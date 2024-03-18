@@ -24,15 +24,15 @@ bool arcade::NCurses::game()
     char c;
 
     while (c != 27) {
-        box(_window, 0, 0);
-        mvwprintw(_window, 1, 1, "Arcade\n");
+        mvprintw(0, 0, "Arcade\n");
+        mvwprintw(_window, 0, 0, "Arcade\n");
         wrefresh(_window);
         c = getch();
     }
     return true;
 }
 
-void arcade::NCurses::playerNameDisplay(const std::string displayText)
+void arcade::NCurses::textNameDisplay(const std::string displayText)
 {
     mvprintw(100, 80, "%s\n", displayText.c_str());
 }

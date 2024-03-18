@@ -8,7 +8,7 @@
 #ifndef NCURSES_HPP_
     #define NCURSES_HPP_
 
-#include "../IDisplayModule.hpp"
+#include "IDisplayModule.hpp"
 #include <ncurses.h>
 
 namespace arcade {
@@ -20,7 +20,7 @@ namespace arcade {
             void init() override;
             void stop() override;
             const std::string &getName() const override;
-            void playerNameDisplay(std::string textDisplay) override;
+            void textNameDisplay(std::string textDisplay) override;
             bool game() override;
         protected:
         private:

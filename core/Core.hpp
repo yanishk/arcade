@@ -8,7 +8,7 @@
 #ifndef CORE_HPP_
 #define CORE_HPP_
 
-#include "../lib/IDisplayModule.hpp"
+#include "IDisplayModule.hpp"
 #include <string>
 
 namespace arcade {

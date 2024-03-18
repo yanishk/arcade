@@ -1,36 +1,36 @@
 ##
 ## EPITECH PROJECT, 2024
-## MiniLibC
+## Makefile
 ## File description:
 ## Makefile
 ##
 
-CC = g++
-
-FPIC = -c -fPIC
-
-CFLAGS = -shared
-
-NCURSES = -lncurses
-
-SRC  =	NCurses.cpp
+SRC = NCurses.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
-NAME = libncurses.so
+CXX = g++
 
-all:   	$(NAME)
+CXXFLAGS = -fPIC -I ..
 
-$(NAME):    $(OBJ)
-	$(CC) $(FPIC) $(SRC)
-	$(CC) $(CFLAGS) $(NCURSES) $(OBJ) -o $(NAME)
+LDFLAGS = -shared
+
+LDLIBS = -lncurses
+
+NAME = ncurses.so
+
+all : $(NAME)
+
+$(NAME):	$(OBJ)
+	$(CXX) -c $(CXXFLAGS) $(SRC)
+	$(CXX) $(LDFLAGS) -o $(NAME) $(LDLIBS) $(OBJ)
 
 clean:
-	rm -f $(OBJ)
+	$(RM) $(OBJ)
 
 fclean: clean
-	rm -f $(NAME)
+	$(RM) $(NAME)
 
-re:    fclean all
+re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY : all clean fclean re

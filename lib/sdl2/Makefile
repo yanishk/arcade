@@ -1,36 +1,36 @@
 ##
 ## EPITECH PROJECT, 2024
-## MiniLibC
+## Makefile
 ## File description:
 ## Makefile
 ##
 
-CC = g++
-
-FPIC = -c -fPIC
-
-CFLAGS = -shared
-
-SRC  =	SDL2.cpp
-
-SDL = -lSDL2 -lSDL2_ttf
+SRC = SDL2.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
-NAME = libsdl2.so
+CXX = g++
 
-all:   	$(NAME)
+CXXFLAGS = -fPIC -I /usr/include/SDL2 -I ..
 
-$(NAME):    $(OBJ)
-	$(CC) $(FPIC) $(SRC)
-	$(CC) $(CFLAGS) $(SDL) $(OBJ) -o $(NAME)
+LDFLAGS = -shared
+
+LDLIBS = -lSDL2 -lSDL2_ttf
+
+NAME = sdl2.so
+
+all : $(NAME)
+
+$(NAME):	$(OBJ)
+	$(CXX) -c $(CXXFLAGS) $(SRC)
+	$(CXX) $(LDFLAGS) -o $(NAME) $(LDLIBS) $(OBJ)
 
 clean:
-	rm -f $(OBJ)
+	$(RM) $(OBJ)
 
 fclean: clean
-	rm -f $(NAME)
+	$(RM) $(NAME)
 
-re:    fclean all
+re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY : all clean fclean re
