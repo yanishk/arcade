@@ -11,8 +11,10 @@
 #include "IDisplayModule.hpp"
 #include <string>
 
-namespace arcade {
-    class Core {
+namespace arcade
+{
+    class Core
+    {
         public:
             Core();
             ~Core();

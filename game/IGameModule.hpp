@@ -11,13 +11,17 @@
 #include <string>
 #include <array>
 
-class IGameModule {
-    public:
-        IGameModule() {};
-        virtual ~IGameModule() = 0;
+namespace arcade
+{
+    class IGameModule
+    {
+        public:
+            IGameModule() {};
+            virtual ~IGameModule() = 0;
 
-    protected:
-    private:
-};
+        protected:
+        private:
+    };
+}
 
 #endif /* !IGAMEMODULE_HPP_ */

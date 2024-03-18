@@ -14,12 +14,12 @@ void arcade::SDL2::initWindow()
         SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (!_window) {
         std::cerr << SDL_GetError() << std::endl;
-        return;
+        exit(84);
     }
     _screen = SDL_CreateRenderer(_window, -1, SDL_RENDERER_PRESENTVSYNC);
     if (!_screen) {
         std::cerr << SDL_GetError() << std::endl;
-        return;
+        exit(84);
     }
 }
 
@@ -27,12 +27,12 @@ void arcade::SDL2::initFont(const char *fontPath)
 {
     if (TTF_Init() == -1) {
         std::cerr << SDL_GetError() << std::endl;
-        return;
+        exit(84);
     }
     _font = TTF_OpenFont(fontPath, 20);
     if (!_font) {
         std::cerr << SDL_GetError() << std::endl;
-        return;
+        exit(84);
     }
 }
 
@@ -51,7 +51,7 @@ bool arcade::SDL2::game()
             return true;
         }
     }
-    textNameDisplay("Arcade\n", 80, 100);
+    textDisplay("Arcade\n", 80, 100);
     SDL_RenderPresent(_screen);
     return false;
 }
@@ -65,18 +65,18 @@ void arcade::SDL2::stop()
     SDL_Quit();
 }
 
-void arcade::SDL2::textNameDisplay(const std::string displayText, int xPos, int yPos)
+void arcade::SDL2::textDisplay(const std::string displayText, int xPos, int yPos)
 {
     SDL_Color White = {255, 255, 255};
     SDL_Surface *surfaceMsg = TTF_RenderText_Solid(_font, displayText.c_str(), White);
     if (!surfaceMsg) {
         std::cerr << SDL_GetError() << std::endl;
-        return;
+        exit(84);
     }
     _message = SDL_CreateTextureFromSurface(_screen, surfaceMsg);
     if (!_message) {
         std::cerr << SDL_GetError() << std::endl;
-        return;
+        exit(84);
     }
     SDL_Rect Message_rect = {xPos, yPos, surfaceMsg->w, surfaceMsg->h};
     SDL_FreeSurface(surfaceMsg);

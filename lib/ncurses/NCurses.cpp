@@ -32,9 +32,9 @@ bool arcade::NCurses::game()
     return true;
 }
 
-void arcade::NCurses::textNameDisplay(const std::string displayText)
+void textDisplay(const std::string displayText, int xPos, int yPos)
 {
-    mvprintw(100, 80, "%s\n", displayText.c_str());
+    mvprintw(xPos, yPos, "%s\n", displayText.c_str());
 }
 
 const std::string &arcade::NCurses::getName() const

@@ -11,8 +11,10 @@
 #include "IDisplayModule.hpp"
 #include <ncurses.h>
 
-namespace arcade {
-    class NCurses : virtual public IDisplayModule {
+namespace arcade
+{
+    class NCurses : virtual public IDisplayModule
+    {
         public:
             NCurses() : _name("Ncurses") {};
             ~NCurses() {};
@@ -20,7 +22,7 @@ namespace arcade {
             void init() override;
             void stop() override;
             const std::string &getName() const override;
-            void textNameDisplay(std::string textDisplay) override;
+            void textDisplay(const std::string displayText, int xPos, int yPos) override;
             bool game() override;
         protected:
         private:

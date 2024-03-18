@@ -10,15 +10,17 @@
 
 #include "../IGameModule.hpp"
 
-namespace arcade {
-    class Nibbler : virtual public IGameModule {
+namespace arcade
+{
+    class Nibbler : virtual public IGameModule
+    {
         public :
             Nibbler();
             ~Nibbler(){};
 
         private:
             std::array<std::string, 19> _map;
-    }
-};
+    };
+}
 
 #endif /* !NIBBLER_HPP_ */

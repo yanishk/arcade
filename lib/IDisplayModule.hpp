@@ -10,8 +10,10 @@
 
 #include <string>
 
-namespace arcade {
-    class IDisplayModule {
+namespace arcade
+{
+    class IDisplayModule
+    {
         public:
             IDisplayModule() {};
             virtual ~IDisplayModule() {};
@@ -19,7 +21,7 @@ namespace arcade {
             virtual void init() = 0;
             virtual void stop() = 0;
             virtual const std::string &getName() const = 0;
-            virtual void textNameDisplay(const std::string displayText,
+            virtual void textDisplay(const std::string displayText,
                 int xPos, int yPos) = 0;
             virtual bool game() = 0;
     };
