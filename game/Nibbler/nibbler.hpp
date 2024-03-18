@@ -19,6 +19,6 @@ namespace arcade {
         private:
             std::array<std::string, 19> _map;
     }
-}
+};
 
 #endif /* !NIBBLER_HPP_ */
