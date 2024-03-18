@@ -21,9 +21,9 @@ namespace arcade
 
             void init() override;
             void stop() override;
-            const std::string &getName() const override;
             void textDisplay(const std::string displayText, int xPos, int yPos) override;
             bool game() override;
+            void initSprite(const char *imagePath, int xPos, int yPos) noexcept override {};
         protected:
         private:
             std::string _name;

@@ -16,8 +16,8 @@ void arcade::SDL2::initWindow()
         std::cerr << SDL_GetError() << std::endl;
         exit(84);
     }
-    _screen = SDL_CreateRenderer(_window, -1, SDL_RENDERER_PRESENTVSYNC);
-    if (!_screen) {
+    _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_PRESENTVSYNC);
+    if (!_renderer) {
         std::cerr << SDL_GetError() << std::endl;
         exit(84);
     }
@@ -52,7 +52,7 @@ bool arcade::SDL2::game()
         }
     }
     textDisplay("Arcade\n", 80, 100);
-    SDL_RenderPresent(_screen);
+    SDL_RenderPresent(_renderer);
     return false;
 }
 
@@ -73,17 +73,32 @@ void arcade::SDL2::textDisplay(const std::string displayText, int xPos, int yPos
         std::cerr << SDL_GetError() << std::endl;
         exit(84);
     }
-    _message = SDL_CreateTextureFromSurface(_screen, surfaceMsg);
+    _message = SDL_CreateTextureFromSurface(_renderer, surfaceMsg);
     if (!_message) {
         std::cerr << SDL_GetError() << std::endl;
         exit(84);
     }
     SDL_Rect Message_rect = {xPos, yPos, surfaceMsg->w, surfaceMsg->h};
     SDL_FreeSurface(surfaceMsg);
-    SDL_RenderCopy(_screen, _message, NULL, &Message_rect);
+    SDL_RenderCopy(_renderer, _message, NULL, &Message_rect);
 }
 
-const std::string &arcade::SDL2::getName() const
+void arcade::SDL2::initSprite(const char *imagePath, int xPos, int yPos) noexcept
 {
-    return _name;
+    SDL_Surface *spriteSurface = SDL_LoadBMP(imagePath);
+    if (!spriteSurface) {
+        std::cerr << SDL_GetError() << std::endl;
+        exit(84);
+    }
+    SDL_Texture* spriteTexture = SDL_CreateTextureFromSurface(_renderer, spriteSurface);
+    if (!spriteTexture) {
+        std::cerr << SDL_GetError() << std::endl;
+        exit(84);
+    }
+    SDL_FreeSurface(spriteSurface);
+
+    SDL_Rect spriteRect = {xPos, yPos, spriteSurface->w, spriteSurface->h};
+    SDL_RenderCopy(_renderer, spriteTexture, NULL, &spriteRect);
+    SDL_RenderPresent(_renderer);
+    SDL_DestroyTexture(spriteTexture);
 }

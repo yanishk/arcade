@@ -22,17 +22,16 @@ namespace arcade
 
             void init() override;
             void stop() override;
-            const std::string &getName() const override;
-            void textDisplay(const std::string displayText,
-                int xPos, int yPos) override;
+            void textDisplay(const std::string displayText, int xPos, int yPos) override;
             bool game() override;
+            void initSprite(const char *imagePath, int xPos, int yPos) noexcept override;
         private:
             void initWindow();
             void initFont(const char *fontPath);
             std::string _name;
             TTF_Font *_font;
             SDL_Window *_window;
-            SDL_Renderer *_screen;
+            SDL_Renderer *_renderer;
             SDL_Texture *_message;
     };
 }

@@ -18,6 +18,8 @@ namespace arcade
             Nibbler();
             ~Nibbler(){};
 
+            std::array<std::string, 19> getMap();
+
         private:
             std::array<std::string, 19> _map;
     };

@@ -31,3 +31,9 @@ arcade::Nibbler::Nibbler()
         "######################################"
     };
 }
+
+std::array<std::string, 19> arcade::Nibbler::getMap()
+{
+    return _map;
+}
+
