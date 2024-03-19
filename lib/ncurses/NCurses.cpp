@@ -19,13 +19,13 @@ void arcade::NCurses::stop()
     endwin();
 }
 
-bool arcade::NCurses::game()
+bool arcade::NCurses::game(std::array<std::string, 19> map)
 {
     char c;
 
     while (c != 27) {
         mvprintw(0, 0, "Arcade\n");
-        mvwprintw(_window, 0, 0, "Arcade\n");
+        displayMap(map);
         wrefresh(_window);
         c = getch();
     }
@@ -35,4 +35,10 @@ bool arcade::NCurses::game()
 void arcade::NCurses::textDisplay(const std::string displayText, int xPos, int yPos)
 {
     mvprintw(xPos, yPos, "%s\n", displayText.c_str());
+}
+
+void arcade::NCurses::displayMap(std::array<std::string, 19> map)
+{
+    for (int i = 0; i != 19; i += 1)
+        mvprintw(0, 0, "%s\n", map[i]);
 }

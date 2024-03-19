@@ -43,7 +43,7 @@ void arcade::SDL2::init()
     initFont("lib/sdl2/asset/font/OpenSans-Regular.ttf");
 }
 
-bool arcade::SDL2::game()
+bool arcade::SDL2::game(std::array<std::string, 19> map)
 {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -52,6 +52,7 @@ bool arcade::SDL2::game()
         }
     }
     textDisplay("Arcade\n", 80, 100);
+    displayMap(map);
     SDL_RenderPresent(_renderer);
     return false;
 }
@@ -101,4 +102,10 @@ void arcade::SDL2::initSprite(const char *imagePath, int xPos, int yPos) noexcep
     SDL_RenderCopy(_renderer, spriteTexture, NULL, &spriteRect);
     SDL_RenderPresent(_renderer);
     SDL_DestroyTexture(spriteTexture);
+}
+
+void arcade::SDL2::displayMap(std::array<std::string, 19> map)
+{
+    for (int i = 0; i != 19; i += 1)
+        std::cout << map[i] << std::endl;
 }

@@ -25,4 +25,11 @@ namespace arcade
     };
 }
 
+extern "C"
+{
+    arcade::Nibbler* entryPoint() {
+        return new arcade::Nibbler;
+    }
+}
+
 #endif /* !NIBBLER_HPP_ */

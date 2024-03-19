@@ -22,7 +22,8 @@ namespace arcade
             virtual void stop() = 0;
             virtual void textDisplay(const std::string displayText, int xPos, int yPos) = 0;
             virtual void initSprite(const char *imagePath, int xPos, int yPos) noexcept = 0;
-            virtual bool game() = 0;
+            virtual void displayMap(std::array<std::string, 19> map) = 0;
+            virtual bool game(std::array<std::string, 19> map) = 0;
     };
 }
 

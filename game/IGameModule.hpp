@@ -19,6 +19,8 @@ namespace arcade
             IGameModule() {};
             virtual ~IGameModule() = 0;
 
+            virtual std::array<std::string, 19> getMap() = 0;
+
         protected:
         private:
     };

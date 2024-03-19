@@ -8,23 +8,26 @@
 #ifndef CORE_HPP_
 #define CORE_HPP_
 
-#include "IDisplayModule.hpp"
 #include <string>
+#include <vector>
+#include "IDisplayModule.hpp"
+#include "IGameModule.hpp"
 
 namespace arcade
 {
     class Core
     {
         public:
-            Core();
-            ~Core();
+            Core(std::string libPath, std::string gamePath);
+            ~Core() {};
 
-            void initLoop(auto _lib);
+            void initLoop(void);
             void setExit(bool exit);
-            void openLib(std::string path);
-
-        protected:
+            std::pair<arcade::IDisplayModule *, void *> openLib(std::string path);
+            std::pair<arcade::IGameModule *, void *> openGame(std::string path);
         private:
+            std::vector<std::pair<arcade::IGameModule *, void *>> _game;
+            std::vector<std::pair<arcade::IDisplayModule *, void *>> _lib;
             bool _exit;
     };
 }

@@ -5,49 +5,66 @@
 ** Core
 */
 
-#include "Core.hpp"
 #include <dlfcn.h>
 #include <iostream>
+#include "Core.hpp"
 
-arcade::Core::Core() : _exit(false)
+arcade::Core::Core(std::string libPath, std::string gamePath) : _exit(false)
 {
+    _lib.push_back(openLib(libPath));
+    _game.push_back(openGame(gamePath));
 }
 
-arcade::Core::~Core()
+std::pair<arcade::IGameModule *, void *> arcade::Core::openGame(std::string path)
 {
-}
-
-void arcade::Core::openLib(std::string path)
-{
-    void *handle;
-    arcade::IDisplayModule *(*cosine)(void);
+    arcade::IGameModule *(*cosine)(void);
     char *error;
+    void *handle;
 
     handle = dlopen(path.c_str(), RTLD_LAZY);
     if (!handle) {
         fprintf(stderr, "%s\n", dlerror());
-        return;
+        return std::make_pair(nullptr, nullptr);
+    }
+    dlerror();
+    cosine = (arcade::IGameModule *(*)(void)) dlsym(handle, "entryPoint");
+    error = dlerror();
+    if (error != NULL) {
+        fprintf(stderr, "%s\n", error);
+        return std::make_pair(nullptr, nullptr);
+    }
+    return std::make_pair((*cosine)(), handle);
+}
+
+std::pair<arcade::IDisplayModule *, void *> arcade::Core::openLib(std::string path)
+{
+    arcade::IDisplayModule *(*cosine)(void);
+    char *error;
+    void *handle;
+
+    handle = dlopen(path.c_str(), RTLD_LAZY);
+    if (!handle) {
+        fprintf(stderr, "%s\n", dlerror());
+        return std::make_pair(nullptr, nullptr);
     }
     dlerror();
     cosine = (arcade::IDisplayModule *(*)(void)) dlsym(handle, "entryPoint");
     error = dlerror();
     if (error != NULL) {
         fprintf(stderr, "%s\n", error);
-        return;
+        return std::make_pair(nullptr, nullptr);
     }
-    arcade::IDisplayModule *_lib = (*cosine)();
-    _lib->init();
-    initLoop(_lib);
-    _lib->stop();
-    dlclose(handle);
-    return;
+    return std::make_pair((*cosine)(), handle);
 }
 
-void arcade::Core::initLoop(auto _lib)
+void arcade::Core::initLoop(void)
 {
+    _lib[0].first->init();
     while (!_exit) {
-        _exit = _lib->game();
+        _exit = _lib[0].first->game(_game[0].first->getMap());
     }
+    _lib[0].first->stop();
+    dlclose(_lib[0].second);
 }
 
 void arcade::Core::setExit(bool exit)

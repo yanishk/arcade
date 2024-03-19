@@ -4,8 +4,8 @@
 
 int main(int ac, char **av)
 {
-    arcade::Core core;
-    if (ac != 2)
+    if (ac != 3)
         return 84;
-    core.openLib(av[1]);
+    arcade::Core core(av[1], av[2]);
+    core.initLoop();
 }

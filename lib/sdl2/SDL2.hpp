@@ -11,6 +11,7 @@
 #include "IDisplayModule.hpp"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <array>
 
 namespace arcade
 {
@@ -22,9 +23,10 @@ namespace arcade
 
             void init() override;
             void stop() override;
+            bool game(std::array<std::string, 19> map) override;
             void textDisplay(const std::string displayText, int xPos, int yPos) override;
-            bool game() override;
             void initSprite(const char *imagePath, int xPos, int yPos) noexcept override;
+            void displayMap(std::array<std::string, 19> map) override;
         private:
             void initWindow();
             void initFont(const char *fontPath);
@@ -42,4 +44,5 @@ extern "C"
         return new arcade::SDL2;
     }
 }
+
 #endif /* !NCURSES_HPP_ */
