@@ -54,9 +54,7 @@ bool arcade::SDL2::game(std::array<std::string, 19> map)
         }
     }
     textDisplay("Arcade\n", 80, 100);
-    for (auto it = _charMap.begin(); it != _charMap.end(); it++) {
-        SDL_RenderCopy(_renderer, it->second.first, NULL, &it->second.second);
-    }
+    displayRectMap(map);
     SDL_RenderPresent(_renderer);
     return false;
 }
@@ -68,6 +66,30 @@ void arcade::SDL2::stop()
     TTF_CloseFont(_font);
     TTF_Quit();
     SDL_Quit();
+}
+
+void arcade::SDL2::displayRectMap(std::array<std::string, 19> map)
+{
+    size_t y = 0;
+    std::string hay;
+    int xPos = 0;
+    int yPos = 0;
+
+    for (size_t x = 0; x != 19; x += 1) {
+        while (y != 38) {
+            hay = std::string(1, map[x][y]) + std::string(1, map[x][y+1]);
+            auto it = _charMap.find(hay);
+            if (it != _charMap.end()) {
+                SDL_Rect spriteRect = {xPos, yPos, 50, 50};
+                SDL_RenderCopy(_renderer, it->second, NULL, &spriteRect);
+            }
+            xPos += 50;
+            y += 2;
+        }
+        xPos = 0;
+        yPos += 50;
+        y = 0;
+    }
 }
 
 void arcade::SDL2::textDisplay(const std::string displayText, int xPos, int yPos)
@@ -151,24 +173,8 @@ void arcade::SDL2::initRectShape(std::string pattern, short r, short g, short b,
         exit(84);
     }
 
-    SDL_Rect spriteRect = {posX, posY, spriteSurface->w, spriteSurface->h};
     SDL_FreeSurface(spriteSurface);
-    _charMap[pattern] = std::make_pair(spriteTexture, spriteRect);
-}
-
-
-void arcade::SDL2::initCharMap(std::array<std::string, 19> map)
-{
-    std::size_t y = 0;
-
-    for (std::size_t x = 0; x != 19; x += 1) {
-        while (y != 38) {
-            std::cout << map[x][y];
-            y += 2;
-        }
-        y = 0;
-        std::cout << std::endl;
-    }
+    _charMap[pattern] = spriteTexture;
 }
 
 void arcade::SDL2::displayMap(std::array<std::string, 19> map)
