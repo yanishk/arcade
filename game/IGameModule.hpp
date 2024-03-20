@@ -10,6 +10,7 @@
 
 #include <string>
 #include <array>
+#include <map>
 
 namespace arcade
 {
@@ -20,6 +21,7 @@ namespace arcade
             virtual ~IGameModule() = 0;
 
             virtual std::array<std::string, 19> getMap() = 0;
+            virtual std::map<std::string, std::string> getPattern() = 0;
 
         protected:
         private:

@@ -7,7 +7,7 @@
 
 #include "NCurses.hpp"
 
-void arcade::NCurses::init()
+void arcade::NCurses::init(std::map<std::string, std::string>)
 {
     initscr();
     noecho();

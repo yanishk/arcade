@@ -20,7 +20,7 @@ namespace arcade
             NCurses() : _name("Ncurses") {};
             ~NCurses() {};
 
-            void init() override;
+            void init(std::map<std::string, std::string>) override;
             void stop() override;
             void textDisplay(const std::string displayText, int xPos, int yPos) override;
             bool game(std::array<std::string, 19> map) override;

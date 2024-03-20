@@ -59,7 +59,8 @@ std::pair<arcade::IDisplayModule *, void *> arcade::Core::openLib(std::string pa
 
 void arcade::Core::initLoop(void)
 {
-    _lib[0].first->init();
+    _lib[0].first->init(_game[0].first->getPattern());
+
     while (!_exit) {
         _exit = _lib[0].first->game(_game[0].first->getMap());
     }

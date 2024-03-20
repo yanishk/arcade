@@ -9,6 +9,7 @@
 #define IDISPLAYMODULE_HPP_
 
 #include <string>
+#include <map>
 
 namespace arcade
 {
@@ -18,7 +19,7 @@ namespace arcade
             IDisplayModule() {};
             virtual ~IDisplayModule() {};
 
-            virtual void init() = 0;
+            virtual void init(std::map<std::string, std::string>) = 0;
             virtual void stop() = 0;
             virtual void textDisplay(const std::string displayText, int xPos, int yPos) = 0;
             virtual void initSprite(const char *imagePath, int xPos, int yPos) noexcept = 0;
