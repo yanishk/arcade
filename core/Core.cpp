@@ -24,14 +24,14 @@ std::pair<arcade::IGameModule *, void *> arcade::Core::openGame(std::string path
     handle = dlopen(path.c_str(), RTLD_LAZY);
     if (!handle) {
         fprintf(stderr, "%s\n", dlerror());
-        return std::make_pair(nullptr, nullptr);
+        exit(84);
     }
     dlerror();
     cosine = (arcade::IGameModule *(*)(void)) dlsym(handle, "entryPoint");
     error = dlerror();
     if (error != NULL) {
         fprintf(stderr, "%s\n", error);
-        return std::make_pair(nullptr, nullptr);
+        exit(84);
     }
     return std::make_pair((*cosine)(), handle);
 }
@@ -45,14 +45,14 @@ std::pair<arcade::IDisplayModule *, void *> arcade::Core::openLib(std::string pa
     handle = dlopen(path.c_str(), RTLD_LAZY);
     if (!handle) {
         fprintf(stderr, "%s\n", dlerror());
-        return std::make_pair(nullptr, nullptr);
+        exit(84);
     }
     dlerror();
     cosine = (arcade::IDisplayModule *(*)(void)) dlsym(handle, "entryPoint");
     error = dlerror();
     if (error != NULL) {
         fprintf(stderr, "%s\n", error);
-        return std::make_pair(nullptr, nullptr);
+        exit(84);
     }
     return std::make_pair((*cosine)(), handle);
 }
@@ -66,7 +66,7 @@ void arcade::Core::initLoop(void)
     while (!_exit) {
         _exit = _lib[0].first->game(_game[0].first->getMap());
         _game[0].first->updateMap(_lib[0].first->getKey());
-       // _lib[0].first->setKey(arcade::KeyPressed::OTHER);
+        _lib[0].first->setKey(arcade::KeyPressed::OTHER);
     }
     _lib[0].first->stop();
     dlclose(_lib[0].second);

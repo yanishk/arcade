@@ -28,7 +28,7 @@ arcade::Nibbler::Nibbler()
         "##[]######[]##[]######[]##[]######[]##",
         "##          ##  ##  ##  ##          ##",
         "##[]##########  ######  ##########[]##",
-        "##          <=========8~            ##",
+        "##            <=====8~              ##",
         "######################################"
     };
     _patternPath["##"] = "White";
@@ -44,58 +44,83 @@ bool arcade::Nibbler::isFree(char c)
     return (c == ' ' || c == '[' || c == ']');
 }
 
+bool arcade::Nibbler::isFood(char c)
+{
+    return (c == '[' || c == ']');
+}
+
+void arcade::Nibbler::goUp(std::size_t x, std::size_t y)
+{
+    if (isFree(_map[x - 1][y - 1]) && isFree(_map[x - 1][y])) {
+        _map[x - 1][y - 1] = _map[x][y - 1];
+        _map[x - 1][y] = _map[x][y];
+        updatePlayerPos();
+        _snakePos[_snakePos.size() - 1].first -= 1;
+        _snakePos[_snakePos.size() - 2].first -= 1;
+    }
+}
+
+void arcade::Nibbler::goDown(std::size_t x, std::size_t y)
+{
+    if (isFree(_map[x + 1][y - 1]) && isFree(_map[x + 1][y])) {
+        _map[x + 1][y - 1] = _map[x][y - 1];
+        _map[x + 1][y] = _map[x][y];
+        updatePlayerPos();
+        _snakePos[_snakePos.size() - 1].first += 1;
+        _snakePos[_snakePos.size() - 2].first += 1;
+    }
+}
+
+void arcade::Nibbler::goLeft(std::size_t x, std::size_t y)
+{
+    if (isFree(_map[x][y - 2]) && isFree(_map[x][y - 3])) {
+        _map[x][y - 2] = _map[x][y];
+        _map[x][y - 3] = _map[x][y - 1];
+        updatePlayerPos();
+        _snakePos[_snakePos.size() - 1].second -= 2;
+        _snakePos[_snakePos.size() - 2].second -= 2;
+    }
+}
+
+void arcade::Nibbler::goRight(std::size_t x, std::size_t y)
+{
+    if (isFree(_map[x][y + 1]) && isFree(_map[x][y + 2])) {
+        _map[x][y + 2] = _map[x][y];
+        _map[x][y + 1] = _map[x][y - 1];
+        updatePlayerPos();
+        _snakePos[_snakePos.size() - 1].second += 2;
+        _snakePos[_snakePos.size() - 2].second += 2;
+    }
+}
+
 void arcade::Nibbler::updateMap(arcade::KeyPressed key)
 {
     std::pair<std::size_t, std::size_t> playerPos = getPlayerHeadPos();
 
-// le faire en plus clean en passant en param l'offset pour le premier char
-    if (key == arcade::KeyPressed::UP) {
-        if (isFree(_map[playerPos.first - 1][playerPos.second])) {
-            _map[playerPos.first - 1][playerPos.second] =
-            _map[playerPos.first][playerPos.second];
-            updatePlayerPos();
-            _snakePos[_snakePos.size() - 1].first -= 1;
-        }
-    }
-    if (key == arcade::KeyPressed::DOWN) {
-        if (isFree(_map[playerPos.first + 1][playerPos.second])) {
-            _map[playerPos.first + 1][playerPos.second] =
-            _map[playerPos.first][playerPos.second];
-            updatePlayerPos();
-            _snakePos[_snakePos.size() - 1].first += 1;
-        }
-    }
-    if (key == arcade::KeyPressed::LEFT) {
-        if (isFree(_map[playerPos.first][playerPos.second - 1])) {
-            _map[playerPos.first][playerPos.second - 1] =
-            _map[playerPos.first][playerPos.second];
-            updatePlayerPos();
-            _snakePos[_snakePos.size() - 1].second -= 1;
-        }
-    }
-    if (key == arcade::KeyPressed::RIGHT) {
-        if (isFree(_map[playerPos.first][playerPos.second + 1])) {
-            _map[playerPos.first][playerPos.second + 1] =
-            _map[playerPos.first][playerPos.second];
-            updatePlayerPos();
-            _snakePos[_snakePos.size() - 1].second += 1;
-        }
-    }
+    if (key == arcade::KeyPressed::UP)
+        goUp(playerPos.first, playerPos.second);
+    if (key == arcade::KeyPressed::DOWN)
+        goDown(playerPos.first, playerPos.second);
+    if (key == arcade::KeyPressed::LEFT)
+        goLeft(playerPos.first, playerPos.second);
+    if (key == arcade::KeyPressed::RIGHT)
+        goRight(playerPos.first, playerPos.second);
 }
 
 void arcade::Nibbler::updatePlayerPos()
 {
     std::size_t i = _snakePos.size() - 1;
 
-    for (i; i > 0; i -= 1) {
+    for (i; i > 1; i -= 1) {
         _map[_snakePos[i].first][_snakePos[i].second] =
-        _map[_snakePos[i - 1].first][_snakePos[i - 1].second];
+        _map[_snakePos[i - 2].first][_snakePos[i - 2].second];
     }
     _map[_snakePos[i].first][_snakePos[i].second] = ' ';
+    _map[_snakePos[i].first][_snakePos[i].second - 1] = ' ';
 
-    for (i = 0; i != _snakePos.size() - 1; i += 1) {
-        _snakePos[i].first = _snakePos[i + 1].first;
-        _snakePos[i].second = _snakePos[i + 1].second;
+    for (i = 0; i != _snakePos.size() - 2; i += 1) {
+        _snakePos[i].first = _snakePos[i + 2].first;
+        _snakePos[i].second = _snakePos[i + 2].second;
     }
 }
 
