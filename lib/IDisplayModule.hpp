@@ -10,6 +10,7 @@
 
 #include <string>
 #include <map>
+#include <array>
 #include "KeyPressed.hpp"
 
 namespace arcade

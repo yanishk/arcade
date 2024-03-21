@@ -11,7 +11,6 @@
 #include "IDisplayModule.hpp"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include <array>
 #include <map>
 
 namespace arcade
