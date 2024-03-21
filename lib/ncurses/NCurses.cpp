@@ -21,15 +21,16 @@ void arcade::NCurses::stop()
 
 bool arcade::NCurses::game(std::array<std::string, 19> map)
 {
-    char c;
+    int key;
 
-    while (c != 27) {
-        mvprintw(0, 0, "Arcade\n");
+    keypad(stdscr, TRUE);
         displayMap(map);
         wrefresh(_window);
-        c = getch();
-    }
-    return true;
+        key = getch();
+        if (key == 27)
+            return true;
+        _key = checkKeyPressed(key);
+    return false;
 }
 
 void arcade::NCurses::textDisplay(const std::string displayText, int xPos, int yPos)
@@ -40,5 +41,28 @@ void arcade::NCurses::textDisplay(const std::string displayText, int xPos, int y
 void arcade::NCurses::displayMap(std::array<std::string, 19> map)
 {
     for (int i = 0; i != 19; i += 1)
-        mvprintw(0, 0, "%s\n", map[i]);
+        mvprintw(i, 0, "%s\n", map[i].c_str());
+}
+
+arcade::KeyPressed arcade::NCurses::checkKeyPressed(int key)
+{
+    if (key == KEY_UP)
+        return KeyPressed::UP;
+    if (key == KEY_DOWN)
+        return KeyPressed::DOWN;
+    if (key == KEY_LEFT)
+        return KeyPressed::LEFT;
+    if (key == KEY_RIGHT)
+        return KeyPressed::RIGHT;
+    return KeyPressed::OTHER;
+}
+
+void arcade::NCurses::setKey(arcade::KeyPressed newValue)
+{
+    _key = newValue;
+}
+
+arcade::KeyPressed arcade::NCurses::getKey()
+{
+    return _key;
 }

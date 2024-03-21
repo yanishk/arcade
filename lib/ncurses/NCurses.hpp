@@ -17,19 +17,21 @@ namespace arcade
     class NCurses : virtual public IDisplayModule
     {
         public:
-            NCurses() : _name("Ncurses") {};
-            ~NCurses() {};
+            NCurses() = default;
+            ~NCurses() = default;
 
             void init(std::map<std::string, std::string>) override;
             void stop() override;
-            void textDisplay(const std::string displayText, int xPos, int yPos) override;
             bool game(std::array<std::string, 19> map) override;
+            void textDisplay(const std::string displayText, int xPos, int yPos) override;
             void initSprite(const char *imagePath, int xPos, int yPos) noexcept override {};
             void displayMap(std::array<std::string, 19> map) override;
-        protected:
+            arcade::KeyPressed getKey() override;
+            void setKey(arcade::KeyPressed newValue) override;
         private:
-            std::string _name;
+            arcade::KeyPressed checkKeyPressed(int key);
             WINDOW *_window;
+            KeyPressed _key;
     };
 }
 

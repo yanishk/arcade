@@ -45,12 +45,38 @@ void arcade::SDL2::init(std::map<std::string, std::string> pattern)
     pickColor(pattern);
 }
 
+arcade::KeyPressed arcade::SDL2::checkKeyPressed(SDL_Event event)
+{
+    if (event.key.keysym.sym == SDLK_UP)
+        return KeyPressed::UP;
+    if (event.key.keysym.sym == SDLK_DOWN)
+        return KeyPressed::DOWN;
+    if (event.key.keysym.sym == SDLK_LEFT)
+        return KeyPressed::LEFT;
+    if (event.key.keysym.sym == SDLK_RIGHT)
+        return KeyPressed::RIGHT;
+    return KeyPressed::OTHER;
+}
+
+void arcade::SDL2::setKey(arcade::KeyPressed newValue)
+{
+    _key = newValue;
+}
+
+arcade::KeyPressed arcade::SDL2::getKey()
+{
+    return _key;
+}
+
 bool arcade::SDL2::game(std::array<std::string, 19> map)
 {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
             return true;
+        }
+        if (event.type == SDL_KEYDOWN) {
+            _key = checkKeyPressed(event);
         }
     }
     textDisplay("Arcade\n", 80, 100);

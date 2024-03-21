@@ -13,7 +13,7 @@ OBJ = $(SRC:.cpp=.o)
 
 CXX = g++
 
-CXXFLAGS = -I lib/ -I game/
+CXXFLAGS = -I . -I lib/ -I game/
 
 NAME = arcade
 

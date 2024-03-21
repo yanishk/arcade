@@ -11,7 +11,7 @@ OBJ = $(SRC:.cpp=.o)
 
 CXX = g++
 
-CXXFLAGS = -fPIC -I /usr/include/SDL2 -I ..
+CXXFLAGS = -fPIC -I /usr/include/SDL2 -I .. -I ../../
 
 LDFLAGS = -shared
 

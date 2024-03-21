@@ -57,12 +57,16 @@ std::pair<arcade::IDisplayModule *, void *> arcade::Core::openLib(std::string pa
     return std::make_pair((*cosine)(), handle);
 }
 
+#include <vector>
+
 void arcade::Core::initLoop(void)
 {
     _lib[0].first->init(_game[0].first->getPattern());
-
+    _game[0].first->stockPlayerPos();
     while (!_exit) {
         _exit = _lib[0].first->game(_game[0].first->getMap());
+        _game[0].first->updateMap(_lib[0].first->getKey());
+       // _lib[0].first->setKey(arcade::KeyPressed::OTHER);
     }
     _lib[0].first->stop();
     dlclose(_lib[0].second);

@@ -19,8 +19,8 @@ namespace arcade
     class SDL2 : virtual public IDisplayModule
     {
         public:
-            SDL2() : _name("SDL2") {};
-            ~SDL2() {};
+            SDL2() = default;
+            ~SDL2() = default;
 
             void init(std::map<std::string, std::string> pattern) override;
             void stop() override;
@@ -31,15 +31,18 @@ namespace arcade
             void initRectShape(std::string pattern, short r, short g, short b, int xPos, int yPos);
             void displayRectMap(std::array<std::string, 19> map);
             void pickColor(std::map<std::string, std::string> patternMap);
+            arcade::KeyPressed getKey() override;
+            void setKey(arcade::KeyPressed newValue) override;
         private:
             void initWindow();
             void initFont(const char *fontPath);
-            std::string _name;
+            arcade::KeyPressed checkKeyPressed(SDL_Event event);
             TTF_Font *_font;
             SDL_Window *_window;
             SDL_Renderer *_renderer;
             SDL_Texture *_message;
             std::map<std::string, SDL_Texture *> _charMap;
+            KeyPressed _key;
     };
 }
 

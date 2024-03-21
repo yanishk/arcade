@@ -8,7 +8,7 @@
 #ifndef NIBBLER_HPP_
 #define NIBBLER_HPP_
 
-#include "../IGameModule.hpp"
+#include "IGameModule.hpp"
 #include <map>
 
 namespace arcade
@@ -17,14 +17,20 @@ namespace arcade
     {
         public :
             Nibbler();
-            ~Nibbler(){};
+            ~Nibbler() = default;
 
             std::array<std::string, 19> getMap();
             std::map<std::string, std::string> getPattern();
+            void updateMap(arcade::KeyPressed key) override;
+            void updatePlayerPos() override;
+            void stockPlayerPos() override;
+            std::pair<std::size_t, std::size_t> getPlayerHeadPos() override;
 
         private:
+            bool isFree(char c);
             std::array<std::string, 19> _map;
             std::map<std::string, std::string> _patternPath;
+            std::vector <std::pair<std::size_t, std::size_t>> _snakePos;
     };
 }
 

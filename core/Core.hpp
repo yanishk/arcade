@@ -19,7 +19,7 @@ namespace arcade
     {
         public:
             Core(std::string libPath, std::string gamePath);
-            ~Core() {};
+            ~Core() = default;
 
             void initLoop(void);
             void setExit(bool exit);
