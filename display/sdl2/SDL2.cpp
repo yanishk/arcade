@@ -35,7 +35,7 @@ void arcade::SDL2::initFont(const char *fontPath)
     }
 }
 
-void arcade::SDL2::init(std::map<std::string, std::string> pattern)
+void arcade::SDL2::init(std::map<std::string, Color> pattern)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
     initWindow();
@@ -46,14 +46,14 @@ void arcade::SDL2::init(std::map<std::string, std::string> pattern)
 arcade::KeyPressed arcade::SDL2::checkKeyPressed(SDL_Event event)
 {
     if (event.key.keysym.sym == SDLK_UP)
-        return KeyPressed::UP;
+        return UP;
     if (event.key.keysym.sym == SDLK_DOWN)
-        return KeyPressed::DOWN;
+        return DOWN;
     if (event.key.keysym.sym == SDLK_LEFT)
-        return KeyPressed::LEFT;
+        return LEFT;
     if (event.key.keysym.sym == SDLK_RIGHT)
-        return KeyPressed::RIGHT;
-    return KeyPressed::OTHER;
+        return RIGHT;
+    return OTHER;
 }
 
 void arcade::SDL2::setKey(arcade::KeyPressed newValue)
@@ -99,8 +99,8 @@ void arcade::SDL2::displayMap(std::array<std::string, 19> map)
     int xPos = 0;
     int yPos = 50;
 
-    for (size_t x = 0; x != 19; x += 1) {
-        while (y != 38) {
+    for (size_t x = 0; x != map.size(); x += 1) {
+        while (y != map[0].size()) {
             hay = std::string(1, map[x][y]) + std::string(1, map[x][y+1]);
             auto it = _charMap.find(hay);
             if (it != _charMap.end()) {
@@ -140,28 +140,28 @@ void arcade::SDL2::displayText(std::vector<std::string> textToDisplay)
     }
 }
 
-void arcade::SDL2::pickColor(std::map<std::string, std::string> patternMap)
+void arcade::SDL2::pickColor(std::map<std::string, Color> patternMap)
 {
     int posX = 0;
     int posY = 0;
 
     for (auto it = patternMap.begin(); it != patternMap.end(); it++) {
-        if (it->second == "Black") {
+        if (it->second == BLACK) {
             initRectShape(it->first, 0, 0, 0, posX, posY);
         }
-        if (it->second == "White"){
+        if (it->second == WHITE){
             initRectShape(it->first, 255, 255, 255, posX, posY);
         }
-        if (it->second == "Red") {
+        if (it->second == RED) {
             initRectShape(it->first, 255, 0, 0, posX, posY);
         }
-        if (it->second == "Blue") {
+        if (it->second == BLUE) {
             initRectShape(it->first, 0, 0, 255, posX, posY);
         }
-        if (it->second == "Green") {
+        if (it->second == GREEN) {
             initRectShape(it->first, 0, 128, 0, posX, posY);
         }
-        if (it->second == "Yellow") {
+        if (it->second == YELLOW) {
             initRectShape(it->first, 255, 255, 0, posX, posY);
         }
         posX += 10;

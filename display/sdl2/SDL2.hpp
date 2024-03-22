@@ -22,15 +22,16 @@ namespace arcade
             SDL2() = default;
             ~SDL2() = default;
 
-            void init(std::map<std::string, std::string> pattern) override;
+            void init(std::map<std::string, Color> pattern) override;
             void stop() override;
             bool game(std::array<std::string, 19> map) override;
             void displayText(std::vector<std::string> textToDisplay) override;
             void displayMap(std::array<std::string, 19> map) override;
-            void initRectShape(std::string pattern, short r, short g, short b, int xPos, int yPos);
-            void pickColor(std::map<std::string, std::string> patternMap);
             arcade::KeyPressed getKey() override;
             void setKey(arcade::KeyPressed newValue) override;
+            void pickColor(std::map<std::string, Color> patternMap) override;
+            void initRectShape(std::string pattern, short r, short g, short b, int xPos, int yPos);
+
         private:
             void initWindow();
             void initFont(const char *fontPath);

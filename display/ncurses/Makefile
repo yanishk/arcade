@@ -11,7 +11,7 @@ OBJ = $(SRC:.cpp=.o)
 
 CXX = g++
 
-CXXFLAGS = -fPIC -I .. -I ../../
+CXXFLAGS = -fPIC -I .. -I ../../include
 
 LDFLAGS = -shared
 

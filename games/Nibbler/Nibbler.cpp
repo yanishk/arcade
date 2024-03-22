@@ -31,13 +31,12 @@ arcade::Nibbler::Nibbler() : _score(0)
         "##            <=====8~              ##",
         "######################################"
     };
-    _patternPath["##"] = "White";
-    _patternPath["  "] = "Black";
-    _patternPath["[]"] = "Red";
-    _patternPath["=="] = "Blue";
-    _patternPath["8~"] = "Green";
-    _patternPath["<="] = "Yellow";
-
+    _patternPath["##"] = WHITE;
+    _patternPath["  "] = BLACK;
+    _patternPath["[]"] = RED;
+    _patternPath["=="] = BLUE;
+    _patternPath["8~"] = GREEN;
+    _patternPath["<="] = YELLOW;
     _scoreText = "score: " + std::to_string(_score);
     _textToDisplay.push_back(_scoreText);
 }
@@ -161,13 +160,13 @@ void arcade::Nibbler::updateMap(arcade::KeyPressed key)
 
     if (checkWin())
         exit(2);
-    if (key == arcade::KeyPressed::UP)
+    if (key == arcade::UP)
         goUp(playerPos.first, playerPos.second);
-    if (key == arcade::KeyPressed::DOWN)
+    if (key == arcade::DOWN)
         goDown(playerPos.first, playerPos.second);
-    if (key == arcade::KeyPressed::LEFT)
+    if (key == arcade::LEFT)
         goLeft(playerPos.first, playerPos.second);
-    if (key == arcade::KeyPressed::RIGHT)
+    if (key == arcade::RIGHT)
         goRight(playerPos.first, playerPos.second);
 }
 
@@ -190,8 +189,8 @@ void arcade::Nibbler::updatePlayerPos()
 
 void arcade::Nibbler::stockPlayerPos()
 {
-    for (std::size_t i = 0; i != 19; i += 1) { // modif avec une variable stockée
-        for (std::size_t y = 0; y != 38; y += 1) { // pareil
+    for (std::size_t i = 0; i != _map.size(); i += 1) {
+        for (std::size_t y = 0; y != _map[0].size(); y += 1) {
             if (_map[i][y] == '<' ||
                 _map[i][y] == '='||
                 _map[i][y] == '8' ||
@@ -204,8 +203,8 @@ void arcade::Nibbler::stockPlayerPos()
 
 bool arcade::Nibbler::checkWin()
 {
-    for (std::size_t i = 0; i != 19; i += 1) { // modif avec une variable stockée
-        for (std::size_t y = 0; y != 38; y += 1) { // pareil
+    for (std::size_t i = 0; i != _map.size(); i += 1) {
+        for (std::size_t y = 0; y != _map[0].size(); y += 1) {
             if (_map[i][y] == '[' || _map[i][y] == ']') {
                 return false;
             }
@@ -219,8 +218,8 @@ std::pair<std::size_t, std::size_t> arcade::Nibbler::getPlayerHeadPos()
     std::size_t i = 0;
     std::size_t y = 0;
 
-    for (i = 0; i != 19; i += 1) { // modif avec une variable stockée
-        for (y = 0; y != 38; y += 1) { // pareil
+    for (i = 0; i != _map.size(); i += 1) {
+        for (y = 0; y != _map[0].size(); y += 1) {
             if (_map[i][y] == '~') {
                 return std::make_pair(i, y);
             }
@@ -239,7 +238,7 @@ std::array<std::string, 19> arcade::Nibbler::getMap()
     return _map;
 }
 
-std::map<std::string, std::string> arcade::Nibbler::getPattern()
+std::map<std::string, arcade::Color> arcade::Nibbler::getPattern()
 {
     return _patternPath;
 }

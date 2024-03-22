@@ -20,7 +20,7 @@ namespace arcade
             ~Nibbler() = default;
 
             std::array<std::string, 19> getMap() override;
-            std::map<std::string, std::string> getPattern() override;
+            std::map<std::string, Color> getPattern() override;
             std::vector<std::string> getText() override;
             void updateMap(arcade::KeyPressed key) override;
             void updatePlayerPos() override;
@@ -38,9 +38,8 @@ namespace arcade
             bool isSnakeBody(char firstChar, char secondChar);
             bool isNotSnakeNeck(std::size_t x, std::size_t y);
             std::array<std::string, 19> _map;
-            std::map<std::string, std::string> _patternPath;
+            std::map<std::string, Color> _patternPath;
             std::vector <std::pair<std::size_t, std::size_t>> _snakePos;
-
             std::size_t _score;
             std::string _scoreText;
             std::vector<std::string> _textToDisplay;

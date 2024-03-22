@@ -20,17 +20,19 @@ namespace arcade
             NCurses() = default;
             ~NCurses() = default;
 
-            void init(std::map<std::string, std::string>) override;
+            void init(std::map<std::string, Color> pattern) override;
             void stop() override;
             bool game(std::array<std::string, 19> map) override;
             void displayText(std::vector<std::string> textToDisplay) override;
             void displayMap(std::array<std::string, 19> map) override;
             arcade::KeyPressed getKey() override;
             void setKey(arcade::KeyPressed newValue) override;
+            void pickColor(std::map<std::string, Color> patternMap) override;
+
         private:
             arcade::KeyPressed checkKeyPressed(int key);
-            WINDOW *_window;
             KeyPressed _key;
+            std::map<std::string, Color> _charMap;
     };
 }
 

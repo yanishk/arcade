@@ -13,6 +13,7 @@
 #include <map>
 #include <vector>
 #include "KeyPressed.hpp"
+#include "Color.hpp"
 
 namespace arcade
 {
@@ -23,7 +24,7 @@ namespace arcade
             ~IGameModule() = default;
 
             virtual std::array<std::string, 19> getMap() = 0;
-            virtual std::map<std::string, std::string> getPattern() = 0;
+            virtual std::map<std::string, Color> getPattern() = 0;
             virtual std::vector<std::string> getText() = 0;
             virtual void updateMap(arcade::KeyPressed key) = 0;
             virtual void updatePlayerPos() = 0;

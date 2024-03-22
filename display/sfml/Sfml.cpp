@@ -12,7 +12,7 @@ void arcade::Sfml::initWindow()
     _window.create(sf::VideoMode(1000, 1000), "SFML", sf::Style::Default);
 }
 
-void arcade::Sfml::init(std::map<std::string, std::string> pattern)
+void arcade::Sfml::init(std::map<std::string, Color> pattern)
 {
     initWindow();
     pickColor(pattern);
@@ -20,28 +20,28 @@ void arcade::Sfml::init(std::map<std::string, std::string> pattern)
         exit(84);
 }
 
-void arcade::Sfml::pickColor(std::map<std::string, std::string> patternMap)
+void arcade::Sfml::pickColor(std::map<std::string, Color> patternMap)
 {
     int posX = 0;
     int posY = 0;
 
     for (auto it = patternMap.begin(); it != patternMap.end(); it++) {
-        if (it->second == "Black") {
+        if (it->second == BLACK) {
             initRectShape(it->first, sf::Color::Black, posX, posY);
         }
-        if (it->second == "White"){
+        if (it->second == WHITE){
             initRectShape(it->first, sf::Color::White, posX, posY);
         }
-        if (it->second == "Red") {
+        if (it->second == RED) {
             initRectShape(it->first, sf::Color::Red, posX, posY);
         }
-        if (it->second == "Blue") {
+        if (it->second == BLUE) {
             initRectShape(it->first, sf::Color::Blue, posX, posY);
         }
-        if (it->second == "Green") {
+        if (it->second == GREEN) {
             initRectShape(it->first, sf::Color::Green, posX, posY);
         }
-        if (it->second == "Yellow") {
+        if (it->second == YELLOW) {
             initRectShape(it->first, sf::Color::Yellow, posX, posY);
         }
         posX += 10;
@@ -56,8 +56,8 @@ void arcade::Sfml::displayMap(std::array<std::string, 19> map)
     int xPos = 50;
     int yPos = 0;
 
-    for (size_t x = 0; x != 19; x += 1) {
-        while (y != 38) {
+    for (size_t x = 0; x != map.size(); x += 1) {
+        while (y != map[0].size()) {
             hay = std::string(1, map[x][y]) + std::string(1, map[x][y+1]);
             auto it = _charMap.find(hay);
             if (it != _charMap.end()) {
@@ -122,14 +122,14 @@ void arcade::Sfml::setKey(arcade::KeyPressed newValue)
 arcade::KeyPressed arcade::Sfml::checkKeyPressed(sf::Event event)
 {
     if (event.key.code == sf::Keyboard::Up)
-        return KeyPressed::UP;
+        return UP;
     if (event.key.code == sf::Keyboard::Down)
-        return KeyPressed::DOWN;
+        return DOWN;
     if (event.key.code == sf::Keyboard::Left)
-        return KeyPressed::LEFT;
+        return LEFT;
     if (event.key.code == sf::Keyboard::Right)
-        return KeyPressed::RIGHT;
-    return KeyPressed::OTHER;
+        return RIGHT;
+    return OTHER;
 }
 
 arcade::KeyPressed arcade::Sfml::getKey()
