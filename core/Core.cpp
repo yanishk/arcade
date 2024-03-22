@@ -66,6 +66,7 @@ void arcade::Core::initLoop(void)
     _game[0].first->stockPlayerPos();
     while (!_exit) {
         _exit = _lib[0].first->game(_game[0].first->getMap());
+        // _lib[0].first->displayText(_game[0].first->getText());
         _game[0].first->updateMap(_lib[0].first->getKey());
         _lib[0].first->setKey(arcade::KeyPressed::OTHER);
     }

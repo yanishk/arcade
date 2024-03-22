@@ -8,7 +8,7 @@
 #include "Nibbler.hpp"
 #include <iostream>
 
-arcade::Nibbler::Nibbler()
+arcade::Nibbler::Nibbler() : _score(0)
 {
     _map = {
         "######################################",
@@ -37,6 +37,9 @@ arcade::Nibbler::Nibbler()
     _patternPath["=="] = "Blue";
     _patternPath["8~"] = "Green";
     _patternPath["<="] = "Yellow";
+
+    _scoreText = "score:" + std::to_string(_score);
+    _textToDisplay.push_back(_scoreText);
 }
 
 bool arcade::Nibbler::isFree(char c)
@@ -71,6 +74,12 @@ void arcade::Nibbler::goUp(std::size_t x, std::size_t y)
         isNotSnakeNeck((x - 1), (y))) {
         exit(1);
     }
+    if (isFood(_map[x - 1][y - 1]) && isFood(_map[x - 1][y])) {
+        _score += 100;
+        _scoreText = "score:" + std::to_string(_score);
+        _textToDisplay.pop_back();
+        _textToDisplay.push_back(_scoreText);
+    }
     if (isFree(_map[x - 1][y - 1]) && isFree(_map[x - 1][y])) {
         _map[x - 1][y - 1] = _map[x][y - 1];
         _map[x - 1][y] = _map[x][y];
@@ -86,6 +95,12 @@ void arcade::Nibbler::goDown(std::size_t x, std::size_t y)
         isNotSnakeNeck((x + 1), (y - 1)) &&
         isNotSnakeNeck((x + 1), (y))) {
         exit(1);
+    }
+    if (isFood(_map[x + 1][y - 1]) && isFood(_map[x + 1][y])) {
+        _score += 100;
+        _scoreText = "score:" + std::to_string(_score);
+        _textToDisplay.pop_back();
+        _textToDisplay.push_back(_scoreText);
     }
     if (isFree(_map[x + 1][y - 1]) && isFree(_map[x + 1][y])) {
         _map[x + 1][y - 1] = _map[x][y - 1];
@@ -103,6 +118,12 @@ void arcade::Nibbler::goLeft(std::size_t x, std::size_t y)
         isNotSnakeNeck((x), (y - 3))) {
         exit(1);
     }
+    if (isFood(_map[x][y - 2]) && isFood(_map[x][y - 3])) {
+        _score += 100;
+        _scoreText = "score:" + std::to_string(_score);
+        _textToDisplay.pop_back();
+        _textToDisplay.push_back(_scoreText);
+    }
     if (isFree(_map[x][y - 2]) && isFree(_map[x][y - 3])) {
         _map[x][y - 2] = _map[x][y];
         _map[x][y - 3] = _map[x][y - 1];
@@ -118,6 +139,12 @@ void arcade::Nibbler::goRight(std::size_t x, std::size_t y)
         isNotSnakeNeck((x), (y + 1)) &&
         isNotSnakeNeck((x), (y + 2))) {
         exit(1);
+    }
+    if (isFood(_map[x][y + 1]) && isFood(_map[x][y + 2])) {
+        _score += 100;
+        _scoreText = "score:" + std::to_string(_score);
+        _textToDisplay.pop_back();
+        _textToDisplay.push_back(_scoreText);
     }
     if (isFree(_map[x][y + 1]) && isFree(_map[x][y + 2])) {
         _map[x][y + 2] = _map[x][y];
@@ -173,7 +200,6 @@ void arcade::Nibbler::stockPlayerPos()
             }
         }
     }
-
 }
 
 bool arcade::Nibbler::checkWin()
@@ -201,6 +227,11 @@ std::pair<std::size_t, std::size_t> arcade::Nibbler::getPlayerHeadPos()
         }
     }
     return std::make_pair(i, y);
+}
+
+std::vector<std::string> arcade::Nibbler::getText()
+{
+    return _textToDisplay;
 }
 
 std::array<std::string, 19> arcade::Nibbler::getMap()

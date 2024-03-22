@@ -19,8 +19,9 @@ namespace arcade
             Nibbler();
             ~Nibbler() = default;
 
-            std::array<std::string, 19> getMap();
-            std::map<std::string, std::string> getPattern();
+            std::array<std::string, 19> getMap() override;
+            std::map<std::string, std::string> getPattern() override;
+            std::vector<std::string> getText() override;
             void updateMap(arcade::KeyPressed key) override;
             void updatePlayerPos() override;
             void stockPlayerPos() override;
@@ -39,6 +40,10 @@ namespace arcade
             std::array<std::string, 19> _map;
             std::map<std::string, std::string> _patternPath;
             std::vector <std::pair<std::size_t, std::size_t>> _snakePos;
+
+            std::size_t _score;
+            std::string _scoreText;
+            std::vector<std::string> _textToDisplay;
     };
 }
 
