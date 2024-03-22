@@ -100,6 +100,7 @@ void arcade::Sfml::initRectShape(std::string pattern, sf::Color color, int posX,
 bool arcade::Sfml::game(std::array<std::string, 19> map)
 {
     sf::Event event;
+
     while (_window.pollEvent(event)) {
         if (event.type == sf::Event::Closed)
             return true;
@@ -109,6 +110,7 @@ bool arcade::Sfml::game(std::array<std::string, 19> map)
     }
     displayRectMap(map);
     _window.display();
+    _window.clear();
     return false;
 }
 

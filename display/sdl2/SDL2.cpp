@@ -79,6 +79,7 @@ bool arcade::SDL2::game(std::array<std::string, 19> map)
     }
     displayRectMap(map);
     SDL_RenderPresent(_renderer);
+    SDL_RenderClear(_renderer);
     return false;
 }
 
