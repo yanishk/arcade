@@ -49,7 +49,7 @@ void arcade::Sfml::pickColor(std::map<std::string, std::string> patternMap)
     }
 }
 
-void arcade::Sfml::displayRectMap(std::array<std::string, 19> map)
+void arcade::Sfml::displayMap(std::array<std::string, 19> map)
 {
     size_t y = 0;
     std::string hay;
@@ -108,7 +108,7 @@ bool arcade::Sfml::game(std::array<std::string, 19> map)
             _key = checkKeyPressed(event);
         }
     }
-    displayRectMap(map);
+    displayMap(map);
     _window.display();
     _window.clear();
     return false;

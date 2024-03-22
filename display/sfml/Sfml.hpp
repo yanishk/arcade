@@ -24,15 +24,13 @@ namespace arcade
             void stop() override;
             bool game(std::array<std::string, 19> map) override;
             void displayText(std::vector<std::string>) override;
-            void displayMap(std::array<std::string, 19> map) override {};
+            void displayMap(std::array<std::string, 19> map) override;
             arcade::KeyPressed getKey() override;
             void setKey(arcade::KeyPressed newValue) override;
             void pickColor(std::map<std::string, std::string> patternMap);
-            void displayRectMap(std::array<std::string, 19> map);
             void initRectShape(std::string pattern, sf::Color color, int posX, int posY);
             arcade::KeyPressed checkKeyPressed(sf::Event event);
             void initWindow();
-            void initSprite(const char *imagePath, int xPos, int yPos) noexcept override {};
 
         protected:
         private:

@@ -77,7 +77,7 @@ bool arcade::SDL2::game(std::array<std::string, 19> map)
             _key = checkKeyPressed(event);
         }
     }
-    displayRectMap(map);
+    displayMap(map);
     SDL_RenderPresent(_renderer);
     SDL_RenderClear(_renderer);
     return false;
@@ -92,7 +92,7 @@ void arcade::SDL2::stop()
     SDL_Quit();
 }
 
-void arcade::SDL2::displayRectMap(std::array<std::string, 19> map)
+void arcade::SDL2::displayMap(std::array<std::string, 19> map)
 {
     size_t y = 0;
     std::string hay;
@@ -140,26 +140,6 @@ void arcade::SDL2::displayText(std::vector<std::string> textToDisplay)
     }
 }
 
-void arcade::SDL2::initSprite(const char *imagePath, int xPos, int yPos) noexcept
-{
-    SDL_Surface *spriteSurface = SDL_LoadBMP(imagePath);
-    if (!spriteSurface) {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(84);
-    }
-    SDL_Texture* spriteTexture = SDL_CreateTextureFromSurface(_renderer, spriteSurface);
-    if (!spriteTexture) {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(84);
-    }
-    SDL_FreeSurface(spriteSurface);
-
-    SDL_Rect spriteRect = {xPos, yPos, spriteSurface->w, spriteSurface->h};
-    SDL_RenderCopy(_renderer, spriteTexture, NULL, &spriteRect);
-    SDL_RenderPresent(_renderer);
-    SDL_DestroyTexture(spriteTexture);
-}
-
 void arcade::SDL2::pickColor(std::map<std::string, std::string> patternMap)
 {
     int posX = 0;
@@ -205,10 +185,4 @@ void arcade::SDL2::initRectShape(std::string pattern, short r, short g, short b,
 
     SDL_FreeSurface(spriteSurface);
     _charMap[pattern] = spriteTexture;
-}
-
-void arcade::SDL2::displayMap(std::array<std::string, 19> map)
-{
-    for (int i = 0; i != 19; i += 1)
-        std::cout << map[i] << std::endl;
 }
