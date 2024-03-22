@@ -9,8 +9,9 @@
 #include <iostream>
 #include "Core.hpp"
 
-arcade::Core::Core(std::string libPath, std::string gamePath) : _exit(false)
+arcade::Core::Core(std::string libPath) : _exit(false)
 {
+    std::string gamePath = "games/Nibbler/nibbler.so";
     _lib.push_back(openLib(libPath));
     _game.push_back(openGame(gamePath));
 }

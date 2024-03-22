@@ -41,7 +41,7 @@ void arcade::SDL2::init(std::map<std::string, std::string> pattern)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
     initWindow();
-    initFont("lib/sdl2/asset/font/OpenSans-Regular.ttf");
+    initFont("display/sdl2/asset/font/OpenSans-Regular.ttf");
     pickColor(pattern);
 }
 

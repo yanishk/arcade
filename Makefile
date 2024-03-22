@@ -8,26 +8,55 @@
 SRC =	core/Core.cpp 	\
 		main.cpp
 
-
 OBJ = $(SRC:.cpp=.o)
 
 CXX = g++
 
-CXXFLAGS = -I . -I lib/ -I game/
+CXXFLAGS = -I . -I display/ -I games/ -I core/
 
 NAME = arcade
 
-all : $(NAME)
+all: core games graphicals
+
+clean: games_clean graphicals_clean core_clean
+
+fclean: games_fclean graphicals_fclean core_fclean
+
+re: fclean all
+
+core: $(NAME)
 
 $(NAME):	$(OBJ)
 	$(CXX) -o $(NAME) $(OBJ)
 
-clean:
+core_clean:
 	$(RM) $(OBJ)
 
-fclean: clean
+core_fclean: core_clean
 	$(RM) $(NAME)
 
-re: fclean all
+games:
+	cd games/Nibbler && make
 
-.PHONY : all clean fclean re
+games_clean:
+	cd games/Nibbler && make clean
+
+games_fclean:
+	cd games/Nibbler && make fclean
+
+graphicals:
+	cd display/ncurses && make
+	cd display/sdl2 && make
+	cd display/sfml && make
+
+graphicals_clean:
+	cd display/ncurses && make clean
+	cd display/sdl2 && make clean
+	cd display/sfml && make clean
+
+graphicals_fclean:
+	cd display/ncurses && make fclean
+	cd display/sdl2 && make fclean
+	cd display/sfml && make fclean
+
+.PHONY :  all clean fclean re core games graphicals

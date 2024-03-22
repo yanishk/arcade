@@ -18,7 +18,7 @@ namespace arcade
     class Core
     {
         public:
-            Core(std::string libPath, std::string gamePath);
+            Core(std::string libPath);
             ~Core() = default;
 
             void initLoop(void);

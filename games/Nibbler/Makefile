@@ -5,31 +5,35 @@
 ## Makefile
 ##
 
-SRC = Sfml.cpp
+SRC = Nibbler.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
 CXX = g++
 
-CXXFLAGS = -fPIC -I /usr/include/SFML -I .. -I ../../
+CXXFLAGS = -fPIC -I .. -I ../../
 
 LDFLAGS = -shared
 
-LDLIBS = -lsfml-graphics -lsfml-window -lsfml-system
+LDLIBS = -lncurses
 
-NAME = sfml.so
+LIBPATH = ../../lib/
+
+NAME = nibbler.so
 
 all : $(NAME)
 
 $(NAME):	$(OBJ)
 	$(CXX) -c $(CXXFLAGS) $(SRC)
 	$(CXX) $(LDFLAGS) -o $(NAME) $(LDLIBS) $(OBJ)
+	cp $(NAME) $(LIBPATH)
 
 clean:
 	$(RM) $(OBJ)
 
 fclean: clean
 	$(RM) $(NAME)
+	$(RM) $(LIBPATH)/$(NAME)
 
 re: fclean all
 

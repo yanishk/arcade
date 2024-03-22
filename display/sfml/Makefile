@@ -5,31 +5,35 @@
 ## Makefile
 ##
 
-SRC = SDL2.cpp
+SRC = Sfml.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
 CXX = g++
 
-CXXFLAGS = -fPIC -I /usr/include/SDL2 -I .. -I ../../
+CXXFLAGS = -fPIC -I /usr/include/SFML -I .. -I ../../
 
 LDFLAGS = -shared
 
-LDLIBS = -lSDL2 -lSDL2_ttf
+LDLIBS = -lsfml-graphics -lsfml-window -lsfml-system
 
-NAME = sdl2.so
+LIBPATH = ../../lib/
+
+NAME = sfml.so
 
 all : $(NAME)
 
 $(NAME):	$(OBJ)
 	$(CXX) -c $(CXXFLAGS) $(SRC)
 	$(CXX) $(LDFLAGS) -o $(NAME) $(LDLIBS) $(OBJ)
+	cp $(NAME) $(LIBPATH)
 
 clean:
 	$(RM) $(OBJ)
 
 fclean: clean
 	$(RM) $(NAME)
+	$(RM) $(LIBPATH)/$(NAME)
 
 re: fclean all
 

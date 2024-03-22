@@ -5,25 +5,29 @@
 ## Makefile
 ##
 
-SRC = NCurses.cpp
+SRC =	core/Core.cpp 	\
+		main.cpp
+
 
 OBJ = $(SRC:.cpp=.o)
 
 CXX = g++
 
-CXXFLAGS = -fPIC -I .. -I ../../
+CXXFLAGS = -I . -I display/ -I games/ -I core/
 
-LDFLAGS = -shared
+NAME = arcade
 
-LDLIBS = -lncurses
+all: games
 
-NAME = ncurses.so
+#core
 
-all : $(NAME)
+#core: $(NAME)
 
-$(NAME):	$(OBJ)
-	$(CXX) -c $(CXXFLAGS) $(SRC)
-	$(CXX) $(LDFLAGS) -o $(NAME) $(LDLIBS) $(OBJ)
+#$(NAME):	$(OBJ)
+#	$(CXX) -o $(NAME) $(OBJ)
+
+games:
+	cd games/Nibbler && make re
 
 clean:
 	$(RM) $(OBJ)
