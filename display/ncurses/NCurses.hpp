@@ -23,7 +23,7 @@ namespace arcade
             void init(std::map<std::string, std::string>) override;
             void stop() override;
             bool game(std::array<std::string, 19> map) override;
-            void textDisplay(const std::string displayText, int xPos, int yPos) override;
+            void displayText(std::vector<std::string> textToDisplay) override;
             void initSprite(const char *imagePath, int xPos, int yPos) noexcept override {};
             void displayMap(std::array<std::string, 19> map) override;
             arcade::KeyPressed getKey() override;

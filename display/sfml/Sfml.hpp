@@ -23,7 +23,7 @@ namespace arcade
             void init(std::map<std::string, std::string> pattern) override;
             void stop() override;
             bool game(std::array<std::string, 19> map) override;
-            void textDisplay(const std::string displayText, int xPos, int yPos) override {};
+            void displayText(std::vector<std::string>) override;
             void displayMap(std::array<std::string, 19> map) override {};
             arcade::KeyPressed getKey() override;
             void setKey(arcade::KeyPressed newValue) override;
@@ -39,6 +39,7 @@ namespace arcade
             std::map<std::string, sf::RectangleShape> _charMap;
             sf::RenderWindow _window;
             KeyPressed _key;
+            sf::Font _font;
     };
 }
 

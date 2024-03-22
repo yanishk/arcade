@@ -33,15 +33,25 @@ bool arcade::NCurses::game(std::array<std::string, 19> map)
     return false;
 }
 
-void arcade::NCurses::textDisplay(const std::string displayText, int xPos, int yPos)
+void arcade::NCurses::displayText(std::vector<std::string> textToDisplay)
 {
-    mvprintw(xPos, yPos, "%s\n", displayText.c_str());
+    std::size_t xPos = 0;
+    std::size_t yPos = 0;
+
+    for (auto it : textToDisplay) {
+        mvprintw(xPos, yPos, "%s\n", it.c_str());
+        xPos += 50;
+    }
 }
 
 void arcade::NCurses::displayMap(std::array<std::string, 19> map)
 {
-    for (int i = 0; i != 19; i += 1)
-        mvprintw(i, 0, "%s\n", map[i].c_str());
+    int index = 1;
+
+    for (int i = 0; i != 19; i += 1) {
+        mvprintw(index, 0, "%s\n", map[i].c_str());
+        index += 1;
+    }
 }
 
 arcade::KeyPressed arcade::NCurses::checkKeyPressed(int key)

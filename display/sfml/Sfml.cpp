@@ -6,8 +6,6 @@
 */
 
 #include "Sfml.hpp"
-#include <SFML/Window.hpp>
-#include <iostream>
 
 void arcade::Sfml::initWindow()
 {
@@ -18,6 +16,8 @@ void arcade::Sfml::init(std::map<std::string, std::string> pattern)
 {
     initWindow();
     pickColor(pattern);
+    if (!_font.loadFromFile("display/sfml/asset/font/OpenSans-Regular.ttf"))
+        exit(84);
 }
 
 void arcade::Sfml::pickColor(std::map<std::string, std::string> patternMap)
@@ -70,6 +70,19 @@ void arcade::Sfml::displayRectMap(std::array<std::string, 19> map)
         yPos = 0;
         xPos += 50;
         y = 0;
+    }
+}
+
+void arcade::Sfml::displayText(std::vector<std::string> textToDisplay)
+{
+    sf::Text text;
+
+    for (auto it : textToDisplay) {
+        text.setFont(_font);
+        text.setString(it);
+        text.setCharacterSize(24);
+        text.setFillColor(sf::Color::White);
+        _window.draw(text);
     }
 }
 

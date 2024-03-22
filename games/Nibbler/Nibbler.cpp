@@ -38,7 +38,7 @@ arcade::Nibbler::Nibbler() : _score(0)
     _patternPath["8~"] = "Green";
     _patternPath["<="] = "Yellow";
 
-    _scoreText = "score:" + std::to_string(_score);
+    _scoreText = "score: " + std::to_string(_score);
     _textToDisplay.push_back(_scoreText);
 }
 
@@ -76,7 +76,7 @@ void arcade::Nibbler::goUp(std::size_t x, std::size_t y)
     }
     if (isFood(_map[x - 1][y - 1]) && isFood(_map[x - 1][y])) {
         _score += 100;
-        _scoreText = "score:" + std::to_string(_score);
+        _scoreText = "score: " + std::to_string(_score);
         _textToDisplay.pop_back();
         _textToDisplay.push_back(_scoreText);
     }
@@ -98,7 +98,7 @@ void arcade::Nibbler::goDown(std::size_t x, std::size_t y)
     }
     if (isFood(_map[x + 1][y - 1]) && isFood(_map[x + 1][y])) {
         _score += 100;
-        _scoreText = "score:" + std::to_string(_score);
+        _scoreText = "score: " + std::to_string(_score);
         _textToDisplay.pop_back();
         _textToDisplay.push_back(_scoreText);
     }
@@ -120,7 +120,7 @@ void arcade::Nibbler::goLeft(std::size_t x, std::size_t y)
     }
     if (isFood(_map[x][y - 2]) && isFood(_map[x][y - 3])) {
         _score += 100;
-        _scoreText = "score:" + std::to_string(_score);
+        _scoreText = "score: " + std::to_string(_score);
         _textToDisplay.pop_back();
         _textToDisplay.push_back(_scoreText);
     }
@@ -142,7 +142,7 @@ void arcade::Nibbler::goRight(std::size_t x, std::size_t y)
     }
     if (isFood(_map[x][y + 1]) && isFood(_map[x][y + 2])) {
         _score += 100;
-        _scoreText = "score:" + std::to_string(_score);
+        _scoreText = "score: " + std::to_string(_score);
         _textToDisplay.pop_back();
         _textToDisplay.push_back(_scoreText);
     }

@@ -6,8 +6,6 @@
 */
 
 #include "SDL2.hpp"
-#include <iostream>
-#include <vector>
 
 void arcade::SDL2::initWindow()
 {
@@ -79,7 +77,6 @@ bool arcade::SDL2::game(std::array<std::string, 19> map)
             _key = checkKeyPressed(event);
         }
     }
-    textDisplay("Arcade\n", 80, 100);
     displayRectMap(map);
     SDL_RenderPresent(_renderer);
     return false;
@@ -99,7 +96,7 @@ void arcade::SDL2::displayRectMap(std::array<std::string, 19> map)
     size_t y = 0;
     std::string hay;
     int xPos = 0;
-    int yPos = 0;
+    int yPos = 50;
 
     for (size_t x = 0; x != 19; x += 1) {
         while (y != 38) {
@@ -118,22 +115,28 @@ void arcade::SDL2::displayRectMap(std::array<std::string, 19> map)
     }
 }
 
-void arcade::SDL2::textDisplay(const std::string displayText, int xPos, int yPos)
+void arcade::SDL2::displayText(std::vector<std::string> textToDisplay)
 {
-    SDL_Color White = {255, 255, 255};
-    SDL_Surface *surfaceMsg = TTF_RenderText_Solid(_font, displayText.c_str(), White);
-    if (!surfaceMsg) {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(84);
+    int xPos = 0;
+    int yPos = 0;
+
+    for (auto it : textToDisplay) {
+        SDL_Color White = {255, 255, 255};
+        SDL_Surface *surfaceMsg = TTF_RenderText_Solid(_font, it.c_str(), White);
+        if (!surfaceMsg) {
+            std::cerr << SDL_GetError() << std::endl;
+            exit(84);
+        }
+        _message = SDL_CreateTextureFromSurface(_renderer, surfaceMsg);
+        if (!_message) {
+            std::cerr << SDL_GetError() << std::endl;
+            exit(84);
+        }
+        SDL_Rect Message_rect = {xPos, yPos, surfaceMsg->w, surfaceMsg->h};
+        SDL_FreeSurface(surfaceMsg);
+        SDL_RenderCopy(_renderer, _message, NULL, &Message_rect);
+        xPos += 50;
     }
-    _message = SDL_CreateTextureFromSurface(_renderer, surfaceMsg);
-    if (!_message) {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(84);
-    }
-    SDL_Rect Message_rect = {xPos, yPos, surfaceMsg->w, surfaceMsg->h};
-    SDL_FreeSurface(surfaceMsg);
-    SDL_RenderCopy(_renderer, _message, NULL, &Message_rect);
 }
 
 void arcade::SDL2::initSprite(const char *imagePath, int xPos, int yPos) noexcept
