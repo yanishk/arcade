@@ -21,12 +21,12 @@ void arcade::NCurses::stop()
     endwin();
 }
 
-void arcade::NCurses::game(std::array<std::string, 19> map)
+void arcade::NCurses::game(std::array<std::string, 19> map, std::size_t size)
 {
     std::size_t key;
 
     keypad(stdscr, TRUE);
-    displayMap(map);
+    displayMap(map, size);
     key = getch();
     _key = checkKeyPressed(key);
 }
@@ -74,15 +74,18 @@ void arcade::NCurses::pickColor(std::map<std::string, Color> patternMap)
 }
 
 
-void arcade::NCurses::displayMap(std::array<std::string, 19> map)
+void arcade::NCurses::displayMap(std::array<std::string, 19> map, std::size_t size)
 {
     int index = 1;
     std::string pattern;
     unsigned int colorChosen;
 
     for (std::size_t x = 0; x != map.size(); x += 1) {
-        for (std::size_t y = 0; y != map[0].size(); y += 2) {
-            pattern = std::string(1, map[x][y]) + std::string(1, map[x][y+1]);
+        for (std::size_t y = 0; y != map[0].size(); y += size) {
+            if (size == 2)
+                pattern = std::string(1, map[x][y]) + std::string(1, map[x][y+1]);
+            else
+                pattern = std::string(1, map[x][y]);
             auto it = _charMap.find(pattern);
             colorChosen = static_cast<int>(it->second);
             if (it != _charMap.end()) {

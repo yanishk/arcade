@@ -31,6 +31,7 @@ namespace arcade
             virtual std::pair<std::size_t, std::size_t> getPlayerHeadPos() = 0;
             virtual void updatePlayerPos() = 0;
             virtual bool updateMap(arcade::KeyPressed key) = 0;
+            virtual std::size_t getSize() = 0;
     };
 }
 

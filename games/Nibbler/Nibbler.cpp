@@ -40,6 +40,7 @@ arcade::Nibbler::Nibbler() : _score(0)
     _patternPath["<="] = YELLOW;
     _scoreText = "score: " + std::to_string(_score);
     _textToDisplay.push_back(_scoreText);
+    _sizeMap = 2;
 }
 
 void arcade::Nibbler::resetGame()
@@ -257,4 +258,9 @@ std::array<std::string, 19> arcade::Nibbler::getMap()
 std::map<std::string, arcade::Color> arcade::Nibbler::getPattern()
 {
     return _patternPath;
+}
+
+std::size_t arcade::Nibbler::getSize()
+{
+    return _sizeMap;
 }

@@ -23,7 +23,7 @@ arcade::Core::Core(std::string libPath)
         if (libName[index] != libPath)
             _lib.push_back(openLib(libName[index]));
     }
-    _game.push_back(openGame("lib/arcade_nibbler.so"));
+    _game.push_back(openGame("lib/arcade_pacman.so"));
 }
 
 arcade::IGameModule *arcade::Core::openGame(std::string path)
@@ -77,7 +77,7 @@ void arcade::Core::loop()
     _game[0]->stockPlayerPos();
     while (!exit) {
         _lib[index]->displayText(_game[0]->getText());
-        _lib[index]->game(_game[0]->getMap());
+        _lib[index]->game(_game[0]->getMap(), _game[0]->getSize());
         exit = _game[0]->updateMap(_lib[index]->getKey());
         if (_lib[index]->getKey() == N && index < 2) {
             _lib[index]->stop();

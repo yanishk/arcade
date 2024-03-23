@@ -49,7 +49,7 @@ void arcade::Sfml::pickColor(std::map<std::string, Color> patternMap)
     }
 }
 
-void arcade::Sfml::displayMap(std::array<std::string, 19> map)
+void arcade::Sfml::displayMap(std::array<std::string, 19> map, std::size_t size)
 {
     size_t y = 0;
     std::string hay;
@@ -58,14 +58,17 @@ void arcade::Sfml::displayMap(std::array<std::string, 19> map)
 
     for (size_t x = 0; x != map.size(); x += 1) {
         while (y != map[0].size()) {
-            hay = std::string(1, map[x][y]) + std::string(1, map[x][y+1]);
+            if (size == 2)
+                hay = std::string(1, map[x][y]) + std::string(1, map[x][y+1]);
+            else
+                hay = std::string(1, map[x][y]);
             auto it = _charMap.find(hay);
             if (it != _charMap.end()) {
                 it->second.setPosition(yPos, xPos);
                 _window.draw(it->second);
             }
             yPos += 50;
-            y += 2;
+            y += size;
         }
         yPos = 0;
         xPos += 50;
@@ -97,7 +100,7 @@ void arcade::Sfml::initRectShape(std::string pattern, sf::Color color, int posX,
     _charMap[pattern] = rect;
 }
 
-void arcade::Sfml::game(std::array<std::string, 19> map)
+void arcade::Sfml::game(std::array<std::string, 19> map, std::size_t size)
 {
     sf::Event event;
 
@@ -107,7 +110,7 @@ void arcade::Sfml::game(std::array<std::string, 19> map)
         if (event.type == sf::Event::KeyPressed)
             _key = checkKeyPressed(event);
     }
-    displayMap(map);
+    displayMap(map, size);
     _window.display();
     _window.clear();
 }

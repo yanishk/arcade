@@ -75,7 +75,7 @@ arcade::KeyPressed arcade::SDL2::getKey()
     return _key;
 }
 
-void arcade::SDL2::game(std::array<std::string, 19> map)
+void arcade::SDL2::game(std::array<std::string, 19> map, std::size_t size)
 {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -84,7 +84,7 @@ void arcade::SDL2::game(std::array<std::string, 19> map)
         if (event.type == SDL_KEYDOWN)
             _key = checkKeyPressed(event);
     }
-    displayMap(map);
+    displayMap(map, size);
     SDL_RenderPresent(_renderer);
     SDL_RenderClear(_renderer);
 }
@@ -98,7 +98,7 @@ void arcade::SDL2::stop()
     SDL_Quit();
 }
 
-void arcade::SDL2::displayMap(std::array<std::string, 19> map)
+void arcade::SDL2::displayMap(std::array<std::string, 19> map, std::size_t size)
 {
     size_t y = 0;
     std::string hay;
@@ -107,14 +107,17 @@ void arcade::SDL2::displayMap(std::array<std::string, 19> map)
 
     for (size_t x = 0; x != map.size(); x += 1) {
         while (y != map[0].size()) {
-            hay = std::string(1, map[x][y]) + std::string(1, map[x][y+1]);
+            if (size == 2)
+                hay = std::string(1, map[x][y]) + std::string(1, map[x][y+1]);
+            else
+                hay = std::string(1, map[x][y]);
             auto it = _charMap.find(hay);
             if (it != _charMap.end()) {
                 SDL_Rect spriteRect = {xPos, yPos, 50, 50};
                 SDL_RenderCopy(_renderer, it->second, NULL, &spriteRect);
             }
             xPos += 50;
-            y += 2;
+            y += size;
         }
         xPos = 0;
         yPos += 50;

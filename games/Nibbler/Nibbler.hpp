@@ -27,6 +27,7 @@ namespace arcade
             std::pair<std::size_t, std::size_t> getPlayerHeadPos() override;
             void updatePlayerPos() override;
             bool updateMap(arcade::KeyPressed key) override;
+            std::size_t getSize() override;
 
         private:
             bool checkWin();
@@ -45,6 +46,7 @@ namespace arcade
             std::size_t _score;
             std::string _scoreText;
             std::vector<std::string> _textToDisplay;
+            std::size_t _sizeMap;
     };
 }
 
