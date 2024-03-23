@@ -21,17 +21,14 @@ void arcade::NCurses::stop()
     endwin();
 }
 
-bool arcade::NCurses::game(std::array<std::string, 19> map)
+void arcade::NCurses::game(std::array<std::string, 19> map)
 {
-    int key;
+    std::size_t key;
 
     keypad(stdscr, TRUE);
-        displayMap(map);
-        key = getch();
-        if (key == 27)
-            return true;
-        _key = checkKeyPressed(key);
-    return false;
+    displayMap(map);
+    key = getch();
+    _key = checkKeyPressed(key);
 }
 
 void arcade::NCurses::displayText(std::vector<std::string> textToDisplay)
@@ -107,6 +104,10 @@ arcade::KeyPressed arcade::NCurses::checkKeyPressed(int key)
         return LEFT;
     if (key == KEY_RIGHT)
         return RIGHT;
+    if (std::toupper(key) == 'R')
+        return R_KEY;
+    if (key == KEY_BACKSPACE)
+        return BACKSPACE;
     return OTHER;
 }
 

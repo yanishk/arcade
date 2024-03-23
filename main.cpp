@@ -16,5 +16,5 @@ int main(int ac, char **av)
         return 84;
     }
     arcade::Core core(av[1]);
-    core.initLoop();
+    core.loop();
 }

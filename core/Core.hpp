@@ -21,8 +21,7 @@ namespace arcade
             Core(std::string libPath);
             ~Core() = default;
 
-            void initLoop();
-            void setExit(bool exit);
+            void loop();
             arcade::IDisplayModule *openLib(std::string path);
             arcade::IGameModule *openGame(std::string path);
         private:

@@ -53,6 +53,10 @@ arcade::KeyPressed arcade::SDL2::checkKeyPressed(SDL_Event event)
         return LEFT;
     if (event.key.keysym.sym == SDLK_RIGHT)
         return RIGHT;
+    if (event.key.keysym.sym == SDLK_r)
+        return R_KEY;
+    if (event.key.keysym.sym == SDLK_BACKSPACE)
+        return BACKSPACE;
     return OTHER;
 }
 
@@ -66,21 +70,18 @@ arcade::KeyPressed arcade::SDL2::getKey()
     return _key;
 }
 
-bool arcade::SDL2::game(std::array<std::string, 19> map)
+void arcade::SDL2::game(std::array<std::string, 19> map)
 {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
-        if (event.type == SDL_QUIT) {
-            return true;
-        }
-        if (event.type == SDL_KEYDOWN) {
+        if (event.type == SDL_QUIT)
+            _key = CLOSE_BUTTON;
+        if (event.type == SDL_KEYDOWN)
             _key = checkKeyPressed(event);
-        }
     }
     displayMap(map);
     SDL_RenderPresent(_renderer);
     SDL_RenderClear(_renderer);
-    return false;
 }
 
 void arcade::SDL2::stop()

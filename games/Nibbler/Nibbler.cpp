@@ -10,7 +10,7 @@
 
 arcade::Nibbler::Nibbler() : _score(0)
 {
-    _map = {
+    _defaultMap = {
         "######################################",
         "##    []      []      []      []    ##",
         "##  ######  ##  ######  ##  ######  ##",
@@ -31,12 +31,24 @@ arcade::Nibbler::Nibbler() : _score(0)
         "##            <=====8~              ##",
         "######################################"
     };
+    _map = _defaultMap;
     _patternPath["##"] = WHITE;
     _patternPath["  "] = BLACK;
     _patternPath["[]"] = RED;
     _patternPath["=="] = BLUE;
     _patternPath["8~"] = GREEN;
     _patternPath["<="] = YELLOW;
+    _scoreText = "score: " + std::to_string(_score);
+    _textToDisplay.push_back(_scoreText);
+}
+
+void arcade::Nibbler::resetGame()
+{
+    _map = _defaultMap;
+    _snakePos.clear();
+    stockPlayerPos();
+    _textToDisplay.clear();
+    _score = 0;
     _scoreText = "score: " + std::to_string(_score);
     _textToDisplay.push_back(_scoreText);
 }
@@ -53,9 +65,9 @@ bool arcade::Nibbler::isFood(char c)
 
 bool arcade::Nibbler::isSnakeBody(char firstChar, char secondChar)
 {
-    return (firstChar == '=' && secondChar == '=' ||
-        firstChar == '<' && secondChar == '=' ||
-        firstChar == '=' && secondChar == '<');
+    return ((firstChar == '=' && secondChar == '=') ||
+        (firstChar == '<' && secondChar == '=') ||
+        (firstChar == '=' && secondChar == '<'));
 }
 
 bool arcade::Nibbler::isNotSnakeNeck(std::size_t x, std::size_t y)
@@ -154,33 +166,37 @@ void arcade::Nibbler::goRight(std::size_t x, std::size_t y)
     }
 }
 
-void arcade::Nibbler::updateMap(arcade::KeyPressed key)
+bool arcade::Nibbler::updateMap(arcade::KeyPressed key)
 {
     std::pair<std::size_t, std::size_t> playerPos = getPlayerHeadPos();
 
     if (checkWin())
         exit(2);
-    if (key == arcade::UP)
+    if (key == UP)
         goUp(playerPos.first, playerPos.second);
-    if (key == arcade::DOWN)
+    if (key == DOWN)
         goDown(playerPos.first, playerPos.second);
-    if (key == arcade::LEFT)
+    if (key == LEFT)
         goLeft(playerPos.first, playerPos.second);
-    if (key == arcade::RIGHT)
+    if (key == RIGHT)
         goRight(playerPos.first, playerPos.second);
+    if (key == R_KEY)
+        resetGame();
+    if (key == BACKSPACE || key == CLOSE_BUTTON)
+        return true;
+    return false;
 }
 
 void arcade::Nibbler::updatePlayerPos()
 {
-    std::size_t i = _snakePos.size() - 1;
+    std::size_t i;
 
-    for (i; i > 1; i -= 1) {
+    for (i = _snakePos.size() - 1; i > 1; i -= 1) {
         _map[_snakePos[i].first][_snakePos[i].second] =
         _map[_snakePos[i - 2].first][_snakePos[i - 2].second];
     }
     _map[_snakePos[i].first][_snakePos[i].second] = ' ';
     _map[_snakePos[i].first][_snakePos[i].second - 1] = ' ';
-
     for (i = 0; i != _snakePos.size() - 2; i += 1) {
         _snakePos[i].first = _snakePos[i + 2].first;
         _snakePos[i].second = _snakePos[i + 2].second;

@@ -16,7 +16,10 @@ namespace arcade
         UP,
         DOWN,
         LEFT,
-        RIGHT
+        RIGHT,
+        R_KEY,
+        BACKSPACE,
+        CLOSE_BUTTON
     };
 }
 

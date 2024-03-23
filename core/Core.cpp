@@ -10,7 +10,7 @@
 #include "Core.hpp"
 #include "DLLoader.hpp"
 
-arcade::Core::Core(std::string libPath) : _exit(false)
+arcade::Core::Core(std::string libPath)
 {
     std::string gamePath = "lib/nibbler.so";
     _lib.push_back(openLib(libPath));
@@ -59,21 +59,18 @@ arcade::IDisplayModule *arcade::Core::openLib(std::string path)
     return (*cosine)();
 }
 
-void arcade::Core::initLoop()
+void arcade::Core::loop()
 {
+    bool exit = false;
+
     _lib[0]->init(_game[0]->getPattern());
     _game[0]->stockPlayerPos();
-    while (!_exit) {
+    while (!exit) {
         _lib[0]->displayText(_game[0]->getText());
-        _exit = _lib[0]->game(_game[0]->getMap());
-        _game[0]->updateMap(_lib[0]->getKey());
-        _lib[0]->setKey(arcade::KeyPressed::OTHER);
+        _lib[0]->game(_game[0]->getMap());
+        exit = _game[0]->updateMap(_lib[0]->getKey());
+        _lib[0]->setKey(OTHER);
     }
     _lib[0]->stop();
     dlclose(_lib[0]);
-}
-
-void arcade::Core::setExit(bool exit)
-{
-    _exit = exit;
 }
