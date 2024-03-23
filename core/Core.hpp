@@ -24,9 +24,11 @@ namespace arcade
             void loop();
             arcade::IDisplayModule *openLib(std::string path);
             arcade::IGameModule *openGame(std::string path);
+            void switchLibrary(std::string libPath);
         private:
             std::vector<arcade::IGameModule *> _game;
             std::vector<arcade::IDisplayModule *> _lib;
+            int _curentLib;
             bool _exit;
     };
 }

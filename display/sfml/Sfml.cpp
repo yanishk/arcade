@@ -131,6 +131,8 @@ arcade::KeyPressed arcade::Sfml::checkKeyPressed(sf::Event event)
         return R_KEY;
     if (event.key.code == sf::Keyboard::Backspace)
         return BACKSPACE;
+    if (event.key.code == sf::Keyboard::P)
+        return P;
     return OTHER;
 }
 

@@ -57,6 +57,8 @@ arcade::KeyPressed arcade::SDL2::checkKeyPressed(SDL_Event event)
         return R_KEY;
     if (event.key.keysym.sym == SDLK_BACKSPACE)
         return BACKSPACE;
+    if (event.key.keysym.sym == SDLK_p)
+        return P;
     return OTHER;
 }
 
@@ -170,7 +172,7 @@ void arcade::SDL2::pickColor(std::map<std::string, Color> patternMap)
     }
 }
 
-void arcade::SDL2::initRectShape(std::string pattern, short r, short g, short b, int posX, int posY)
+void arcade::SDL2::initRectShape(std::string pattern, short r, short g, short b, int, int)
 {
     SDL_Surface *spriteSurface = SDL_CreateRGBSurface(0, 780, 480, 32, 0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF);
     if (!spriteSurface) {

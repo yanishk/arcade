@@ -12,9 +12,18 @@
 
 arcade::Core::Core(std::string libPath)
 {
-    std::string gamePath = "lib/nibbler.so";
+    std::array<std::string, 3> libName =
+    {
+        "lib/sfml.so",
+        "lib/sdl2.so",
+        "lib/ncurses.so",
+    };
     _lib.push_back(openLib(libPath));
-    _game.push_back(openGame(gamePath));
+    for (std::size_t index = 0; index != 3; index += 1) {
+        if (libName[index] != libPath)
+            _lib.push_back(openLib(libName[index]));
+    }
+    _game.push_back(openGame("lib/nibbler.so"));
 }
 
 arcade::IGameModule *arcade::Core::openGame(std::string path)
@@ -62,15 +71,22 @@ arcade::IDisplayModule *arcade::Core::openLib(std::string path)
 void arcade::Core::loop()
 {
     bool exit = false;
+    int index = 0;
 
-    _lib[0]->init(_game[0]->getPattern());
+    _lib[index]->init(_game[0]->getPattern());
     _game[0]->stockPlayerPos();
     while (!exit) {
-        _lib[0]->displayText(_game[0]->getText());
-        _lib[0]->game(_game[0]->getMap());
-        exit = _game[0]->updateMap(_lib[0]->getKey());
-        _lib[0]->setKey(OTHER);
+        _lib[index]->displayText(_game[0]->getText());
+        _lib[index]->game(_game[0]->getMap());
+        if (_lib[index]->getKey() == 8 && index < 2) {
+            _lib[index]->stop();
+            dlclose(_lib[index]);
+            index ++;
+            _lib[index]->init(_game[0]->getPattern());
+        }
+        exit = _game[0]->updateMap(_lib[index]->getKey());
+        _lib[index]->setKey(OTHER);
     }
-    _lib[0]->stop();
-    dlclose(_lib[0]);
+    _lib[index]->stop();
+    dlclose(_lib[index]);
 }

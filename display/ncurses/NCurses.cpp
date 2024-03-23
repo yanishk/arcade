@@ -106,6 +106,8 @@ arcade::KeyPressed arcade::NCurses::checkKeyPressed(int key)
         return RIGHT;
     if (std::toupper(key) == 'R')
         return R_KEY;
+    if (std::toupper(key) == 'P')
+        return P;
     if (key == KEY_BACKSPACE)
         return BACKSPACE;
     return OTHER;
