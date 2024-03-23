@@ -15,8 +15,8 @@ arcade::Core::Core(std::string libPath)
     std::array<std::string, 3> libName =
     {
         "lib/sfml.so",
-        "lib/sdl2.so",
         "lib/ncurses.so",
+        "lib/sdl2.so",
     };
     _lib.push_back(openLib(libPath));
     for (std::size_t index = 0; index != 3; index += 1) {
@@ -78,21 +78,22 @@ void arcade::Core::loop()
     while (!exit) {
         _lib[index]->displayText(_game[0]->getText());
         _lib[index]->game(_game[0]->getMap());
+        exit = _game[0]->updateMap(_lib[index]->getKey());
         if (_lib[index]->getKey() == N && index < 2) {
+            std::cout << "NEXT" << std::endl;
             _lib[index]->stop();
-            dlclose(_lib[index]);
             index ++;
             _lib[index]->init(_game[0]->getPattern());
+            _lib[index]->setKey(OTHER);
         }
         if (_lib[index]->getKey() == P && index > 0) {
+            std::cout << "PREVIOUS" << std::endl;
             _lib[index]->stop();
-            dlclose(_lib[index]);
             index --;
             _lib[index]->init(_game[0]->getPattern());
+            _lib[index]->setKey(OTHER);
         }
-        exit = _game[0]->updateMap(_lib[index]->getKey());
         _lib[index]->setKey(OTHER);
     }
     _lib[index]->stop();
-    dlclose(_lib[index]);
 }

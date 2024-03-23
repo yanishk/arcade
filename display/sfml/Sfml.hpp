@@ -17,7 +17,7 @@ namespace arcade
 {
     class Sfml : virtual public IDisplayModule {
         public:
-            Sfml() = default;
+            Sfml() : _key(OTHER) {};
             ~Sfml() = default;
 
             void init(std::map<std::string, Color> pattern) override;

@@ -17,7 +17,7 @@ namespace arcade
     class NCurses : virtual public IDisplayModule
     {
         public:
-            NCurses() = default;
+            NCurses() : _key(OTHER) {};
             ~NCurses() = default;
 
             void init(std::map<std::string, Color> pattern) override;

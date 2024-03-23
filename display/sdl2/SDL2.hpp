@@ -19,7 +19,7 @@ namespace arcade
     class SDL2 : virtual public IDisplayModule
     {
         public:
-            SDL2() = default;
+            SDL2() : _key(OTHER) {};
             ~SDL2() = default;
 
             void init(std::map<std::string, Color> pattern) override;
