@@ -20,7 +20,8 @@ namespace arcade
         R_KEY,
         BACKSPACE,
         CLOSE_BUTTON,
-        P
+        P,
+        N
     };
 }
 

@@ -78,10 +78,16 @@ void arcade::Core::loop()
     while (!exit) {
         _lib[index]->displayText(_game[0]->getText());
         _lib[index]->game(_game[0]->getMap());
-        if (_lib[index]->getKey() == 8 && index < 2) {
+        if (_lib[index]->getKey() == N && index < 2) {
             _lib[index]->stop();
             dlclose(_lib[index]);
             index ++;
+            _lib[index]->init(_game[0]->getPattern());
+        }
+        if (_lib[index]->getKey() == P && index > 0) {
+            _lib[index]->stop();
+            dlclose(_lib[index]);
+            index --;
             _lib[index]->init(_game[0]->getPattern());
         }
         exit = _game[0]->updateMap(_lib[index]->getKey());
