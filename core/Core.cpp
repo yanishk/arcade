@@ -8,6 +8,7 @@
 #include <dlfcn.h>
 #include <iostream>
 #include "Core.hpp"
+#include "DLLoader.hpp"
 
 arcade::Core::Core(std::string libPath) : _exit(false)
 {
@@ -16,7 +17,7 @@ arcade::Core::Core(std::string libPath) : _exit(false)
     _game.push_back(openGame(gamePath));
 }
 
-std::pair<arcade::IGameModule *, void *> arcade::Core::openGame(std::string path)
+arcade::IGameModule *arcade::Core::openGame(std::string path)
 {
     arcade::IGameModule *(*cosine)(void);
     char *error;
@@ -34,10 +35,10 @@ std::pair<arcade::IGameModule *, void *> arcade::Core::openGame(std::string path
         fprintf(stderr, "%s\n", error);
         exit(84);
     }
-    return std::make_pair((*cosine)(), handle);
+    return (*cosine)();
 }
 
-std::pair<arcade::IDisplayModule *, void *> arcade::Core::openLib(std::string path)
+arcade::IDisplayModule *arcade::Core::openLib(std::string path)
 {
     arcade::IDisplayModule *(*cosine)(void);
     char *error;
@@ -55,21 +56,21 @@ std::pair<arcade::IDisplayModule *, void *> arcade::Core::openLib(std::string pa
         fprintf(stderr, "%s\n", error);
         exit(84);
     }
-    return std::make_pair((*cosine)(), handle);
+    return (*cosine)();
 }
 
 void arcade::Core::initLoop()
 {
-    _lib[0].first->init(_game[0].first->getPattern());
-    _game[0].first->stockPlayerPos();
+    _lib[0]->init(_game[0]->getPattern());
+    _game[0]->stockPlayerPos();
     while (!_exit) {
-        _lib[0].first->displayText(_game[0].first->getText());
-        _exit = _lib[0].first->game(_game[0].first->getMap());
-        _game[0].first->updateMap(_lib[0].first->getKey());
-        _lib[0].first->setKey(OTHER);
+        _lib[0]->displayText(_game[0]->getText());
+        _exit = _lib[0]->game(_game[0]->getMap());
+        _game[0]->updateMap(_lib[0]->getKey());
+        _lib[0]->setKey(arcade::KeyPressed::OTHER);
     }
-    _lib[0].first->stop();
-    dlclose(_lib[0].second);
+    _lib[0]->stop();
+    dlclose(_lib[0]);
 }
 
 void arcade::Core::setExit(bool exit)
