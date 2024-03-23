@@ -19,7 +19,7 @@ LDLIBS = -lsfml-graphics -lsfml-window -lsfml-system
 
 LIBPATH = ../../lib/
 
-NAME = sfml.so
+NAME = arcade_sfml.so
 
 all : $(NAME)
 

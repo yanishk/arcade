@@ -19,7 +19,7 @@ LDLIBS = -lncurses
 
 LIBPATH = ../../lib/
 
-NAME = ncurses.so
+NAME = arcade_ncurses.so
 
 all : $(NAME)
 

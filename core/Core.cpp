@@ -14,16 +14,16 @@ arcade::Core::Core(std::string libPath)
 {
     std::array<std::string, 3> libName =
     {
-        "lib/sfml.so",
-        "lib/ncurses.so",
-        "lib/sdl2.so",
+        "lib/arcade_ncurses.so",
+        "lib/arcade_sdl2.so",
+        "lib/arcade_sfml.so",
     };
     _lib.push_back(openLib(libPath));
     for (std::size_t index = 0; index != 3; index += 1) {
         if (libName[index] != libPath)
             _lib.push_back(openLib(libName[index]));
     }
-    _game.push_back(openGame("lib/nibbler.so"));
+    _game.push_back(openGame("lib/arcade_nibbler.so"));
 }
 
 arcade::IGameModule *arcade::Core::openGame(std::string path)
@@ -80,14 +80,12 @@ void arcade::Core::loop()
         _lib[index]->game(_game[0]->getMap());
         exit = _game[0]->updateMap(_lib[index]->getKey());
         if (_lib[index]->getKey() == N && index < 2) {
-            std::cout << "NEXT" << std::endl;
             _lib[index]->stop();
             index ++;
             _lib[index]->init(_game[0]->getPattern());
             _lib[index]->setKey(OTHER);
         }
         if (_lib[index]->getKey() == P && index > 0) {
-            std::cout << "PREVIOUS" << std::endl;
             _lib[index]->stop();
             index --;
             _lib[index]->init(_game[0]->getPattern());

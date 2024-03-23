@@ -19,7 +19,7 @@ LDLIBS = -lSDL2 -lSDL2_ttf
 
 LIBPATH = ../../lib/
 
-NAME = sdl2.so
+NAME = arcade_sdl2.so
 
 all : $(NAME)
 

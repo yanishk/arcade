@@ -15,17 +15,15 @@ CXXFLAGS = -fPIC -I .. -I ../../include -Wall -Wextra -g
 
 LDFLAGS = -shared
 
-LDLIBS = -lncurses
-
 LIBPATH = ../../lib/
 
-NAME = nibbler.so
+NAME = arcade_nibbler.so
 
 all : $(NAME)
 
 $(NAME):	$(OBJ)
 	$(CXX) -c $(CXXFLAGS) $(SRC)
-	$(CXX) $(LDFLAGS) -o $(NAME) $(LDLIBS) $(OBJ)
+	$(CXX) $(LDFLAGS) -o $(NAME) $(OBJ)
 	cp $(NAME) $(LIBPATH)
 
 clean:

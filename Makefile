@@ -37,12 +37,15 @@ core_fclean: core_clean
 
 games:
 	cd games/Nibbler && make
+	cd games/Pacman && make
 
 games_clean:
 	cd games/Nibbler && make clean
+	cd games/Pacman && make clean
 
 games_fclean:
 	cd games/Nibbler && make fclean
+	cd games/Pacman && make fclean
 
 graphicals:
 	cd display/ncurses && make
