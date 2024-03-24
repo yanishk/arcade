@@ -93,7 +93,6 @@ void arcade::Core::loop()
     auto clockT0 = std::chrono::steady_clock::now();
 
     _lib[index]->init(_game[0]->getPattern());
-    _game[0]->stockPlayerPos();
     while (!exit) {
         _lib[index]->displayText(_game[0]->getText());
         _lib[index]->game(_game[0]->getMap(), _game[0]->getSize());

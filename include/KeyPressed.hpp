@@ -17,7 +17,7 @@ namespace arcade
         DOWN,
         LEFT,
         RIGHT,
-        R_KEY,
+        R,
         BACKSPACE,
         CLOSE_BUTTON,
         P,

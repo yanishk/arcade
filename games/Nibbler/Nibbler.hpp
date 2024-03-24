@@ -23,23 +23,35 @@ namespace arcade
             std::array<std::string, 19> getMap() override;
             std::map<std::string, Color> getPattern() override;
             std::vector<std::string> getText() override;
-            void stockPlayerPos() override;
-            std::pair<std::size_t, std::size_t> getPlayerHeadPos() override;
-            void updatePlayerPos() override;
+            std::size_t getSize() override;
             bool updateMap(arcade::KeyPressed key) override;
             KeyPressed nextPlayerMove() override;
-            std::size_t getSize() override;
 
         private:
-            bool checkWin();
             void goUp(std::size_t x, std::size_t y);
             void goDown(std::size_t x, std::size_t y);
             void goLeft(std::size_t x, std::size_t y);
             void goRight(std::size_t x, std::size_t y);
+            void stockPlayerPos();
+            std::pair<std::size_t, std::size_t> getPlayerHeadPos();
+            void updatePlayerPos(std::pair <std::size_t, std::size_t> newCell1,
+                std::pair <std::size_t, std::size_t> newCell2,
+                std::pair<std::size_t, std::size_t> playerHead);
+            void increaseScore();
+            void growSnakeTail(std::pair <std::size_t, std::size_t> snakeTailCell1,
+                std::pair <std::size_t, std::size_t> snakeTailCell2);
             bool isFree(char c);
-            bool isFood(char c);
+            bool isFood(char firstChar, char secondChar);
             bool isSnakeBody(char firstChar, char secondChar);
-            bool isNotSnakeNeck(std::size_t x, std::size_t y);
+            bool isNeckPattern1(std::pair <std::size_t, std::size_t> cell1,
+                    std::pair <std::size_t, std::size_t> cell2);
+            bool isNeckPattern2(std::pair <std::size_t, std::size_t> cell1,
+                std::pair <std::size_t, std::size_t> cell2);
+            bool isSnakeNeck(std::pair <std::size_t, std::size_t> cell1,
+                std::pair <std::size_t, std::size_t> cell2);
+            bool checkLoose(std::pair <std::size_t, std::size_t> cell1,
+                std::pair <std::size_t, std::size_t> cell2);
+            bool checkWin();
             bool isTJunction(std::size_t x,  std::size_t y);
             bool isTJunctionUp(std::size_t x,  std::size_t y);
             bool isTJunctionDown(std::size_t x,  std::size_t y);
@@ -47,7 +59,6 @@ namespace arcade
             bool isTJunctionLeft(std::size_t x,  std::size_t y);
             KeyPressed playerMoveStatus(arcade::KeyPressed lastMove,
                 std::size_t x, std::size_t y);
-
             std::array<std::string, 19> _defaultMap;
             std::array<std::string, 19> _map;
             std::map<std::string, Color> _patternPath;

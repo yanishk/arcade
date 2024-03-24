@@ -41,6 +41,7 @@ arcade::Nibbler::Nibbler() : _score(0)
     _scoreText = "score: " + std::to_string(_score);
     _textToDisplay.push_back(_scoreText);
     _sizeMap = 2;
+    stockPlayerPos();
 }
 
 void arcade::Nibbler::resetGame()
@@ -54,14 +55,35 @@ void arcade::Nibbler::resetGame()
     _textToDisplay.push_back(_scoreText);
 }
 
+std::array<std::string, 19> arcade::Nibbler::getMap()
+{
+    return _map;
+}
+
+std::map<std::string, arcade::Color> arcade::Nibbler::getPattern()
+{
+    return _patternPath;
+}
+
+std::vector<std::string> arcade::Nibbler::getText()
+{
+    return _textToDisplay;
+}
+
+std::size_t arcade::Nibbler::getSize()
+{
+    return _sizeMap;
+}
+
 bool arcade::Nibbler::isFree(char c)
 {
     return (c == ' ' || c == '[' || c == ']');
 }
 
-bool arcade::Nibbler::isFood(char c)
+bool arcade::Nibbler::isFood(char firstChar, char secondChar)
 {
-    return (c == '[' || c == ']');
+    return ((firstChar == '[' && secondChar == ']') ||
+        (secondChar == '[' && firstChar == ']'));
 }
 
 bool arcade::Nibbler::isSnakeBody(char firstChar, char secondChar)
@@ -69,6 +91,49 @@ bool arcade::Nibbler::isSnakeBody(char firstChar, char secondChar)
     return ((firstChar == '=' && secondChar == '=') ||
         (firstChar == '<' && secondChar == '=') ||
         (firstChar == '=' && secondChar == '<'));
+}
+
+bool arcade::Nibbler::isNeckPattern1(std::pair <std::size_t, std::size_t> cell1,
+    std::pair <std::size_t, std::size_t> cell2)
+{
+    return (_snakePos[_snakePos.size() - 3].first == cell1.first &&
+        _snakePos[_snakePos.size() - 3].second == cell1.second &&
+        _snakePos[_snakePos.size() - 4].first == cell2.first &&
+        _snakePos[_snakePos.size() - 4].second == cell2.second);
+}
+
+bool arcade::Nibbler::isNeckPattern2(std::pair <std::size_t, std::size_t> cell1,
+    std::pair <std::size_t, std::size_t> cell2)
+{
+    return (_snakePos[_snakePos.size() - 3].first == cell2.first &&
+        _snakePos[_snakePos.size() - 3].second == cell2.second &&
+        _snakePos[_snakePos.size() - 4].first == cell1.first &&
+        _snakePos[_snakePos.size() - 4].second == cell1.second);
+}
+
+bool arcade::Nibbler::isSnakeNeck(std::pair <std::size_t, std::size_t> cell1,
+    std::pair <std::size_t, std::size_t> cell2)
+{
+    return (isNeckPattern1(cell1, cell2) || isNeckPattern2(cell1, cell2));
+}
+
+bool arcade::Nibbler::checkLoose(std::pair <std::size_t, std::size_t> cell1,
+    std::pair <std::size_t, std::size_t> cell2)
+{
+    return (isSnakeBody(_map[cell1.first][cell1.second],
+        _map[cell2.first][cell2.second]) && !isSnakeNeck(cell1, cell2));
+}
+
+bool arcade::Nibbler::checkWin()
+{
+    for (std::size_t i = 0; i != _map.size(); i += 1) {
+        for (std::size_t y = 0; y != _map[0].size(); y += 1) {
+            if (_map[i][y] == '[' || _map[i][y] == ']') {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 bool arcade::Nibbler::isTJunctionUp(std::size_t x,  std::size_t y)
@@ -104,99 +169,191 @@ bool arcade::Nibbler::isTJunction(std::size_t x,  std::size_t y)
         isTJunctionRight(x,y) || isTJunctionLeft(x,y));
 }
 
-bool arcade::Nibbler::isNotSnakeNeck(std::size_t x, std::size_t y)
+void arcade::Nibbler::increaseScore()
 {
-    return (_snakePos[_snakePos.size() - 3].first != x &&
-    _snakePos[_snakePos.size() - 3].second != y &&
-    _snakePos[_snakePos.size() - 4].first != x &&
-    _snakePos[_snakePos.size() - 4].second != y);
+    _score += 100;
+    _scoreText = "score: " + std::to_string(_score);
+    _textToDisplay.pop_back();
+    _textToDisplay.push_back(_scoreText);
+}
+
+void arcade::Nibbler::growSnakeTail(std::pair <std::size_t, std::size_t> snakeTailCell1,
+    std::pair <std::size_t, std::size_t> snakeTailCell2)
+{
+    _map[_snakePos[0].first][_snakePos[0].second] = '=';
+    _map[snakeTailCell1.first][snakeTailCell1.second] = '<';
+    _map[snakeTailCell2.first][snakeTailCell2.second] =  '=';
+    _snakePos.insert(_snakePos.begin(),
+        std::make_pair(snakeTailCell2.first, snakeTailCell2.second));
+    _snakePos.insert(_snakePos.begin(),
+        std::make_pair(snakeTailCell1.first, snakeTailCell1.second));
 }
 
 void arcade::Nibbler::goUp(std::size_t x, std::size_t y)
 {
-    if (isSnakeBody(_map[x - 1][y - 1], _map[x - 1][y]) &&
-        isNotSnakeNeck((x - 1), (y - 1)) &&
-        isNotSnakeNeck((x - 1), (y))) {
+    bool foodEaten = false;
+    std::pair <std::size_t, std::size_t> snakeTailCell1 =
+    std::make_pair(_snakePos[0].first, _snakePos[0].second);
+    std::pair <std::size_t, std::size_t> snakeTailCell2 =
+    std::make_pair(_snakePos[1].first, _snakePos[1].second);
+
+    if (checkLoose(std::make_pair(x - 1, y - 1), std::make_pair(x - 1, y)))
         exit(1);
-    }
-    if (isFood(_map[x - 1][y - 1]) && isFood(_map[x - 1][y])) {
-        _score += 100;
-        _scoreText = "score: " + std::to_string(_score);
-        _textToDisplay.pop_back();
-        _textToDisplay.push_back(_scoreText);
+    if (isFood(_map[x - 1][y - 1], _map[x - 1][y])) {
+        foodEaten = true;
+        increaseScore();
     }
     if (isFree(_map[x - 1][y - 1]) && isFree(_map[x - 1][y])) {
-        _map[x - 1][y - 1] = _map[x][y - 1];
-        _map[x - 1][y] = _map[x][y];
-        updatePlayerPos();
+        updatePlayerPos(std::make_pair(x - 1, y - 1),
+            std::make_pair(x - 1, y), std::make_pair(x, y));
         _snakePos[_snakePos.size() - 1].first -= 1;
         _snakePos[_snakePos.size() - 2].first -= 1;
     }
+    if (foodEaten)
+        growSnakeTail(snakeTailCell1, snakeTailCell2);
 }
 
 void arcade::Nibbler::goDown(std::size_t x, std::size_t y)
 {
-    if (isSnakeBody(_map[x + 1][y - 1], _map[x + 1][y]) &&
-        isNotSnakeNeck((x + 1), (y - 1)) &&
-        isNotSnakeNeck((x + 1), (y))) {
+    bool foodEaten = false;
+    std::pair <std::size_t, std::size_t> snakeTailCell1 =
+    std::make_pair(_snakePos[0].first, _snakePos[0].second);
+    std::pair <std::size_t, std::size_t> snakeTailCell2 =
+    std::make_pair(_snakePos[1].first, _snakePos[1].second);
+
+    if (checkLoose(std::make_pair(x + 1, y - 1), std::make_pair(x + 1, y)))
         exit(1);
-    }
-    if (isFood(_map[x + 1][y - 1]) && isFood(_map[x + 1][y])) {
-        _score += 100;
-        _scoreText = "score: " + std::to_string(_score);
-        _textToDisplay.pop_back();
-        _textToDisplay.push_back(_scoreText);
+    if (isFood(_map[x + 1][y - 1], _map[x + 1][y])) {
+        foodEaten = true;
+        increaseScore();
     }
     if (isFree(_map[x + 1][y - 1]) && isFree(_map[x + 1][y])) {
-        _map[x + 1][y - 1] = _map[x][y - 1];
-        _map[x + 1][y] = _map[x][y];
-        updatePlayerPos();
+        updatePlayerPos(std::make_pair(x + 1, y - 1),
+            std::make_pair(x + 1, y), std::make_pair(x, y));
         _snakePos[_snakePos.size() - 1].first += 1;
         _snakePos[_snakePos.size() - 2].first += 1;
     }
+    if (foodEaten)
+        growSnakeTail(snakeTailCell1, snakeTailCell2);
 }
 
 void arcade::Nibbler::goLeft(std::size_t x, std::size_t y)
 {
-    if (isSnakeBody(_map[x][y - 2], _map[x][y - 3]) &&
-        isNotSnakeNeck((x), (y - 2)) &&
-        isNotSnakeNeck((x), (y - 3))) {
+    bool foodEaten = false;
+    std::pair <std::size_t, std::size_t> snakeTailCell1 =
+    std::make_pair(_snakePos[0].first, _snakePos[0].second);
+    std::pair <std::size_t, std::size_t> snakeTailCell2 =
+    std::make_pair(_snakePos[1].first, _snakePos[1].second);
+
+    if (checkLoose(std::make_pair(x, y - 3), std::make_pair(x, y - 2)))
         exit(1);
-    }
-    if (isFood(_map[x][y - 2]) && isFood(_map[x][y - 3])) {
-        _score += 100;
-        _scoreText = "score: " + std::to_string(_score);
-        _textToDisplay.pop_back();
-        _textToDisplay.push_back(_scoreText);
+    if (isFood(_map[x][y - 2], _map[x][y - 3])) {
+        foodEaten = true;
+        increaseScore();
     }
     if (isFree(_map[x][y - 2]) && isFree(_map[x][y - 3])) {
-        _map[x][y - 2] = _map[x][y];
-        _map[x][y - 3] = _map[x][y - 1];
-        updatePlayerPos();
+        updatePlayerPos(std::make_pair(x, y - 3),
+            std::make_pair(x, y - 2), std::make_pair(x, y));
         _snakePos[_snakePos.size() - 1].second -= 2;
         _snakePos[_snakePos.size() - 2].second -= 2;
     }
+    if (foodEaten)
+        growSnakeTail(snakeTailCell1, snakeTailCell2);
 }
 
 void arcade::Nibbler::goRight(std::size_t x, std::size_t y)
 {
-    if (isSnakeBody(_map[x][y + 1], _map[x][y + 2]) &&
-        isNotSnakeNeck((x), (y + 1)) &&
-        isNotSnakeNeck((x), (y + 2))) {
+    bool foodEaten = false;
+    std::pair <std::size_t, std::size_t> snakeTailCell1 =
+    std::make_pair(_snakePos[0].first, _snakePos[0].second);
+    std::pair <std::size_t, std::size_t> snakeTailCell2 =
+    std::make_pair(_snakePos[1].first, _snakePos[1].second);
+
+    if (checkLoose(std::make_pair(x, y + 1), std::make_pair(x, y + 2)))
         exit(1);
-    }
-    if (isFood(_map[x][y + 1]) && isFood(_map[x][y + 2])) {
-        _score += 100;
-        _scoreText = "score: " + std::to_string(_score);
-        _textToDisplay.pop_back();
-        _textToDisplay.push_back(_scoreText);
+    if (isFood(_map[x][y + 1], _map[x][y + 2])) {
+        foodEaten = true;
+        increaseScore();
     }
     if (isFree(_map[x][y + 1]) && isFree(_map[x][y + 2])) {
-        _map[x][y + 2] = _map[x][y];
-        _map[x][y + 1] = _map[x][y - 1];
-        updatePlayerPos();
+        updatePlayerPos(std::make_pair(x, y + 1),
+            std::make_pair(x, y + 2), std::make_pair(x, y));
         _snakePos[_snakePos.size() - 1].second += 2;
         _snakePos[_snakePos.size() - 2].second += 2;
+    }
+    if (foodEaten)
+        growSnakeTail(snakeTailCell1, snakeTailCell2);
+}
+
+void arcade::Nibbler::updatePlayerPos(std::pair<std::size_t, std::size_t> newCell1,
+    std::pair<std::size_t, std::size_t> newCell2,
+    std::pair<std::size_t, std::size_t> playerHead)
+{
+    std::size_t i;
+
+    _map[newCell1.first][newCell1.second] =
+        _map[playerHead.first][playerHead.second - 1];
+    _map[newCell2.first][newCell2.second] =
+        _map[playerHead.first][playerHead.second];
+    for (i = _snakePos.size() - 1; i > 1; i -= 1) {
+        _map[_snakePos[i].first][_snakePos[i].second] =
+        _map[_snakePos[i - 2].first][_snakePos[i - 2].second];
+    }
+    _map[_snakePos[i].first][_snakePos[i].second] = ' ';
+    _map[_snakePos[i].first][_snakePos[i].second - 1] = ' ';
+    for (i = 0; i != _snakePos.size() - 2; i += 1) {
+        _snakePos[i].first = _snakePos[i + 2].first;
+        _snakePos[i].second = _snakePos[i + 2].second;
+    }
+}
+
+std::pair<std::size_t, std::size_t> arcade::Nibbler::getPlayerHeadPos()
+{
+    std::size_t i = 0;
+    std::size_t y = 0;
+
+    for (i = 0; i != _map.size(); i += 1) {
+        for (y = 0; y != _map[0].size(); y += 1) {
+            if (_map[i][y] == '~') {
+                return std::make_pair(i, y);
+            }
+        }
+    }
+    return std::make_pair(i, y);
+}
+
+bool arcade::Nibbler::updateMap(arcade::KeyPressed key)
+{
+    std::pair<std::size_t, std::size_t> playerPos = getPlayerHeadPos();
+
+    if (checkWin())
+        exit(2);
+    if (key == UP)
+        goUp(playerPos.first, playerPos.second);
+    if (key == DOWN)
+        goDown(playerPos.first, playerPos.second);
+    if (key == LEFT)
+        goLeft(playerPos.first, playerPos.second);
+    if (key == RIGHT)
+        goRight(playerPos.first, playerPos.second);
+    if (key == R)
+        resetGame();
+    if (key == BACKSPACE || key == CLOSE_BUTTON)
+        return true;
+    return false;
+}
+
+void arcade::Nibbler::stockPlayerPos()
+{
+    for (std::size_t i = 0; i != _map.size(); i += 1) {
+        for (std::size_t y = 0; y != _map[0].size(); y += 1) {
+            if (_map[i][y] == '<' ||
+                _map[i][y] == '='||
+                _map[i][y] == '8' ||
+                _map[i][y] == '~' ) {
+                    _snakePos.push_back(std::make_pair(i, y));
+            }
+        }
     }
 }
 
@@ -244,102 +401,4 @@ arcade::KeyPressed arcade::Nibbler::nextPlayerMove()
     if (isFree(_map[x + 1][y - 1]) && isFree(_map[x + 1][y]))
         lastMove = DOWN;
     return lastMove;
-}
-
-bool arcade::Nibbler::updateMap(arcade::KeyPressed key)
-{
-    std::pair<std::size_t, std::size_t> playerPos = getPlayerHeadPos();
-
-    if (checkWin())
-        exit(2);
-    if (key == UP)
-        goUp(playerPos.first, playerPos.second);
-    if (key == DOWN)
-        goDown(playerPos.first, playerPos.second);
-    if (key == LEFT)
-        goLeft(playerPos.first, playerPos.second);
-    if (key == RIGHT)
-        goRight(playerPos.first, playerPos.second);
-    if (key == R_KEY)
-        resetGame();
-    if (key == BACKSPACE || key == CLOSE_BUTTON)
-        return true;
-    return false;
-}
-
-void arcade::Nibbler::updatePlayerPos()
-{
-    std::size_t i;
-
-    for (i = _snakePos.size() - 1; i > 1; i -= 1) {
-        _map[_snakePos[i].first][_snakePos[i].second] =
-        _map[_snakePos[i - 2].first][_snakePos[i - 2].second];
-    }
-    _map[_snakePos[i].first][_snakePos[i].second] = ' ';
-    _map[_snakePos[i].first][_snakePos[i].second - 1] = ' ';
-    for (i = 0; i != _snakePos.size() - 2; i += 1) {
-        _snakePos[i].first = _snakePos[i + 2].first;
-        _snakePos[i].second = _snakePos[i + 2].second;
-    }
-}
-
-void arcade::Nibbler::stockPlayerPos()
-{
-    for (std::size_t i = 0; i != _map.size(); i += 1) {
-        for (std::size_t y = 0; y != _map[0].size(); y += 1) {
-            if (_map[i][y] == '<' ||
-                _map[i][y] == '='||
-                _map[i][y] == '8' ||
-                _map[i][y] == '~' ) {
-                    _snakePos.push_back(std::make_pair(i, y));
-            }
-        }
-    }
-}
-
-bool arcade::Nibbler::checkWin()
-{
-    for (std::size_t i = 0; i != _map.size(); i += 1) {
-        for (std::size_t y = 0; y != _map[0].size(); y += 1) {
-            if (_map[i][y] == '[' || _map[i][y] == ']') {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
-std::pair<std::size_t, std::size_t> arcade::Nibbler::getPlayerHeadPos()
-{
-    std::size_t i = 0;
-    std::size_t y = 0;
-
-    for (i = 0; i != _map.size(); i += 1) {
-        for (y = 0; y != _map[0].size(); y += 1) {
-            if (_map[i][y] == '~') {
-                return std::make_pair(i, y);
-            }
-        }
-    }
-    return std::make_pair(i, y);
-}
-
-std::vector<std::string> arcade::Nibbler::getText()
-{
-    return _textToDisplay;
-}
-
-std::array<std::string, 19> arcade::Nibbler::getMap()
-{
-    return _map;
-}
-
-std::map<std::string, arcade::Color> arcade::Nibbler::getPattern()
-{
-    return _patternPath;
-}
-
-std::size_t arcade::Nibbler::getSize()
-{
-    return _sizeMap;
 }

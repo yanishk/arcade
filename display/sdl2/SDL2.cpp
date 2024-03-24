@@ -54,7 +54,7 @@ arcade::KeyPressed arcade::SDL2::checkKeyPressed(SDL_Event event)
     if (event.key.keysym.sym == SDLK_RIGHT)
         return RIGHT;
     if (event.key.keysym.sym == SDLK_r)
-        return R_KEY;
+        return R;
     if (event.key.keysym.sym == SDLK_BACKSPACE)
         return BACKSPACE;
     if (event.key.keysym.sym == SDLK_n)
