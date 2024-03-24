@@ -57,11 +57,11 @@ std::vector<std::string> arcade::Pacman::getText()
     return _textToDisplay;
 }
 
-bool arcade::Pacman::updateMap(arcade::KeyPressed key)
+arcade::GameStatus arcade::Pacman::updateMap(arcade::KeyPressed key)
 {
     if (key == BACKSPACE || key == CLOSE_BUTTON)
-        return true;
-    return false;
+        return QUIT;
+    return PLAYING;
 }
 
 std::array<std::string, 19> arcade::Pacman::getMap()

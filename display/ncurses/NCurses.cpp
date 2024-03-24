@@ -35,7 +35,7 @@ void arcade::NCurses::displayText(std::vector<std::string> textToDisplay)
     std::size_t yPos = 0;
 
     for (auto it : textToDisplay) {
-        attron(COLOR_PAIR(BLACK));
+        attron(COLOR_PAIR(WHITE_TEXT));
         mvprintw(xPos, yPos, "%s\n", it.c_str());
         xPos += 50;
     }
@@ -43,6 +43,7 @@ void arcade::NCurses::displayText(std::vector<std::string> textToDisplay)
 
 void arcade::NCurses::pickColor(std::map<std::string, Color> patternMap)
 {
+    init_pair(WHITE_TEXT, COLOR_WHITE, COLOR_BLACK);
     for (auto it = patternMap.begin(); it != patternMap.end(); it++) {
         if (it->second == BLACK) {
             _charMap[it->first] = BLACK;

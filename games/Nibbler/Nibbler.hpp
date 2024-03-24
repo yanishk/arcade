@@ -24,14 +24,14 @@ namespace arcade
             std::map<std::string, Color> getPattern() override;
             std::vector<std::string> getText() override;
             std::size_t getSize() override;
-            bool updateMap(arcade::KeyPressed key) override;
+            GameStatus updateMap(KeyPressed key) override;
             KeyPressed nextPlayerMove() override;
 
         private:
-            void goUp(std::size_t x, std::size_t y);
-            void goDown(std::size_t x, std::size_t y);
-            void goLeft(std::size_t x, std::size_t y);
-            void goRight(std::size_t x, std::size_t y);
+            GameStatus goUp(std::size_t x, std::size_t y);
+            GameStatus goDown(std::size_t x, std::size_t y);
+            GameStatus goLeft(std::size_t x, std::size_t y);
+            GameStatus goRight(std::size_t x, std::size_t y);
             void stockPlayerPos();
             std::pair<std::size_t, std::size_t> getPlayerHeadPos();
             void updatePlayerPos(std::pair <std::size_t, std::size_t> newCell1,

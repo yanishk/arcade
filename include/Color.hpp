@@ -17,7 +17,8 @@ namespace arcade
         RED = 3,
         BLUE = 4,
         GREEN = 5,
-        YELLOW = 6
+        YELLOW = 6,
+        WHITE_TEXT = 7
     };
 }
 

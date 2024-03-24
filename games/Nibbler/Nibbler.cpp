@@ -189,7 +189,7 @@ void arcade::Nibbler::growSnakeTail(std::pair <std::size_t, std::size_t> snakeTa
         std::make_pair(snakeTailCell1.first, snakeTailCell1.second));
 }
 
-void arcade::Nibbler::goUp(std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Nibbler::goUp(std::size_t x, std::size_t y)
 {
     bool foodEaten = false;
     std::pair <std::size_t, std::size_t> snakeTailCell1 =
@@ -198,7 +198,7 @@ void arcade::Nibbler::goUp(std::size_t x, std::size_t y)
     std::make_pair(_snakePos[1].first, _snakePos[1].second);
 
     if (checkLoose(std::make_pair(x - 1, y - 1), std::make_pair(x - 1, y)))
-        exit(1);
+        return LOOSE;
     if (isFood(_map[x - 1][y - 1], _map[x - 1][y])) {
         foodEaten = true;
         increaseScore();
@@ -211,9 +211,10 @@ void arcade::Nibbler::goUp(std::size_t x, std::size_t y)
     }
     if (foodEaten)
         growSnakeTail(snakeTailCell1, snakeTailCell2);
+    return PLAYING;
 }
 
-void arcade::Nibbler::goDown(std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Nibbler::goDown(std::size_t x, std::size_t y)
 {
     bool foodEaten = false;
     std::pair <std::size_t, std::size_t> snakeTailCell1 =
@@ -222,7 +223,7 @@ void arcade::Nibbler::goDown(std::size_t x, std::size_t y)
     std::make_pair(_snakePos[1].first, _snakePos[1].second);
 
     if (checkLoose(std::make_pair(x + 1, y - 1), std::make_pair(x + 1, y)))
-        exit(1);
+        return LOOSE;
     if (isFood(_map[x + 1][y - 1], _map[x + 1][y])) {
         foodEaten = true;
         increaseScore();
@@ -235,9 +236,10 @@ void arcade::Nibbler::goDown(std::size_t x, std::size_t y)
     }
     if (foodEaten)
         growSnakeTail(snakeTailCell1, snakeTailCell2);
+    return PLAYING;
 }
 
-void arcade::Nibbler::goLeft(std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Nibbler::goLeft(std::size_t x, std::size_t y)
 {
     bool foodEaten = false;
     std::pair <std::size_t, std::size_t> snakeTailCell1 =
@@ -246,7 +248,7 @@ void arcade::Nibbler::goLeft(std::size_t x, std::size_t y)
     std::make_pair(_snakePos[1].first, _snakePos[1].second);
 
     if (checkLoose(std::make_pair(x, y - 3), std::make_pair(x, y - 2)))
-        exit(1);
+        return LOOSE;
     if (isFood(_map[x][y - 2], _map[x][y - 3])) {
         foodEaten = true;
         increaseScore();
@@ -259,9 +261,10 @@ void arcade::Nibbler::goLeft(std::size_t x, std::size_t y)
     }
     if (foodEaten)
         growSnakeTail(snakeTailCell1, snakeTailCell2);
+    return PLAYING;
 }
 
-void arcade::Nibbler::goRight(std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Nibbler::goRight(std::size_t x, std::size_t y)
 {
     bool foodEaten = false;
     std::pair <std::size_t, std::size_t> snakeTailCell1 =
@@ -270,7 +273,7 @@ void arcade::Nibbler::goRight(std::size_t x, std::size_t y)
     std::make_pair(_snakePos[1].first, _snakePos[1].second);
 
     if (checkLoose(std::make_pair(x, y + 1), std::make_pair(x, y + 2)))
-        exit(1);
+        return LOOSE;
     if (isFood(_map[x][y + 1], _map[x][y + 2])) {
         foodEaten = true;
         increaseScore();
@@ -283,6 +286,7 @@ void arcade::Nibbler::goRight(std::size_t x, std::size_t y)
     }
     if (foodEaten)
         growSnakeTail(snakeTailCell1, snakeTailCell2);
+    return PLAYING;
 }
 
 void arcade::Nibbler::updatePlayerPos(std::pair<std::size_t, std::size_t> newCell1,
@@ -322,25 +326,25 @@ std::pair<std::size_t, std::size_t> arcade::Nibbler::getPlayerHeadPos()
     return std::make_pair(i, y);
 }
 
-bool arcade::Nibbler::updateMap(arcade::KeyPressed key)
+arcade::GameStatus arcade::Nibbler::updateMap(arcade::KeyPressed key)
 {
     std::pair<std::size_t, std::size_t> playerPos = getPlayerHeadPos();
 
     if (checkWin())
-        exit(2);
+        return WON;
+    if (key == BACKSPACE || key == CLOSE_BUTTON)
+        return QUIT;
     if (key == UP)
-        goUp(playerPos.first, playerPos.second);
+        return goUp(playerPos.first, playerPos.second);
     if (key == DOWN)
-        goDown(playerPos.first, playerPos.second);
+        return goDown(playerPos.first, playerPos.second);
     if (key == LEFT)
-        goLeft(playerPos.first, playerPos.second);
+        return goLeft(playerPos.first, playerPos.second);
     if (key == RIGHT)
-        goRight(playerPos.first, playerPos.second);
+        return goRight(playerPos.first, playerPos.second);
     if (key == R)
         resetGame();
-    if (key == BACKSPACE || key == CLOSE_BUTTON)
-        return true;
-    return false;
+    return PLAYING;
 }
 
 void arcade::Nibbler::stockPlayerPos()

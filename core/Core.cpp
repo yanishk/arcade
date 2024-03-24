@@ -88,16 +88,16 @@ void arcade::Core::managePlayerAutoMoves(std::chrono::steady_clock::time_point &
 
 void arcade::Core::loop()
 {
-    bool exit = false;
+    GameStatus status;
     int index = 0;
     auto clockT0 = std::chrono::steady_clock::now();
 
     _lib[index]->init(_game[0]->getPattern());
-    while (!exit) {
+    while (status == PLAYING) {
         _lib[index]->displayText(_game[0]->getText());
         _lib[index]->game(_game[0]->getMap(), _game[0]->getSize());
         managePlayerAutoMoves(clockT0, index);
-        exit = _game[0]->updateMap(_lib[index]->getKey());
+        status = _game[0]->updateMap(_lib[index]->getKey());
         if (_lib[index]->getKey() == N && index < 2) {
             _lib[index]->stop();
             index++;

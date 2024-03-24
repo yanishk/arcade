@@ -122,6 +122,8 @@ void arcade::Sfml::setKey(arcade::KeyPressed newValue)
 
 arcade::KeyPressed arcade::Sfml::checkKeyPressed(sf::Event event)
 {
+    if (event.key.code == sf::Keyboard::Backspace)
+        return BACKSPACE;
     if (event.key.code == sf::Keyboard::Up)
         return UP;
     if (event.key.code == sf::Keyboard::Down)
@@ -132,8 +134,6 @@ arcade::KeyPressed arcade::Sfml::checkKeyPressed(sf::Event event)
         return RIGHT;
     if (event.key.code == sf::Keyboard::R)
         return R;
-    if (event.key.code == sf::Keyboard::Backspace)
-        return BACKSPACE;
     if (event.key.code == sf::Keyboard::P)
         return P;
     if (event.key.code == sf::Keyboard::N)

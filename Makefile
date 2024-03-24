@@ -5,8 +5,8 @@
 ## Makefile
 ##
 
-SRC =	core/Core.cpp 	\
-		main.cpp
+SRC =	core/Core.cpp 		\
+		main.cpp			\
 
 OBJ = $(SRC:.cpp=.o)
 

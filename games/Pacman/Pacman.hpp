@@ -21,7 +21,7 @@ namespace arcade
             std::array<std::string, 19> getMap() override;
             std::map<std::string, Color> getPattern() override;
             std::vector<std::string> getText() override;
-            bool updateMap(arcade::KeyPressed key) override;
+            GameStatus updateMap(arcade::KeyPressed key) override;
             KeyPressed nextPlayerMove() override { return OTHER; };
             std::size_t getSize() override;
 

@@ -45,6 +45,8 @@ void arcade::SDL2::init(std::map<std::string, Color> pattern)
 
 arcade::KeyPressed arcade::SDL2::checkKeyPressed(SDL_Event event)
 {
+    if (event.key.keysym.sym == SDLK_BACKSPACE)
+        return BACKSPACE;
     if (event.key.keysym.sym == SDLK_UP)
         return UP;
     if (event.key.keysym.sym == SDLK_DOWN)
@@ -55,13 +57,10 @@ arcade::KeyPressed arcade::SDL2::checkKeyPressed(SDL_Event event)
         return RIGHT;
     if (event.key.keysym.sym == SDLK_r)
         return R;
-    if (event.key.keysym.sym == SDLK_BACKSPACE)
-        return BACKSPACE;
-    if (event.key.keysym.sym == SDLK_n)
-        return N;
     if (event.key.keysym.sym == SDLK_p)
         return P;
-
+    if (event.key.keysym.sym == SDLK_n)
+        return N;
     return OTHER;
 }
 
