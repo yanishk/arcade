@@ -71,6 +71,39 @@ bool arcade::Nibbler::isSnakeBody(char firstChar, char secondChar)
         (firstChar == '=' && secondChar == '<'));
 }
 
+bool arcade::Nibbler::isTJunctionUp(std::size_t x,  std::size_t y)
+{
+    return (_map[x - 1][y] == '#' &&
+        _map[x][y - 2] == ' ' &&
+        _map[x][y + 1] == ' ');
+}
+bool arcade::Nibbler::isTJunctionDown(std::size_t x,  std::size_t y)
+{
+    return (_map[x + 1][y] == '#' &&
+        _map[x][y - 2] == ' ' &&
+        _map[x][y + 1] == ' ');
+}
+
+bool arcade::Nibbler::isTJunctionRight(std::size_t x,  std::size_t y)
+{
+    return (_map[x][y - 2] == '#' &&
+        _map[x + 1][y] == ' ' &&
+        _map[x - 1][y] == ' ');
+}
+
+bool arcade::Nibbler::isTJunctionLeft(std::size_t x,  std::size_t y)
+{
+    return (_map[x][y + 1] == '#' &&
+        _map[x + 1][y] == ' ' &&
+        _map[x - 1][y] == ' ');
+}
+
+bool arcade::Nibbler::isTJunction(std::size_t x,  std::size_t y)
+{
+    return (isTJunctionUp(x,y) || isTJunctionDown(x,y) ||
+        isTJunctionRight(x,y) || isTJunctionLeft(x,y));
+}
+
 bool arcade::Nibbler::isNotSnakeNeck(std::size_t x, std::size_t y)
 {
     return (_snakePos[_snakePos.size() - 3].first != x &&
@@ -165,6 +198,52 @@ void arcade::Nibbler::goRight(std::size_t x, std::size_t y)
         _snakePos[_snakePos.size() - 1].second += 2;
         _snakePos[_snakePos.size() - 2].second += 2;
     }
+}
+
+arcade::KeyPressed arcade::Nibbler::playerMoveStatus(arcade::KeyPressed lastMove,
+    std::size_t x, std::size_t y)
+{
+    if (lastMove == RIGHT) {
+        if (isFree(_map[x][y + 1]) && isFree(_map[x][y + 2]))
+            return RIGHT;
+    }
+    if (lastMove == UP) {
+        if (isFree(_map[x - 1][y - 1]) && isFree(_map[x - 1][y]))
+            return UP;
+    }
+    if (lastMove == LEFT) {
+        if (isFree(_map[x][y - 2]) && isFree(_map[x][y - 3]))
+            return LEFT;
+    }
+    if (lastMove == DOWN) {
+        if (isFree(_map[x + 1][y - 1]) && isFree(_map[x + 1][y]))
+            return DOWN;
+    }
+    return OTHER;
+}
+
+arcade::KeyPressed arcade::Nibbler::nextPlayerMove()
+{
+    std::pair<std::size_t, std::size_t> playerPos = getPlayerHeadPos();
+    std::size_t x = playerPos.first;
+    std::size_t y = playerPos.second;
+    static KeyPressed lastMove;
+    KeyPressed playerStatus;
+
+    if (isTJunction(x, y))
+        return OTHER;
+    playerStatus = playerMoveStatus(lastMove, x, y);
+    if (playerStatus != OTHER)
+        return playerStatus;
+    if (isFree(_map[x][y + 1]) && isFree(_map[x][y + 2]))
+        lastMove = RIGHT;
+    if (isFree(_map[x - 1][y - 1]) && isFree(_map[x - 1][y]))
+        lastMove = UP;
+    if (isFree(_map[x][y - 2]) && isFree(_map[x][y - 3]))
+        lastMove = LEFT;
+    if (isFree(_map[x + 1][y - 1]) && isFree(_map[x + 1][y]))
+        lastMove = DOWN;
+    return lastMove;
 }
 
 bool arcade::Nibbler::updateMap(arcade::KeyPressed key)

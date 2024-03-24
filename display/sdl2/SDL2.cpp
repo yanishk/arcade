@@ -131,7 +131,7 @@ void arcade::SDL2::displayText(std::vector<std::string> textToDisplay)
     int yPos = 0;
 
     for (auto it : textToDisplay) {
-        SDL_Color White = {255, 255, 255};
+        SDL_Color White = {255, 255, 255, 255};
         SDL_Surface *surfaceMsg = TTF_RenderText_Solid(_font, it.c_str(), White);
         if (!surfaceMsg) {
             std::cerr << SDL_GetError() << std::endl;

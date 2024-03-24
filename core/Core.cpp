@@ -23,7 +23,7 @@ arcade::Core::Core(std::string libPath)
         if (libName[index] != libPath)
             _lib.push_back(openLib(libName[index]));
     }
-    _game.push_back(openGame("lib/arcade_pacman.so"));
+    _game.push_back(openGame("lib/arcade_nibbler.so"));
 }
 
 arcade::IGameModule *arcade::Core::openGame(std::string path)
@@ -68,28 +68,46 @@ arcade::IDisplayModule *arcade::Core::openLib(std::string path)
     return (*cosine)();
 }
 
+void arcade::Core::managePlayerAutoMoves(std::chrono::steady_clock::time_point &clockT0, int index)
+{
+    KeyPressed autoMove;
+    unsigned int msTimer = 100;
+    auto clockT1 = std::chrono::steady_clock::now();
+    auto timeElapsed = std::chrono::duration_cast
+        <std::chrono::milliseconds>(clockT1 - clockT0);
+
+    if (timeElapsed.count() > msTimer) {
+        autoMove = _game[0]->nextPlayerMove();
+        _lib[index]->setKey(autoMove);
+        clockT0 = std::chrono::steady_clock::now();
+    }
+    if (timeElapsed.count() < msTimer &&
+        _lib[index]->getKey() == autoMove)
+        _lib[index]->setKey(OTHER);
+}
+
 void arcade::Core::loop()
 {
     bool exit = false;
     int index = 0;
+    auto clockT0 = std::chrono::steady_clock::now();
 
     _lib[index]->init(_game[0]->getPattern());
     _game[0]->stockPlayerPos();
     while (!exit) {
         _lib[index]->displayText(_game[0]->getText());
         _lib[index]->game(_game[0]->getMap(), _game[0]->getSize());
+        managePlayerAutoMoves(clockT0, index);
         exit = _game[0]->updateMap(_lib[index]->getKey());
         if (_lib[index]->getKey() == N && index < 2) {
             _lib[index]->stop();
-            index ++;
+            index++;
             _lib[index]->init(_game[0]->getPattern());
-            _lib[index]->setKey(OTHER);
         }
         if (_lib[index]->getKey() == P && index > 0) {
             _lib[index]->stop();
-            index --;
+            index--;
             _lib[index]->init(_game[0]->getPattern());
-            _lib[index]->setKey(OTHER);
         }
         _lib[index]->setKey(OTHER);
     }

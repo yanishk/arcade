@@ -25,6 +25,7 @@ namespace arcade
             std::pair<std::size_t, std::size_t> getPlayerHeadPos() override {};
             void updatePlayerPos() override {};
             bool updateMap(arcade::KeyPressed key) override;
+            KeyPressed nextPlayerMove() override { return OTHER; };
             std::size_t getSize() override;
 
         protected:

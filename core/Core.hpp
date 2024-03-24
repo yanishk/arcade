@@ -10,6 +10,7 @@
 
 #include <string>
 #include <vector>
+#include <chrono>
 #include "IDisplayModule.hpp"
 #include "IGameModule.hpp"
 
@@ -26,6 +27,7 @@ namespace arcade
             arcade::IGameModule *openGame(std::string path);
             void switchLibrary(std::string libPath);
         private:
+            void managePlayerAutoMoves(std::chrono::steady_clock::time_point &clockT0, int index);
             std::vector<arcade::IGameModule *> _game;
             std::vector<arcade::IDisplayModule *> _lib;
             int _curentLib;

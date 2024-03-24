@@ -27,6 +27,7 @@ namespace arcade
             std::pair<std::size_t, std::size_t> getPlayerHeadPos() override;
             void updatePlayerPos() override;
             bool updateMap(arcade::KeyPressed key) override;
+            KeyPressed nextPlayerMove() override;
             std::size_t getSize() override;
 
         private:
@@ -39,14 +40,22 @@ namespace arcade
             bool isFood(char c);
             bool isSnakeBody(char firstChar, char secondChar);
             bool isNotSnakeNeck(std::size_t x, std::size_t y);
-            std::array<std::string, 19> _map;
+            bool isTJunction(std::size_t x,  std::size_t y);
+            bool isTJunctionUp(std::size_t x,  std::size_t y);
+            bool isTJunctionDown(std::size_t x,  std::size_t y);
+            bool isTJunctionRight(std::size_t x,  std::size_t y);
+            bool isTJunctionLeft(std::size_t x,  std::size_t y);
+            KeyPressed playerMoveStatus(arcade::KeyPressed lastMove,
+                std::size_t x, std::size_t y);
+
             std::array<std::string, 19> _defaultMap;
+            std::array<std::string, 19> _map;
             std::map<std::string, Color> _patternPath;
-            std::vector <std::pair<std::size_t, std::size_t>> _snakePos;
-            std::size_t _score;
-            std::string _scoreText;
-            std::vector<std::string> _textToDisplay;
             std::size_t _sizeMap;
+            std::vector <std::pair<std::size_t, std::size_t>> _snakePos;
+            std::vector<std::string> _textToDisplay;
+            std::string _scoreText;
+            std::size_t _score;
     };
 }
 

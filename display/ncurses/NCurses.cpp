@@ -11,6 +11,8 @@ void arcade::NCurses::init(std::map<std::string, Color> pattern)
 {
     initscr();
     noecho();
+    keypad(stdscr, TRUE);
+    nodelay(stdscr, TRUE);
     start_color();
     curs_set(false);
     pickColor(pattern);
@@ -23,12 +25,8 @@ void arcade::NCurses::stop()
 
 void arcade::NCurses::game(std::array<std::string, 19> map, std::size_t size)
 {
-    std::size_t key;
-
-    keypad(stdscr, TRUE);
     displayMap(map, size);
-    key = getch();
-    _key = checkKeyPressed(key);
+    _key = checkKeyPressed(getch());
 }
 
 void arcade::NCurses::displayText(std::vector<std::string> textToDisplay)
@@ -73,7 +71,6 @@ void arcade::NCurses::pickColor(std::map<std::string, Color> patternMap)
     }
 }
 
-
 void arcade::NCurses::displayMap(std::array<std::string, 19> map, std::size_t size)
 {
     int index = 1;
@@ -94,7 +91,6 @@ void arcade::NCurses::displayMap(std::array<std::string, 19> map, std::size_t si
             }
         }
     }
-
 }
 
 arcade::KeyPressed arcade::NCurses::checkKeyPressed(int key)
