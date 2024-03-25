@@ -22,7 +22,7 @@ namespace arcade
             std::array<std::string, 21> getMap() override;
             std::size_t getMapCellSize() override;
             std::map<std::string, Color> getPattern() override;
-            std::vector<std::string> getText() override;
+            std::vector<std::pair<std::string, std::pair<int, int>>> getText() override;
             GameStatus updateMap(arcade::KeyPressed key) override;
             KeyPressed nextPlayerMove() override { return OTHER; };
 
@@ -31,7 +31,7 @@ namespace arcade
             std::array<std::string, 21> _map;
             std::map<std::string, Color> _patternPath;
             std::size_t _sizeCell;
-            std::vector<std::string> _textToDisplay;
+            std::vector<std::pair<std::string, std::pair<int, int>>> _textToDisplay;
             std::string _scoreText;
             std::size_t _score;
     };

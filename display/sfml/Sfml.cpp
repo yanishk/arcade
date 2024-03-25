@@ -76,15 +76,16 @@ void arcade::Sfml::displayMap(std::array<std::string, 21> map, std::size_t size)
     }
 }
 
-void arcade::Sfml::displayText(std::vector<std::string> textToDisplay)
+void arcade::Sfml::displayText(std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay)
 {
     sf::Text text;
 
     for (auto it : textToDisplay) {
         text.setFont(_font);
-        text.setString(it);
+        text.setString(it.first);
         text.setCharacterSize(24);
         text.setFillColor(sf::Color::White);
+        text.setPosition(it.second.first, it.second.second);
         _window.draw(text);
     }
 }

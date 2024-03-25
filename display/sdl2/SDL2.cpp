@@ -125,14 +125,11 @@ void arcade::SDL2::displayMap(std::array<std::string, 21> map, std::size_t size)
     }
 }
 
-void arcade::SDL2::displayText(std::vector<std::string> textToDisplay)
+void arcade::SDL2::displayText(std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay)
 {
-    int xPos = 0;
-    int yPos = 0;
-
     for (auto it : textToDisplay) {
         SDL_Color White = {255, 255, 255, 255};
-        SDL_Surface *surfaceMsg = TTF_RenderText_Solid(_font, it.c_str(), White);
+        SDL_Surface *surfaceMsg = TTF_RenderText_Solid(_font, it.first.c_str(), White);
         if (!surfaceMsg) {
             std::cerr << SDL_GetError() << std::endl;
             exit(84);
@@ -142,10 +139,9 @@ void arcade::SDL2::displayText(std::vector<std::string> textToDisplay)
             std::cerr << SDL_GetError() << std::endl;
             exit(84);
         }
-        SDL_Rect Message_rect = {xPos, yPos, surfaceMsg->w, surfaceMsg->h};
+        SDL_Rect Message_rect = {it.second.first, it.second.second, surfaceMsg->w, surfaceMsg->h};
         SDL_FreeSurface(surfaceMsg);
         SDL_RenderCopy(_renderer, _message, NULL, &Message_rect);
-        xPos += 40;
     }
 }
 

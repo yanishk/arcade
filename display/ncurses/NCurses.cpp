@@ -36,15 +36,11 @@ void arcade::NCurses::game()
     _key = checkKeyPressed(getch());
 }
 
-void arcade::NCurses::displayText(std::vector<std::string> textToDisplay)
+void arcade::NCurses::displayText(std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay)
 {
-    std::size_t xPos = 0;
-    std::size_t yPos = 0;
-
     for (auto it : textToDisplay) {
         attron(COLOR_PAIR(WHITE_TEXT));
-        mvprintw(xPos, yPos, "%s\n", it.c_str());
-        xPos += 50;
+        mvprintw((it.second.first * 0.04), (it.second.second * 0.01), "%s\n", it.first.c_str());
     }
 }
 

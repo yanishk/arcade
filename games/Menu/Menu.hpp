@@ -15,20 +15,30 @@ namespace arcade
     class Menu : virtual public IGameModule
     {
         public:
-            Menu()= default;
+            Menu();
             ~Menu() = default;
 
             void resetGame() override {};
-            std::array<std::string, 21> getMap() override {};
-            std::map<std::string, Color> getPattern() override {};
-            std::vector<std::string> getText()  override {};
-            GameStatus updateMap(arcade::KeyPressed key) override {};
-            KeyPressed nextPlayerMove() override {};
-            std::size_t getMapCellSize() override {};
+            std::array<std::string, 21> getMap() override;
+            std::map<std::string, Color> getPattern() override;
+            std::vector<std::pair<std::string, std::pair<int, int>>> getText() override;
+            GameStatus updateMap(arcade::KeyPressed key) override;
+            KeyPressed nextPlayerMove() override;
+            std::size_t getMapCellSize() override;
 
         private:
-            std::vector<std::string> _textToDisplay;
+            std::vector<std::pair<std::string, std::pair<int, int>>> _textToDisplay;
+            std::array<std::string, 21> _map;
+            std::map<std::string, arcade::Color> _patternPath;
+            std::size_t _sizeCell;
     };
+}
+
+extern "C"
+{
+    arcade::Menu* entryPoint() {
+        return new arcade::Menu;
+    }
 }
 
 #endif /* !MENU_HPP_ */

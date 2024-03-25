@@ -41,7 +41,7 @@ arcade::Nibbler::Nibbler() : _score(0)
     _patternPath["8~"] = GREEN;
     _patternPath["<="] = YELLOW;
     _scoreText = "score: " + std::to_string(_score);
-    _textToDisplay.push_back(_scoreText);
+    _textToDisplay.push_back(std::make_pair(_scoreText, std::make_pair(0, 0)));
     _sizeCell = 2;
     stockPlayerPos();
 }
@@ -54,7 +54,7 @@ void arcade::Nibbler::resetGame()
     _textToDisplay.clear();
     _score = 0;
     _scoreText = "score: " + std::to_string(_score);
-    _textToDisplay.push_back(_scoreText);
+    _textToDisplay.push_back(std::make_pair(_scoreText, std::make_pair(0, 0)));
 }
 
 std::array<std::string, 21> arcade::Nibbler::getMap()
@@ -67,7 +67,7 @@ std::map<std::string, arcade::Color> arcade::Nibbler::getPattern()
     return _patternPath;
 }
 
-std::vector<std::string> arcade::Nibbler::getText()
+std::vector<std::pair<std::string, std::pair<int, int>>> arcade::Nibbler::getText()
 {
     return _textToDisplay;
 }
@@ -176,7 +176,7 @@ void arcade::Nibbler::increaseScore()
     _score += 100;
     _scoreText = "score: " + std::to_string(_score);
     _textToDisplay.pop_back();
-    _textToDisplay.push_back(_scoreText);
+    _textToDisplay.push_back(std::make_pair(_scoreText, std::make_pair(0, 0)));
 }
 
 void arcade::Nibbler::growSnakeTail(std::pair <std::size_t, std::size_t> snakeTailCell1,
@@ -392,6 +392,7 @@ arcade::KeyPressed arcade::Nibbler::nextPlayerMove()
     std::size_t y = playerPos.second;
     static KeyPressed lastMove;
     KeyPressed playerStatus;
+
     playerStatus = playerMoveStatus(lastMove, x, y);
     if (playerStatus != OTHER)
         return playerStatus;

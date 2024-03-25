@@ -39,7 +39,7 @@ arcade::Pacman::Pacman() : _score(0)
     _patternPath["!"] = RED;
     _patternPath["P"] = YELLOW;
     _scoreText = "score: " + std::to_string(_score);
-    _textToDisplay.push_back(_scoreText);
+    _textToDisplay.push_back(std::make_pair(_scoreText, std::make_pair(0, 0)));
     _sizeCell = 1;
 
 }
@@ -54,7 +54,7 @@ std::size_t arcade::Pacman::getMapCellSize()
     return _sizeCell;
 }
 
-std::vector<std::string> arcade::Pacman::getText()
+std::vector<std::pair<std::string, std::pair<int, int>>> arcade::Pacman::getText()
 {
     return _textToDisplay;
 }
