@@ -22,9 +22,9 @@ namespace arcade
 
             void init(std::map<std::string, Color> pattern) override;
             void stop() override;
-            void game(std::array<std::string, 19> map, std::size_t size) override;
+            void game(std::array<std::string, 21> map, std::size_t size) override;
             void displayText(std::vector<std::string> textToDisplay) override;
-            void displayMap(std::array<std::string, 19> map, std::size_t size) override;
+            void displayMap(std::array<std::string, 21> map, std::size_t size) override;
             arcade::KeyPressed getKey() override;
             void setKey(arcade::KeyPressed newValue) override;
             void pickColor(std::map<std::string, Color> patternMap) override;

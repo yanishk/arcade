@@ -25,7 +25,7 @@ namespace arcade
             ~IGameModule() = default;
 
             virtual void resetGame() = 0;
-            virtual std::array<std::string, 19> getMap() = 0;
+            virtual std::array<std::string, 21> getMap() = 0;
             virtual std::map<std::string, Color> getPattern() = 0;
             virtual std::vector<std::string> getText() = 0;
             virtual GameStatus updateMap(arcade::KeyPressed key) = 0;

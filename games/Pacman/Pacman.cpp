@@ -28,7 +28,9 @@ arcade::Pacman::Pacman() : _score(0)
         " #!.#.....P.....#.!# ",
         " ##.#.#.#####.#.#.## ",
         " #....#...#...#....# ",
-        " #.######.#.######.# "
+        " #.######.#.######.# ",
+        " #.................# ",
+        " ################### "
     };
     _map = _defaultMap;
     _patternPath["#"] = BLUE;
@@ -38,7 +40,7 @@ arcade::Pacman::Pacman() : _score(0)
     _patternPath["P"] = YELLOW;
     _scoreText = "score: " + std::to_string(_score);
     _textToDisplay.push_back(_scoreText);
-    _sizeMap = 1;
+    _sizeCell = 1;
 
 }
 
@@ -49,7 +51,7 @@ std::map<std::string, arcade::Color> arcade::Pacman::getPattern()
 
 std::size_t arcade::Pacman::getSize()
 {
-    return _sizeMap;
+    return _sizeCell;
 }
 
 std::vector<std::string> arcade::Pacman::getText()
@@ -64,7 +66,7 @@ arcade::GameStatus arcade::Pacman::updateMap(arcade::KeyPressed key)
     return PLAYING;
 }
 
-std::array<std::string, 19> arcade::Pacman::getMap()
+std::array<std::string, 21> arcade::Pacman::getMap()
 {
     return _map;
 }

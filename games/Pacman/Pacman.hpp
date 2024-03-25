@@ -18,7 +18,7 @@ namespace arcade
             ~Pacman() = default;
 
             void resetGame() override {};
-            std::array<std::string, 19> getMap() override;
+            std::array<std::string, 21> getMap() override;
             std::map<std::string, Color> getPattern() override;
             std::vector<std::string> getText() override;
             GameStatus updateMap(arcade::KeyPressed key) override;
@@ -27,10 +27,10 @@ namespace arcade
 
         protected:
         private:
-            std::array<std::string, 19> _defaultMap;
-            std::array<std::string, 19> _map;
+            std::array<std::string, 21> _defaultMap;
+            std::array<std::string, 21> _map;
             std::map<std::string, Color> _patternPath;
-            std::size_t _sizeMap;
+            std::size_t _sizeCell;
             std::vector<std::string> _textToDisplay;
             std::string _scoreText;
             std::size_t _score;

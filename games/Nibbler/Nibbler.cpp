@@ -29,7 +29,9 @@ arcade::Nibbler::Nibbler() : _score(0)
         "##          ##  ##  ##  ##          ##",
         "##[]##########  ######  ##########[]##",
         "##            <=====8~              ##",
-        "######################################"
+        "######################################",
+        "                                      ",
+        "                                      "
     };
     _map = _defaultMap;
     _patternPath["##"] = WHITE;
@@ -40,7 +42,7 @@ arcade::Nibbler::Nibbler() : _score(0)
     _patternPath["<="] = YELLOW;
     _scoreText = "score: " + std::to_string(_score);
     _textToDisplay.push_back(_scoreText);
-    _sizeMap = 2;
+    _sizeCell = 2;
     stockPlayerPos();
 }
 
@@ -55,7 +57,7 @@ void arcade::Nibbler::resetGame()
     _textToDisplay.push_back(_scoreText);
 }
 
-std::array<std::string, 19> arcade::Nibbler::getMap()
+std::array<std::string, 21> arcade::Nibbler::getMap()
 {
     return _map;
 }
@@ -72,7 +74,7 @@ std::vector<std::string> arcade::Nibbler::getText()
 
 std::size_t arcade::Nibbler::getSize()
 {
-    return _sizeMap;
+    return _sizeCell;
 }
 
 bool arcade::Nibbler::isFree(char c)

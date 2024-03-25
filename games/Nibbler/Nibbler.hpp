@@ -20,7 +20,7 @@ namespace arcade
             ~Nibbler() = default;
 
             void resetGame() override;
-            std::array<std::string, 19> getMap() override;
+            std::array<std::string, 21> getMap() override;
             std::map<std::string, Color> getPattern() override;
             std::vector<std::string> getText() override;
             std::size_t getSize() override;
@@ -59,10 +59,10 @@ namespace arcade
             bool isTJunctionLeft(std::size_t x,  std::size_t y);
             KeyPressed playerMoveStatus(arcade::KeyPressed lastMove,
                 std::size_t x, std::size_t y);
-            std::array<std::string, 19> _defaultMap;
-            std::array<std::string, 19> _map;
+            std::array<std::string, 21> _defaultMap;
+            std::array<std::string, 21> _map;
             std::map<std::string, Color> _patternPath;
-            std::size_t _sizeMap;
+            std::size_t _sizeCell;
             std::vector <std::pair<std::size_t, std::size_t>> _snakePos;
             std::vector<std::string> _textToDisplay;
             std::string _scoreText;

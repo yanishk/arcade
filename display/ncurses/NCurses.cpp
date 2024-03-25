@@ -20,10 +20,11 @@ void arcade::NCurses::init(std::map<std::string, Color> pattern)
 
 void arcade::NCurses::stop()
 {
+    clear();
     endwin();
 }
 
-void arcade::NCurses::game(std::array<std::string, 19> map, std::size_t size)
+void arcade::NCurses::game(std::array<std::string, 21> map, std::size_t size)
 {
     displayMap(map, size);
     _key = checkKeyPressed(getch());
@@ -72,7 +73,7 @@ void arcade::NCurses::pickColor(std::map<std::string, Color> patternMap)
     }
 }
 
-void arcade::NCurses::displayMap(std::array<std::string, 19> map, std::size_t size)
+void arcade::NCurses::displayMap(std::array<std::string, 21> map, std::size_t size)
 {
     int index = 1;
     std::string pattern;
@@ -110,6 +111,8 @@ arcade::KeyPressed arcade::NCurses::checkKeyPressed(int key)
         return P;
     if (std::toupper(key) == 'N')
         return N;
+    if (std::toupper(key) == 'G')
+        return G;
     if (key == KEY_BACKSPACE)
         return BACKSPACE;
     return OTHER;

@@ -21,7 +21,8 @@ namespace arcade
         BACKSPACE,
         CLOSE_BUTTON,
         P,
-        N
+        N,
+        G,
     };
 }
 

@@ -14,9 +14,9 @@ arcade::Core::Core(std::string libPath)
 {
     std::array<std::string, 3> libName =
     {
-        "lib/arcade_ncurses.so",
         "lib/arcade_sdl2.so",
         "lib/arcade_sfml.so",
+        "lib/arcade_ncurses.so",
     };
     _lib.push_back(openLib(libPath));
     for (std::size_t index = 0; index != 3; index += 1) {
@@ -24,6 +24,7 @@ arcade::Core::Core(std::string libPath)
             _lib.push_back(openLib(libName[index]));
     }
     _game.push_back(openGame("lib/arcade_nibbler.so"));
+    _game.push_back(openGame("lib/arcade_pacman.so"));
 }
 
 arcade::IGameModule *arcade::Core::openGame(std::string path)
@@ -88,27 +89,34 @@ void arcade::Core::managePlayerAutoMoves(std::chrono::steady_clock::time_point &
 
 void arcade::Core::loop()
 {
-    GameStatus status;
-    int index = 0;
+    GameStatus status = PLAYING;
+    int indexLib = 0;
+    bool indexGame = 0;
     auto clockT0 = std::chrono::steady_clock::now();
 
-    _lib[index]->init(_game[0]->getPattern());
+    _lib[indexLib]->init(_game[indexGame]->getPattern());
     while (status == PLAYING) {
-        _lib[index]->displayText(_game[0]->getText());
-        _lib[index]->game(_game[0]->getMap(), _game[0]->getSize());
-        managePlayerAutoMoves(clockT0, index);
-        status = _game[0]->updateMap(_lib[index]->getKey());
-        if (_lib[index]->getKey() == N && index < 2) {
-            _lib[index]->stop();
-            index++;
-            _lib[index]->init(_game[0]->getPattern());
+        _lib[indexLib]->displayText(_game[indexGame]->getText());
+        _lib[indexLib]->game(_game[indexGame]->getMap(), _game[indexGame]->getSize());
+        managePlayerAutoMoves(clockT0, indexLib);
+        status = _game[indexGame]->updateMap(_lib[indexLib]->getKey());
+        if (_lib[indexLib]->getKey() == N && indexLib < 2) {
+            _lib[indexLib]->stop();
+            indexLib++;
+            _lib[indexLib]->init(_game[indexGame]->getPattern());
         }
-        if (_lib[index]->getKey() == P && index > 0) {
-            _lib[index]->stop();
-            index--;
-            _lib[index]->init(_game[0]->getPattern());
+        if (_lib[indexLib]->getKey() == P && indexLib > 0) {
+            _lib[indexLib]->stop();
+            indexLib--;
+            _lib[indexLib]->init(_game[indexGame]->getPattern());
         }
-        _lib[index]->setKey(OTHER);
+        if (_lib[indexLib]->getKey() == G) {
+            _game[indexGame]->resetGame();
+            _lib[indexLib]->stop();
+            indexGame = !indexGame;
+            _lib[indexLib]->init(_game[indexGame]->getPattern());
+        }
+        _lib[indexLib]->setKey(OTHER);
     }
-    _lib[index]->stop();
+    _lib[indexLib]->stop();
 }

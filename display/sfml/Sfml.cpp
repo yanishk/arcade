@@ -9,7 +9,7 @@
 
 void arcade::Sfml::initWindow()
 {
-    _window.create(sf::VideoMode(1000, 1000), "SFML", sf::Style::Default);
+    _window.create(sf::VideoMode(1080, 1920), "SFML", sf::Style::Default);
 }
 
 void arcade::Sfml::init(std::map<std::string, Color> pattern)
@@ -49,7 +49,7 @@ void arcade::Sfml::pickColor(std::map<std::string, Color> patternMap)
     }
 }
 
-void arcade::Sfml::displayMap(std::array<std::string, 19> map, std::size_t size)
+void arcade::Sfml::displayMap(std::array<std::string, 21> map, std::size_t size)
 {
     size_t y = 0;
     std::string hay;
@@ -67,11 +67,11 @@ void arcade::Sfml::displayMap(std::array<std::string, 19> map, std::size_t size)
                 it->second.setPosition(yPos, xPos);
                 _window.draw(it->second);
             }
-            yPos += 50;
+            yPos += 40;
             y += size;
         }
         yPos = 0;
-        xPos += 50;
+        xPos += 40;
         y = 0;
     }
 }
@@ -93,14 +93,14 @@ void arcade::Sfml::initRectShape(std::string pattern, sf::Color color, int posX,
 {
     sf::RectangleShape rect;
 
-    rect.setSize(sf::Vector2f(50, 50));
+    rect.setSize(sf::Vector2f(40, 40));
     rect.setPosition(posY, posX);
     rect.setFillColor(color);
 
     _charMap[pattern] = rect;
 }
 
-void arcade::Sfml::game(std::array<std::string, 19> map, std::size_t size)
+void arcade::Sfml::game(std::array<std::string, 21> map, std::size_t size)
 {
     sf::Event event;
 
@@ -138,6 +138,8 @@ arcade::KeyPressed arcade::Sfml::checkKeyPressed(sf::Event event)
         return P;
     if (event.key.code == sf::Keyboard::N)
         return N;
+    if (event.key.code == sf::Keyboard::G)
+        return G;
     return OTHER;
 }
 

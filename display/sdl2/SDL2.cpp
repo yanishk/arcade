@@ -9,7 +9,7 @@
 
 void arcade::SDL2::initWindow()
 {
-    _window = SDL_CreateWindow("SDL2", 20, 20, 1000, 1000,
+    _window = SDL_CreateWindow("SDL2", 20, 20, 1080, 1920,
         SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (!_window) {
         std::cerr << SDL_GetError() << std::endl;
@@ -61,6 +61,8 @@ arcade::KeyPressed arcade::SDL2::checkKeyPressed(SDL_Event event)
         return P;
     if (event.key.keysym.sym == SDLK_n)
         return N;
+    if (event.key.keysym.sym == SDLK_g)
+        return G;
     return OTHER;
 }
 
@@ -74,7 +76,7 @@ arcade::KeyPressed arcade::SDL2::getKey()
     return _key;
 }
 
-void arcade::SDL2::game(std::array<std::string, 19> map, std::size_t size)
+void arcade::SDL2::game(std::array<std::string, 21> map, std::size_t size)
 {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -97,12 +99,12 @@ void arcade::SDL2::stop()
     SDL_Quit();
 }
 
-void arcade::SDL2::displayMap(std::array<std::string, 19> map, std::size_t size)
+void arcade::SDL2::displayMap(std::array<std::string, 21> map, std::size_t size)
 {
     size_t y = 0;
     std::string hay;
     int xPos = 0;
-    int yPos = 50;
+    int yPos = 40;
 
     for (size_t x = 0; x != map.size(); x += 1) {
         while (y != map[0].size()) {
@@ -112,14 +114,14 @@ void arcade::SDL2::displayMap(std::array<std::string, 19> map, std::size_t size)
                 hay = std::string(1, map[x][y]);
             auto it = _charMap.find(hay);
             if (it != _charMap.end()) {
-                SDL_Rect spriteRect = {xPos, yPos, 50, 50};
+                SDL_Rect spriteRect = {xPos, yPos, 40, 40};
                 SDL_RenderCopy(_renderer, it->second, NULL, &spriteRect);
             }
-            xPos += 50;
+            xPos += 40;
             y += size;
         }
         xPos = 0;
-        yPos += 50;
+        yPos += 40;
         y = 0;
     }
 }
@@ -144,7 +146,7 @@ void arcade::SDL2::displayText(std::vector<std::string> textToDisplay)
         SDL_Rect Message_rect = {xPos, yPos, surfaceMsg->w, surfaceMsg->h};
         SDL_FreeSurface(surfaceMsg);
         SDL_RenderCopy(_renderer, _message, NULL, &Message_rect);
-        xPos += 50;
+        xPos += 40;
     }
 }
 
