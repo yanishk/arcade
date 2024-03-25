@@ -87,11 +87,37 @@ void arcade::Core::managePlayerAutoMoves(std::chrono::steady_clock::time_point &
         _lib[index]->setKey(OTHER);
 }
 
+size_t arcade::Core::manageDynamicSwitchLib(size_t indexLib, size_t indexGame)
+{
+    if (_lib[indexLib]->getKey() == N && indexLib < 2) {
+            _lib[indexLib]->stop();
+            indexLib++;
+            _lib[indexLib]->init(_game[indexGame]->getPattern());
+    }
+    if (_lib[indexLib]->getKey() == P && indexLib > 0) {
+        _lib[indexLib]->stop();
+        indexLib--;
+        _lib[indexLib]->init(_game[indexGame]->getPattern());
+    }
+    return indexLib;
+}
+
+size_t arcade::Core::manageDynamicSwitchGame(size_t indexLib, size_t indexGame)
+{
+    if (_lib[indexLib]->getKey() == G) {
+        _game[indexGame]->resetGame();
+        _lib[indexLib]->stop();
+        indexGame = !indexGame;
+        _lib[indexLib]->init(_game[indexGame]->getPattern());
+    }
+    return indexGame;
+}
+
 void arcade::Core::loop()
 {
     GameStatus status = PLAYING;
-    int indexLib = 0;
-    bool indexGame = 0;
+    size_t indexLib = 0;
+    size_t indexGame = 0;
     auto clockT0 = std::chrono::steady_clock::now();
 
     _lib[indexLib]->init(_game[indexGame]->getPattern());
@@ -100,22 +126,8 @@ void arcade::Core::loop()
         _lib[indexLib]->game(_game[indexGame]->getMap(), _game[indexGame]->getSize());
         managePlayerAutoMoves(clockT0, indexLib);
         status = _game[indexGame]->updateMap(_lib[indexLib]->getKey());
-        if (_lib[indexLib]->getKey() == N && indexLib < 2) {
-            _lib[indexLib]->stop();
-            indexLib++;
-            _lib[indexLib]->init(_game[indexGame]->getPattern());
-        }
-        if (_lib[indexLib]->getKey() == P && indexLib > 0) {
-            _lib[indexLib]->stop();
-            indexLib--;
-            _lib[indexLib]->init(_game[indexGame]->getPattern());
-        }
-        if (_lib[indexLib]->getKey() == G) {
-            _game[indexGame]->resetGame();
-            _lib[indexLib]->stop();
-            indexGame = !indexGame;
-            _lib[indexLib]->init(_game[indexGame]->getPattern());
-        }
+        indexLib = manageDynamicSwitchLib(indexLib, indexGame);
+        indexGame = manageDynamicSwitchGame(indexLib, indexGame);
         _lib[indexLib]->setKey(OTHER);
     }
     _lib[indexLib]->stop();

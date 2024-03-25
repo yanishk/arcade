@@ -28,6 +28,8 @@ namespace arcade
             void switchLibrary(std::string libPath);
         private:
             void managePlayerAutoMoves(std::chrono::steady_clock::time_point &clockT0, int index);
+            size_t manageDynamicSwitchLib(size_t indexLib, size_t indexGame);
+            size_t manageDynamicSwitchGame(size_t indexLib, size_t indexGame);
             std::vector<arcade::IGameModule *> _game;
             std::vector<arcade::IDisplayModule *> _lib;
             int _curentLib;
