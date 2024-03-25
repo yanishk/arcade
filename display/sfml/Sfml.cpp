@@ -100,7 +100,7 @@ void arcade::Sfml::initRectShape(std::string pattern, sf::Color color, int posX,
     _charMap[pattern] = rect;
 }
 
-void arcade::Sfml::game(std::array<std::string, 21> map, std::size_t size)
+void arcade::Sfml::game()
 {
     sf::Event event;
 
@@ -110,7 +110,6 @@ void arcade::Sfml::game(std::array<std::string, 21> map, std::size_t size)
         if (event.type == sf::Event::KeyPressed)
             _key = checkKeyPressed(event);
     }
-    displayMap(map, size);
     _window.display();
     _window.clear();
 }

@@ -123,7 +123,8 @@ void arcade::Core::loop()
     _lib[indexLib]->init(_game[indexGame]->getPattern());
     while (status == PLAYING) {
         _lib[indexLib]->displayText(_game[indexGame]->getText());
-        _lib[indexLib]->game(_game[indexGame]->getMap(), _game[indexGame]->getSize());
+        _lib[indexLib]->displayMap(_game[indexGame]->getMap(), _game[indexGame]->getMapCellSize());
+        _lib[indexLib]->game();
         managePlayerAutoMoves(clockT0, indexLib);
         status = _game[indexGame]->updateMap(_lib[indexLib]->getKey());
         indexLib = manageDynamicSwitchLib(indexLib, indexGame);

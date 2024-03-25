@@ -12,20 +12,20 @@
 
 namespace arcade
 {
-    class Pacman : virtual public IGameModule {
+    class Pacman : virtual public IGameModule
+    {
         public:
             Pacman();
             ~Pacman() = default;
 
             void resetGame() override {};
             std::array<std::string, 21> getMap() override;
+            std::size_t getMapCellSize() override;
             std::map<std::string, Color> getPattern() override;
             std::vector<std::string> getText() override;
             GameStatus updateMap(arcade::KeyPressed key) override;
             KeyPressed nextPlayerMove() override { return OTHER; };
-            std::size_t getSize() override;
 
-        protected:
         private:
             std::array<std::string, 21> _defaultMap;
             std::array<std::string, 21> _map;

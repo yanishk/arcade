@@ -72,7 +72,7 @@ std::vector<std::string> arcade::Nibbler::getText()
     return _textToDisplay;
 }
 
-std::size_t arcade::Nibbler::getSize()
+std::size_t arcade::Nibbler::getMapCellSize()
 {
     return _sizeCell;
 }
@@ -392,12 +392,11 @@ arcade::KeyPressed arcade::Nibbler::nextPlayerMove()
     std::size_t y = playerPos.second;
     static KeyPressed lastMove;
     KeyPressed playerStatus;
-
-    if (isTJunction(x, y))
-        return OTHER;
     playerStatus = playerMoveStatus(lastMove, x, y);
     if (playerStatus != OTHER)
         return playerStatus;
+    if (isTJunction(x, y))
+        return OTHER;
     if (isFree(_map[x][y + 1]) && isFree(_map[x][y + 2]))
         lastMove = RIGHT;
     if (isFree(_map[x - 1][y - 1]) && isFree(_map[x - 1][y]))

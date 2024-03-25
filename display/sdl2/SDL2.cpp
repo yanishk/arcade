@@ -76,7 +76,7 @@ arcade::KeyPressed arcade::SDL2::getKey()
     return _key;
 }
 
-void arcade::SDL2::game(std::array<std::string, 21> map, std::size_t size)
+void arcade::SDL2::game()
 {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -85,7 +85,6 @@ void arcade::SDL2::game(std::array<std::string, 21> map, std::size_t size)
         if (event.type == SDL_KEYDOWN)
             _key = checkKeyPressed(event);
     }
-    displayMap(map, size);
     SDL_RenderPresent(_renderer);
     SDL_RenderClear(_renderer);
 }

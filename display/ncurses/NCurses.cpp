@@ -15,6 +15,13 @@ void arcade::NCurses::init(std::map<std::string, Color> pattern)
     nodelay(stdscr, TRUE);
     start_color();
     curs_set(false);
+    init_pair(WHITE_TEXT, COLOR_WHITE, COLOR_BLACK);
+    init_pair(BLACK, COLOR_BLACK, COLOR_BLACK);
+    init_pair(WHITE, COLOR_WHITE, COLOR_WHITE);
+    init_pair(RED, COLOR_RED, COLOR_RED);
+    init_pair(BLUE, COLOR_BLUE, COLOR_BLUE);
+    init_pair(GREEN, COLOR_GREEN, COLOR_GREEN);
+    init_pair(YELLOW, COLOR_YELLOW, COLOR_YELLOW);
     pickColor(pattern);
 }
 
@@ -24,9 +31,8 @@ void arcade::NCurses::stop()
     endwin();
 }
 
-void arcade::NCurses::game(std::array<std::string, 21> map, std::size_t size)
+void arcade::NCurses::game()
 {
-    displayMap(map, size);
     _key = checkKeyPressed(getch());
 }
 
@@ -44,32 +50,19 @@ void arcade::NCurses::displayText(std::vector<std::string> textToDisplay)
 
 void arcade::NCurses::pickColor(std::map<std::string, Color> patternMap)
 {
-    init_pair(WHITE_TEXT, COLOR_WHITE, COLOR_BLACK);
     for (auto it = patternMap.begin(); it != patternMap.end(); it++) {
-        if (it->second == BLACK) {
+        if (it->second == BLACK)
             _charMap[it->first] = BLACK;
-            init_pair(BLACK, COLOR_BLACK, COLOR_BLACK);
-        }
-        if (it->second == WHITE) {
+        if (it->second == WHITE)
             _charMap[it->first] = WHITE;
-            init_pair(WHITE, COLOR_WHITE, COLOR_WHITE);
-        }
-        if (it->second == RED) {
+        if (it->second == RED)
             _charMap[it->first] = RED;
-            init_pair(RED, COLOR_RED, COLOR_RED);
-        }
-        if (it->second == BLUE) {
+        if (it->second == BLUE)
             _charMap[it->first] = BLUE;
-            init_pair(BLUE, COLOR_BLUE, COLOR_BLUE);
-        }
-        if (it->second == GREEN) {
+        if (it->second == GREEN)
             _charMap[it->first] = GREEN;
-            init_pair(GREEN, COLOR_GREEN, COLOR_GREEN);
-        }
-        if (it->second == YELLOW) {
+        if (it->second == YELLOW)
             _charMap[it->first] = YELLOW;
-            init_pair(YELLOW, COLOR_YELLOW, COLOR_YELLOW);
-        }
     }
 }
 

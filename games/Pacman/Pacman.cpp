@@ -49,7 +49,7 @@ std::map<std::string, arcade::Color> arcade::Pacman::getPattern()
     return _patternPath;
 }
 
-std::size_t arcade::Pacman::getSize()
+std::size_t arcade::Pacman::getMapCellSize()
 {
     return _sizeCell;
 }

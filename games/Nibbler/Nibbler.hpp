@@ -21,9 +21,9 @@ namespace arcade
 
             void resetGame() override;
             std::array<std::string, 21> getMap() override;
+            std::size_t getMapCellSize() override;
             std::map<std::string, Color> getPattern() override;
             std::vector<std::string> getText() override;
-            std::size_t getSize() override;
             GameStatus updateMap(KeyPressed key) override;
             KeyPressed nextPlayerMove() override;
 

@@ -12,9 +12,10 @@
 
 namespace arcade
 {
-    class Menu : virtual public IGameModule {
+    class Menu : virtual public IGameModule
+    {
         public:
-            Menu()= default ;
+            Menu()= default;
             ~Menu() = default;
 
             void resetGame() override {};
@@ -23,8 +24,8 @@ namespace arcade
             std::vector<std::string> getText()  override {};
             GameStatus updateMap(arcade::KeyPressed key) override {};
             KeyPressed nextPlayerMove() override {};
-            std::size_t getSize() override {};
-        protected:
+            std::size_t getMapCellSize() override {};
+
         private:
             std::vector<std::string> _textToDisplay;
     };
