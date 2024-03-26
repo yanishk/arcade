@@ -33,6 +33,7 @@ namespace arcade
             arcade::KeyPressed checkKeyPressed(int key);
             KeyPressed _key;
             std::map<std::string, Color> _charMap;
+            WINDOW *_window;
     };
 }
 

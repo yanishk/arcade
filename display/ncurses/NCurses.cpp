@@ -22,12 +22,14 @@ void arcade::NCurses::init(std::map<std::string, Color> pattern)
     init_pair(BLUE, COLOR_BLUE, COLOR_BLUE);
     init_pair(GREEN, COLOR_GREEN, COLOR_GREEN);
     init_pair(YELLOW, COLOR_YELLOW, COLOR_YELLOW);
+    _window = newwin(500, 500, 0, 0);
     pickColor(pattern);
 }
 
 void arcade::NCurses::stop()
 {
-    clear();
+    wclear(_window);
+    delwin(_window);
     endwin();
 }
 
@@ -39,8 +41,8 @@ void arcade::NCurses::game()
 void arcade::NCurses::displayText(std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay)
 {
     for (auto it : textToDisplay) {
-        attron(COLOR_PAIR(WHITE_TEXT));
-        mvprintw((it.second.first * 0.04), (it.second.second * 0.01), "%s\n", it.first.c_str());
+        wattron(_window, COLOR_PAIR(WHITE_TEXT));
+        mvwprintw(_window, (it.second.second * 0.03), (it.second.first * 0.1), "%s\n", it.first.c_str());
     }
 }
 
@@ -77,15 +79,17 @@ void arcade::NCurses::displayMap(std::array<std::string, 21> map, std::size_t si
             auto it = _charMap.find(pattern);
             colorChosen = static_cast<int>(it->second);
             if (it != _charMap.end()) {
-                attron(COLOR_PAIR(colorChosen));
-                mvprintw(x + index, y, "  ");
+                wattron(_window, COLOR_PAIR(colorChosen));
+                mvwprintw(_window, x + index, y, "  ");
             }
         }
     }
+    wrefresh(_window);
 }
 
 arcade::KeyPressed arcade::NCurses::checkKeyPressed(int key)
 {
+    wclear(_window);
     if (key == KEY_UP)
         return UP;
     if (key == KEY_DOWN)
@@ -104,6 +108,8 @@ arcade::KeyPressed arcade::NCurses::checkKeyPressed(int key)
         return G;
     if (key == KEY_BACKSPACE)
         return BACKSPACE;
+    if (key == 10)
+        return ENTER;
     return OTHER;
 }
 

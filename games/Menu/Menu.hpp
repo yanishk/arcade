@@ -25,12 +25,16 @@ namespace arcade
             std::vector<std::pair<std::string, std::pair<int, int>>> getText() override;
             GameStatus updateMap(arcade::KeyPressed key) override;
             bool isAvailable(char c) override;
+            void keyDown();
+            void keyUp();
+            void keyEnter();
 
         private:
             std::vector<std::pair<std::string, std::pair<int, int>>> _textToDisplay;
             std::array<std::string, 21> _map;
             std::map<std::string, arcade::Color> _patternPath;
             std::size_t _sizeCell;
+            bool _libSelected;
     };
 }
 

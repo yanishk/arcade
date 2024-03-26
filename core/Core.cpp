@@ -23,8 +23,9 @@ arcade::Core::Core(std::string libPath)
         if (libName[index] != libPath)
             _lib.push_back(openLib(libName[index]));
     }
-    _game.push_back(openGame("lib/arcade_pacman.so"));
+    // _game.push_back(openGame("lib/arcade_menu.so"));
     _game.push_back(openGame("lib/arcade_nibbler.so"));
+    _game.push_back(openGame("lib/arcade_pacman.so"));
 }
 
 arcade::IGameModule *arcade::Core::openGame(std::string path)

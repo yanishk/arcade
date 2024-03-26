@@ -9,7 +9,7 @@
 
 void arcade::Sfml::initWindow()
 {
-    _window.create(sf::VideoMode(1080, 1920), "SFML", sf::Style::Default);
+    _window.create(sf::VideoMode(1920, 1080), "SFML", sf::Style::Default);
 }
 
 void arcade::Sfml::init(std::map<std::string, Color> pattern)
@@ -140,6 +140,8 @@ arcade::KeyPressed arcade::Sfml::checkKeyPressed(sf::Event event)
         return N;
     if (event.key.code == sf::Keyboard::G)
         return G;
+    if (event.key.code == sf::Keyboard::Enter)
+        return ENTER;
     return OTHER;
 }
 

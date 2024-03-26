@@ -23,6 +23,7 @@ namespace arcade
         P,
         N,
         G,
+        ENTER
     };
 }
 

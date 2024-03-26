@@ -63,6 +63,8 @@ arcade::KeyPressed arcade::SDL2::checkKeyPressed(SDL_Event event)
         return N;
     if (event.key.keysym.sym == SDLK_g)
         return G;
+    if (event.key.keysym.sym == SDLK_RETURN)
+        return ENTER;
     return OTHER;
 }
 
