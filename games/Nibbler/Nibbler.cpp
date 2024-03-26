@@ -77,7 +77,7 @@ std::size_t arcade::Nibbler::getMapCellSize()
     return _sizeCell;
 }
 
-bool arcade::Nibbler::isFree(char c)
+bool arcade::Nibbler::isAvailable(char c)
 {
     return (c == ' ' || c == '[' || c == ']');
 }
@@ -205,7 +205,7 @@ arcade::GameStatus arcade::Nibbler::goUp(std::size_t x, std::size_t y)
         foodEaten = true;
         increaseScore();
     }
-    if (isFree(_map[x - 1][y - 1]) && isFree(_map[x - 1][y])) {
+    if (isAvailable(_map[x - 1][y - 1]) && isAvailable(_map[x - 1][y])) {
         updatePlayerPos(std::make_pair(x - 1, y - 1),
             std::make_pair(x - 1, y), std::make_pair(x, y));
         _snakePos[_snakePos.size() - 1].first -= 1;
@@ -230,7 +230,7 @@ arcade::GameStatus arcade::Nibbler::goDown(std::size_t x, std::size_t y)
         foodEaten = true;
         increaseScore();
     }
-    if (isFree(_map[x + 1][y - 1]) && isFree(_map[x + 1][y])) {
+    if (isAvailable(_map[x + 1][y - 1]) && isAvailable(_map[x + 1][y])) {
         updatePlayerPos(std::make_pair(x + 1, y - 1),
             std::make_pair(x + 1, y), std::make_pair(x, y));
         _snakePos[_snakePos.size() - 1].first += 1;
@@ -255,7 +255,7 @@ arcade::GameStatus arcade::Nibbler::goLeft(std::size_t x, std::size_t y)
         foodEaten = true;
         increaseScore();
     }
-    if (isFree(_map[x][y - 2]) && isFree(_map[x][y - 3])) {
+    if (isAvailable(_map[x][y - 2]) && isAvailable(_map[x][y - 3])) {
         updatePlayerPos(std::make_pair(x, y - 3),
             std::make_pair(x, y - 2), std::make_pair(x, y));
         _snakePos[_snakePos.size() - 1].second -= 2;
@@ -280,7 +280,7 @@ arcade::GameStatus arcade::Nibbler::goRight(std::size_t x, std::size_t y)
         foodEaten = true;
         increaseScore();
     }
-    if (isFree(_map[x][y + 1]) && isFree(_map[x][y + 2])) {
+    if (isAvailable(_map[x][y + 1]) && isAvailable(_map[x][y + 2])) {
         updatePlayerPos(std::make_pair(x, y + 1),
             std::make_pair(x, y + 2), std::make_pair(x, y));
         _snakePos[_snakePos.size() - 1].second += 2;
@@ -328,27 +328,6 @@ std::pair<std::size_t, std::size_t> arcade::Nibbler::getPlayerHeadPos()
     return std::make_pair(i, y);
 }
 
-arcade::GameStatus arcade::Nibbler::updateMap(arcade::KeyPressed key)
-{
-    std::pair<std::size_t, std::size_t> playerPos = getPlayerHeadPos();
-
-    if (checkWin())
-        return WON;
-    if (key == BACKSPACE || key == CLOSE_BUTTON)
-        return QUIT;
-    if (key == UP)
-        return goUp(playerPos.first, playerPos.second);
-    if (key == DOWN)
-        return goDown(playerPos.first, playerPos.second);
-    if (key == LEFT)
-        return goLeft(playerPos.first, playerPos.second);
-    if (key == RIGHT)
-        return goRight(playerPos.first, playerPos.second);
-    if (key == R)
-        resetGame();
-    return PLAYING;
-}
-
 void arcade::Nibbler::stockPlayerPos()
 {
     for (std::size_t i = 0; i != _map.size(); i += 1) {
@@ -363,48 +342,135 @@ void arcade::Nibbler::stockPlayerPos()
     }
 }
 
-arcade::KeyPressed arcade::Nibbler::playerMoveStatus(arcade::KeyPressed lastMove,
-    std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Nibbler::updateMap(arcade::KeyPressed key)
 {
-    if (lastMove == RIGHT) {
-        if (isFree(_map[x][y + 1]) && isFree(_map[x][y + 2]))
-            return RIGHT;
-    }
-    if (lastMove == UP) {
-        if (isFree(_map[x - 1][y - 1]) && isFree(_map[x - 1][y]))
-            return UP;
-    }
-    if (lastMove == LEFT) {
-        if (isFree(_map[x][y - 2]) && isFree(_map[x][y - 3]))
-            return LEFT;
-    }
-    if (lastMove == DOWN) {
-        if (isFree(_map[x + 1][y - 1]) && isFree(_map[x + 1][y]))
-            return DOWN;
-    }
-    return OTHER;
+    std::pair<std::size_t, std::size_t> playerPos = getPlayerHeadPos();
+    GameStatus status = PLAYING;
+
+    if (checkWin())
+        return WON;
+    if (key == BACKSPACE || key == CLOSE_BUTTON)
+        return QUIT;
+    if (key == UP)
+        status = goUp(playerPos.first, playerPos.second);
+    if (key == DOWN)
+        status = goDown(playerPos.first, playerPos.second);
+    if (key == LEFT)
+        status = goLeft(playerPos.first, playerPos.second);
+    if (key == RIGHT)
+        status = goRight(playerPos.first, playerPos.second);
+    if (key == R)
+        resetGame();
+    if (nextPlayerMove() == LOOSE)
+        return LOOSE;
+    return status;
 }
 
-arcade::KeyPressed arcade::Nibbler::nextPlayerMove()
+arcade::GameStatus arcade::Nibbler::movingPlayerRight(std::size_t x, std::size_t y)
+{
+    if (checkLoose(std::make_pair(x, y + 1),
+        std::make_pair(x, y + 2)))
+        return LOOSE;
+    if (isAvailable(_map[x][y + 1]) && isAvailable(_map[x][y + 2]))
+        return goRight(x, y);
+    return QUIT;
+}
+
+arcade::GameStatus arcade::Nibbler::movingPlayerUp(std::size_t x, std::size_t y)
+{
+    if (checkLoose(std::make_pair(x - 1, y - 1),
+        std::make_pair(x - 1, y)))
+        return LOOSE;
+    if (isAvailable(_map[x - 1][y - 1]) && isAvailable(_map[x - 1][y]))
+        return goUp(x, y);
+    return QUIT;
+}
+
+arcade::GameStatus arcade::Nibbler::movingPlayerLeft(std::size_t x, std::size_t y)
+{
+    if (checkLoose(std::make_pair(x, y - 2),
+        std::make_pair(x, y - 3)))
+        return LOOSE;
+    if (isAvailable(_map[x][y - 2]) && isAvailable(_map[x][y - 3]))
+        return goLeft(x, y);
+    return QUIT;
+}
+
+arcade::GameStatus arcade::Nibbler::movingPlayerDown(std::size_t x, std::size_t y)
+{
+    if (checkLoose(std::make_pair(x + 1, y - 1),
+        std::make_pair(x + 1, y)))
+        return LOOSE;
+    if (isAvailable(_map[x + 1][y - 1]) && isAvailable(_map[x + 1][y]))
+        return goDown(x, y);
+    return QUIT;
+}
+
+arcade::GameStatus arcade::Nibbler::checkMovingPlayer(arcade::KeyPressed
+    lastMove, std::size_t x, std::size_t y)
+{
+    if (lastMove == RIGHT)
+        return movingPlayerRight(x, y);
+    if (lastMove == UP)
+        return movingPlayerUp(x, y);
+    if (lastMove == LEFT)
+        return movingPlayerLeft(x, y);
+    if (lastMove == DOWN)
+        return movingPlayerDown(x, y);
+    return QUIT;
+}
+
+arcade::GameStatus arcade::Nibbler::checkRightCell(std::size_t x, std::size_t y,
+    KeyPressed &lastMove)
+{
+    goRight(x, y);
+    lastMove = RIGHT;
+    return PLAYING;
+}
+
+arcade::GameStatus arcade::Nibbler::checkUpCell(std::size_t x, std::size_t y,
+    KeyPressed &lastMove)
+{
+    goUp(x, y);
+    lastMove = UP;
+    return PLAYING;
+}
+
+arcade::GameStatus arcade::Nibbler::checkLeftCell(std::size_t x, std::size_t y,
+    KeyPressed &lastMove)
+{
+    goLeft(x, y);
+    lastMove = LEFT;
+    return PLAYING;
+}
+
+arcade::GameStatus arcade::Nibbler::checkDownCell(std::size_t x, std::size_t y,
+    KeyPressed &lastMove)
+{
+    goDown(x, y);
+    lastMove = DOWN;
+    return PLAYING;
+}
+
+arcade::GameStatus arcade::Nibbler::nextPlayerMove()
 {
     std::pair<std::size_t, std::size_t> playerPos = getPlayerHeadPos();
     std::size_t x = playerPos.first;
     std::size_t y = playerPos.second;
-    static KeyPressed lastMove;
-    KeyPressed playerStatus;
+    static KeyPressed lastMove = OTHER;
+    GameStatus status = checkMovingPlayer(lastMove, x, y);
 
-    playerStatus = playerMoveStatus(lastMove, x, y);
-    if (playerStatus != OTHER)
-        return playerStatus;
     if (isTJunction(x, y))
-        return OTHER;
-    if (isFree(_map[x][y + 1]) && isFree(_map[x][y + 2]))
-        lastMove = RIGHT;
-    if (isFree(_map[x - 1][y - 1]) && isFree(_map[x - 1][y]))
-        lastMove = UP;
-    if (isFree(_map[x][y - 2]) && isFree(_map[x][y - 3]))
-        lastMove = LEFT;
-    if (isFree(_map[x + 1][y - 1]) && isFree(_map[x + 1][y]))
-        lastMove = DOWN;
-    return lastMove;
+        return PLAYING;
+    if (status != QUIT)
+        return status;
+    if (isAvailable(_map[x][y + 1]) && isAvailable(_map[x][y + 2]))
+        return checkRightCell(x, y, lastMove);
+    if (isAvailable(_map[x - 1][y - 1]) && isAvailable(_map[x - 1][y]))
+        return checkUpCell(x, y, lastMove);
+    if (isAvailable(_map[x][y - 2]) && isAvailable(_map[x][y - 3]))
+        return checkLeftCell(x, y, lastMove);
+    if (isAvailable(_map[x + 1][y - 1]) && isAvailable(_map[x + 1][y]))
+        return checkDownCell(x, y, lastMove);
+    return PLAYING;
 }

@@ -33,6 +33,11 @@ std::size_t arcade::Menu::getMapCellSize()
     return _sizeCell;
 }
 
+std::map<std::string, arcade::Color> arcade::Menu::getPattern()
+{
+    return _patternPath;
+}
+
 arcade::GameStatus arcade::Menu::updateMap(arcade::KeyPressed key)
 {
     if (key == BACKSPACE || key == CLOSE_BUTTON)
@@ -40,12 +45,7 @@ arcade::GameStatus arcade::Menu::updateMap(arcade::KeyPressed key)
     return PLAYING;
 }
 
-arcade::KeyPressed arcade::Menu::nextPlayerMove()
+bool arcade::Menu::isAvailable(char c)
 {
-    return OTHER;
-}
-
-std::map<std::string, arcade::Color> arcade::Menu::getPattern()
-{
-    return _patternPath;
+    return (c == ' ');
 }

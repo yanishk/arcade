@@ -25,7 +25,7 @@ namespace arcade
             std::map<std::string, Color> getPattern() override;
             std::vector<std::pair<std::string, std::pair<int, int>>> getText() override;
             GameStatus updateMap(KeyPressed key) override;
-            KeyPressed nextPlayerMove() override;
+            bool isAvailable(char c) override;
 
         private:
             GameStatus goUp(std::size_t x, std::size_t y);
@@ -40,7 +40,6 @@ namespace arcade
             void increaseScore();
             void growSnakeTail(std::pair <std::size_t, std::size_t> snakeTailCell1,
                 std::pair <std::size_t, std::size_t> snakeTailCell2);
-            bool isFree(char c);
             bool isFood(char firstChar, char secondChar);
             bool isSnakeBody(char firstChar, char secondChar);
             bool isNeckPattern1(std::pair <std::size_t, std::size_t> cell1,
@@ -57,8 +56,21 @@ namespace arcade
             bool isTJunctionDown(std::size_t x,  std::size_t y);
             bool isTJunctionRight(std::size_t x,  std::size_t y);
             bool isTJunctionLeft(std::size_t x,  std::size_t y);
-            KeyPressed playerMoveStatus(arcade::KeyPressed lastMove,
-                std::size_t x, std::size_t y);
+            GameStatus nextPlayerMove();
+            GameStatus checkRightCell(std::size_t x, std::size_t y,
+            KeyPressed &lastMove);
+            GameStatus checkUpCell(std::size_t x, std::size_t y,
+            KeyPressed &lastMove);
+            GameStatus checkLeftCell(std::size_t x, std::size_t y,
+            KeyPressed &lastMove);
+            GameStatus checkDownCell(std::size_t x, std::size_t y,
+            KeyPressed &lastMove);
+            GameStatus checkMovingPlayer(arcade::KeyPressed
+            lastMove, std::size_t x, std::size_t y);
+            GameStatus movingPlayerRight(std::size_t x, std::size_t y);
+            GameStatus movingPlayerUp(std::size_t x, std::size_t y);
+            GameStatus movingPlayerLeft(std::size_t x, std::size_t y);
+            GameStatus movingPlayerDown(std::size_t x, std::size_t y);
             std::array<std::string, 21> _defaultMap;
             std::array<std::string, 21> _map;
             std::map<std::string, Color> _patternPath;
