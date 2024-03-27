@@ -27,7 +27,9 @@ namespace arcade
             bool isAvailable(char c) override;
             void keyDown();
             void keyUp();
-            void keyEnter();
+            void keyEnter(arcade::KeyPressed key) override;
+            void initText(std::vector<std::string>, std::vector<std::string>) override;
+            std::pair<std::size_t, std::size_t> getIndexes() override;
 
         private:
             std::vector<std::pair<std::string, std::pair<int, int>>> _textToDisplay;
@@ -35,6 +37,12 @@ namespace arcade
             std::map<std::string, arcade::Color> _patternPath;
             std::size_t _sizeCell;
             bool _libSelected;
+            bool _gameSelected;
+            std::size_t _selectLibArrow;
+            std::size_t _selectGameArrow;
+            std::size_t _indexLib;
+            std::size_t _indexGame;
+
     };
 }
 

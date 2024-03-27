@@ -26,6 +26,9 @@ namespace arcade
             std::vector<std::pair<std::string, std::pair<int, int>>> getText() override;
             GameStatus updateMap(KeyPressed key) override;
             bool isAvailable(char c) override;
+            void keyEnter(arcade::KeyPressed key) override {};
+            void initText(std::vector<std::string>, std::vector<std::string>) override {};
+            std::pair<std::size_t, std::size_t> getIndexes() override {};
 
         private:
             GameStatus goUp(std::size_t x, std::size_t y);

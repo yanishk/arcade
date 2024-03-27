@@ -31,6 +31,9 @@ namespace arcade
             virtual std::vector<std::pair<std::string, std::pair<int, int>>> getText() = 0;
             virtual GameStatus updateMap(arcade::KeyPressed key) = 0;
             virtual bool isAvailable(char c) = 0;
+            virtual void keyEnter(arcade::KeyPressed key) = 0;
+            virtual void initText(std::vector<std::string>, std::vector<std::string>) = 0;
+            virtual std::pair<std::size_t, std::size_t> getIndexes() = 0;
     };
 }
 
