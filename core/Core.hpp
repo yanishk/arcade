@@ -13,6 +13,7 @@
 #include <chrono>
 #include "IDisplayModule.hpp"
 #include "IGameModule.hpp"
+#include "DLLoader.hpp"
 
 namespace arcade
 {
@@ -23,8 +24,6 @@ namespace arcade
             ~Core() = default;
 
             void loop();
-            arcade::IDisplayModule *openLib(std::string path);
-            arcade::IGameModule *openGame(std::string path);
 
         private:
             void managePlayerAutoMoves(std::chrono::steady_clock::time_point &clockT0, int index);
@@ -34,6 +33,8 @@ namespace arcade
             void manageMenuSwitchGame(std::size_t indexLib, std::size_t indexGame, std::size_t tmp);
             void readLib(std::string libPath);
             void readGame();
+            std::vector<DLLoader<IDisplayModule> *> _libLoader;
+            std::vector<DLLoader<IGameModule> *> _gameLoader;
             std::vector<arcade::IGameModule *> _game;
             std::vector<arcade::IDisplayModule *> _lib;
             std::vector<std::string> _gameText;

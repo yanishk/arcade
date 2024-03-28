@@ -8,7 +8,6 @@
 #include <dlfcn.h>
 #include <iostream>
 #include "Core.hpp"
-#include "DLLoader.hpp"
 #include <filesystem>
 
 void arcade::Core::readLib(std::string libPath)
@@ -17,29 +16,34 @@ void arcade::Core::readLib(std::string libPath)
 
     for (auto it = _libName.begin(); it != _libName.end(); it++) {
         if (*it == libPath) {
-            _lib.push_back(openLib(libPath));
+            _libLoader.push_back(new DLLoader<IDisplayModule>(libPath));
             _libText.push_back(libPath);
         }
     }
-    if (_lib.size() == 0)
+    if (_libLoader.size() == 0)
         exit(84);
     for (auto &entry : std::filesystem::directory_iterator(path)) {
         for (auto it = _libName.begin(); it != _libName.end(); it++) {
             if (*it == entry.path().string() && *it != libPath) {
-                _lib.push_back(openLib(*it));
+                _libLoader.push_back(new DLLoader<IDisplayModule>(*it));
                 _libText.push_back(*it);
             }
         }
         for (auto it = _gameName.begin(); it != _gameName.end(); it++) {
             if (*it == entry.path().string() && *it == "lib/arcade_menu.so") {
-                _game.insert(_game.begin(), openGame(*it));
+                _gameLoader.insert(_gameLoader.begin(), new DLLoader<IGameModule>(*it));
                 _gameText.insert(_gameText.begin(), *it);
             } else if (*it == entry.path().string()) {
-                _game.push_back(openGame(*it));
+                _gameLoader.push_back(new DLLoader<IGameModule>(*it));
                 _gameText.push_back(*it);
             }
         }
     }
+    for (auto &it : _libLoader) {
+        _lib.push_back(it->getInstance());
+    }
+    for (auto it : _gameLoader)
+        _game.push_back(it->getInstance());
 }
 
 arcade::Core::Core(std::string libPath)
@@ -57,48 +61,6 @@ arcade::Core::Core(std::string libPath)
         "lib/arcade_pacman.so"
     };
     readLib(libPath);
-}
-
-arcade::IGameModule *arcade::Core::openGame(std::string path)
-{
-    arcade::IGameModule *(*cosine)(void);
-    char *error;
-    void *handle;
-
-    handle = dlopen(path.c_str(), RTLD_LAZY);
-    if (!handle) {
-        fprintf(stderr, "%s\n", dlerror());
-        exit(84);
-    }
-    dlerror();
-    cosine = (arcade::IGameModule *(*)(void)) dlsym(handle, "entryPoint");
-    error = dlerror();
-    if (error != NULL) {
-        fprintf(stderr, "%s\n", error);
-        exit(84);
-    }
-    return (*cosine)();
-}
-
-arcade::IDisplayModule *arcade::Core::openLib(std::string path)
-{
-    arcade::IDisplayModule *(*cosine)(void);
-    char *error;
-    void *handle;
-
-    handle = dlopen(path.c_str(), RTLD_LAZY);
-    if (!handle) {
-        fprintf(stderr, "%s\n", dlerror());
-        exit(84);
-    }
-    dlerror();
-    cosine = (arcade::IDisplayModule *(*)(void)) dlsym(handle, "entryPoint");
-    error = dlerror();
-    if (error != NULL) {
-        fprintf(stderr, "%s\n", error);
-        exit(84);
-    }
-    return (*cosine)();
 }
 
 void arcade::Core::manageMenuSwitchLib(std::size_t indexLib, std::size_t indexGame, std::size_t tmp)
@@ -159,8 +121,7 @@ void arcade::Core::loop()
     _game[indexGame]->initText(_libText, _gameText);
     while (status == PLAYING) {
         auto clockT1 = std::chrono::steady_clock::now();
-        auto timeElapsed = std::chrono::duration_cast
-        <std::chrono::milliseconds>(clockT1 - clockT0);
+        auto timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(clockT1 - clockT0);
         if (timeElapsed.count() > msTimer) {
             if (indexGame == 0) {
                 indexGame = _game[0]->getIndexes().second;
@@ -184,4 +145,8 @@ void arcade::Core::loop()
         }
     }
     _lib[indexLib]->stop();
+    for (auto it : _libLoader)
+        it->closeLib();
+    for (auto it : _gameLoader)
+        it->closeLib();
 }

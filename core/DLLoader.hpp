@@ -24,13 +24,14 @@ class DLLoader {
         ~DLLoader();
 
         T *getInstance() {
-            T *(*cos)(void);
-            cos = (T*(*)(void)) dlsym(_handle, "entryPoint");
+            T *(*cosine)(void);
+            cosine = (T*(*)(void)) dlsym(_handle, "entryPoint");
             char *error = dlerror();
             if (error != NULL) {
                 fprintf(stderr, "%s\n", error);
                 exit(84);
             }
+            return (*cosine)();
         };
 
         void closeLib() {
