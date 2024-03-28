@@ -10,8 +10,9 @@
 
 arcade::Menu::Menu()
 {
-    _textToDisplay.push_back(std::make_pair("Arcade", std::make_pair(925, 0)));
     _textToDisplay.push_back(std::make_pair("->", std::make_pair(200, 200)));
+    _textToDisplay.push_back(std::make_pair("X", std::make_pair(5000, 0)));
+    _textToDisplay.push_back(std::make_pair("Arcade", std::make_pair(925, 0)));
     _sizeCell = 1;
     _libSelected = false;
     _selectGameArrow = 0;
@@ -72,6 +73,10 @@ void arcade::Menu::keyDown()
                     _selectGameArrow += 1;
             }
         }
+        if (it.first == "<-") {
+            if (_libSelected == true && it.second.second < 500)
+                it.second.second += 300;
+        }
     }
 }
 
@@ -85,6 +90,8 @@ void arcade::Menu::keyUp()
             if (_libSelected == true)
                 _selectGameArrow -= 1;
         }
+        if (it.first == "<-" && it.second.second > 200)
+            it.second.second -= 300;
     }
 }
 
@@ -104,10 +111,16 @@ void arcade::Menu::keyEnter(arcade::KeyPressed key)
             if (it.first == "->" && _libSelected == false) {
                 xPos = it.second.first;
                 yPos = it.second.second;
+                for (auto &it : _textToDisplay) {
+                    if (it.first == "X") {
+                        it.second.first = xPos;
+                        it.second.second = yPos;
+                    }
+                }
                 it.second.first = 1300;
                 it.second.second = 200;
-                _textToDisplay.push_back(std::make_pair("X", std::make_pair(xPos, yPos)));
                 _libSelected = true;
+                _textToDisplay.push_back(std::make_pair("<-", std::make_pair(1700, 200)));
             }
         }
     }
