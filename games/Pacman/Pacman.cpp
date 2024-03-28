@@ -212,3 +212,8 @@ bool arcade::Pacman::checkWin()
     }
     return true;
 }
+
+std::pair<std::size_t, std::size_t> arcade::Pacman::getIndexes()
+{
+    return std::make_pair(0, 0);
+}

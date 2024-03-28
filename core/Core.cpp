@@ -35,7 +35,6 @@ void arcade::Core::readLib(std::string libPath)
                 _game.insert(_game.begin(), openGame(*it));
                 _gameText.insert(_gameText.begin(), *it);
             } else if (*it == entry.path().string()) {
-                std::cout << *it << std::endl;
                 _game.push_back(openGame(*it));
                 _gameText.push_back(*it);
             }
