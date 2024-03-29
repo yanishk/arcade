@@ -19,7 +19,7 @@ void arcade::Sfml::init(std::map<std::string, Color> pattern)
 {
     initWindow();
     pickColor(pattern);
-    if (!_font.loadFromFile("display/sfml/asset/font/OpenSans-Regular.ttf"))
+    if (!_font.loadFromFile("display/asset/font/OpenSans-Regular.ttf"))
         throw arcade::Error("Font not found");
 }
 
