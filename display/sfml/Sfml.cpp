@@ -8,14 +8,12 @@
 #include "Sfml.hpp"
 #include "Error.hpp"
 
-void arcade::Sfml::initWindow()
+void arcade::Sfml::initWindow() noexcept
 {
     _window.create(sf::VideoMode(1920, 1080), "SFML", sf::Style::Default);
 }
 
-#include <iostream>
-
-void arcade::Sfml::init(std::map<std::string, Color> pattern)
+void arcade::Sfml::init(const std::unordered_map<std::string, Color> pattern)
 {
     initWindow();
     pickColor(pattern);
@@ -23,7 +21,7 @@ void arcade::Sfml::init(std::map<std::string, Color> pattern)
         throw arcade::Error("Font not found");
 }
 
-void arcade::Sfml::changeColor(std::map<std::string, Color> patternMap)
+void arcade::Sfml::changeColor(const std::unordered_map<std::string, Color> patternMap) noexcept
 {
     for (auto it = patternMap.begin(); it != patternMap.end(); it++) {
         if (it->second == BLACK)
@@ -45,7 +43,7 @@ void arcade::Sfml::changeColor(std::map<std::string, Color> patternMap)
     }
 }
 
-void arcade::Sfml::initRectShape(std::string pattern, sf::Color color, int posX, int posY)
+void arcade::Sfml::initRectShape(const std::string pattern, const sf::Color color, const int posX, const int posY) noexcept
 {
     sf::RectangleShape rect;
 
@@ -55,7 +53,7 @@ void arcade::Sfml::initRectShape(std::string pattern, sf::Color color, int posX,
     _charMap[pattern] = rect;
 }
 
-void arcade::Sfml::pickColor(std::map<std::string, Color> patternMap)
+void arcade::Sfml::pickColor(const std::unordered_map<std::string, Color> patternMap) noexcept
 {
     int posX = 0;
     int posY = 0;
@@ -82,7 +80,7 @@ void arcade::Sfml::pickColor(std::map<std::string, Color> patternMap)
     }
 }
 
-void arcade::Sfml::displayMap(std::array<std::string, 23> map, std::size_t size)
+void arcade::Sfml::displayMap(const std::array<std::string, 23> map, const std::size_t size) noexcept
 {
     size_t y = 0;
     std::string hay;
@@ -109,7 +107,7 @@ void arcade::Sfml::displayMap(std::array<std::string, 23> map, std::size_t size)
     }
 }
 
-void arcade::Sfml::displayText(std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay)
+void arcade::Sfml::displayText(const std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) noexcept
 {
     sf::Text text;
 
@@ -123,7 +121,7 @@ void arcade::Sfml::displayText(std::vector<std::pair<std::string, std::pair<int,
     }
 }
 
-void arcade::Sfml::game()
+void arcade::Sfml::game() noexcept
 {
     sf::Event event;
 
@@ -137,12 +135,12 @@ void arcade::Sfml::game()
     _window.clear();
 }
 
-void arcade::Sfml::setKey(arcade::KeyPressed newValue)
+void arcade::Sfml::setKey(const arcade::KeyPressed newValue) noexcept
 {
     _key = newValue;
 }
 
-arcade::KeyPressed arcade::Sfml::checkKeyPressed(sf::Event event)
+arcade::KeyPressed arcade::Sfml::checkKeyPressed(const sf::Event event) const noexcept
 {
     if (event.key.code == sf::Keyboard::Backspace)
         return BACKSPACE;
@@ -167,12 +165,12 @@ arcade::KeyPressed arcade::Sfml::checkKeyPressed(sf::Event event)
     return OTHER;
 }
 
-arcade::KeyPressed arcade::Sfml::getKey()
+arcade::KeyPressed arcade::Sfml::getKey() const noexcept
 {
     return _key;
 }
 
-void arcade::Sfml::stop()
+void arcade::Sfml::stop() noexcept
 {
     _window.close();
 }

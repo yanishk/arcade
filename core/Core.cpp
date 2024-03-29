@@ -10,7 +10,7 @@
 #include <filesystem>
 #include "Core.hpp"
 
-void arcade::Core::readLib(std::string libPath)
+void arcade::Core::readLib(const std::string libPath)
 {
     std::string path = "lib";
 
@@ -46,7 +46,7 @@ void arcade::Core::readLib(std::string libPath)
         _game.push_back(it->getInstance());
 }
 
-arcade::Core::Core(std::string libPath)
+arcade::Core::Core(const std::string libPath)
 {
     _libName =
     {
@@ -63,7 +63,7 @@ arcade::Core::Core(std::string libPath)
     readLib(libPath);
 }
 
-void arcade::Core::manageMenuSwitchLib(std::size_t indexLib, std::size_t indexGame, std::size_t tmp)
+void arcade::Core::manageMenuSwitchLib(const std::size_t indexLib, const std::size_t indexGame, const std::size_t tmp) const
 {
     if (tmp != indexLib) {
         _lib[tmp]->stop();
@@ -71,7 +71,7 @@ void arcade::Core::manageMenuSwitchLib(std::size_t indexLib, std::size_t indexGa
     }
 }
 
-void arcade::Core::manageMenuSwitchGame(std::size_t indexLib, std::size_t indexGame, std::size_t tmp)
+void arcade::Core::manageMenuSwitchGame(const std::size_t indexLib, const std::size_t indexGame, const std::size_t tmp) const
 {
     if (tmp != indexGame) {
         _lib[indexLib]->stop();
@@ -79,7 +79,7 @@ void arcade::Core::manageMenuSwitchGame(std::size_t indexLib, std::size_t indexG
     }
 }
 
-size_t arcade::Core::manageDynamicSwitchLib(std::size_t indexLib, std::size_t indexGame)
+size_t arcade::Core::manageDynamicSwitchLib(std::size_t indexLib, const std::size_t indexGame) const
 {
     if (_lib[indexLib]->getKey() == N && indexLib < 2) {
         _lib[indexLib]->stop();
@@ -94,7 +94,7 @@ size_t arcade::Core::manageDynamicSwitchLib(std::size_t indexLib, std::size_t in
     return indexLib;
 }
 
-size_t arcade::Core::manageDynamicSwitchGame(std::size_t indexLib, std::size_t indexGame)
+size_t arcade::Core::manageDynamicSwitchGame(const std::size_t indexLib, std::size_t indexGame) const
 {
     if (_lib[indexLib]->getKey() == G) {
         _game[indexGame]->resetGame();
@@ -107,7 +107,7 @@ size_t arcade::Core::manageDynamicSwitchGame(std::size_t indexLib, std::size_t i
     return indexGame;
 }
 
-void arcade::Core::accelerateMovement(arcade::GameStatus &status, unsigned int &msTimer)
+void arcade::Core::accelerateMovement(arcade::GameStatus &status, unsigned int &msTimer) const noexcept
 {
     if (status == WON_AND_RELOADED) {
         if (msTimer >= 15)
@@ -116,8 +116,8 @@ void arcade::Core::accelerateMovement(arcade::GameStatus &status, unsigned int &
     }
 }
 
-void arcade::Core::incrementGameTime(std::chrono::steady_clock::time_point &clockT2,
-    std::chrono::steady_clock::time_point &clockT0, std::size_t indexGame)
+void arcade::Core::incrementGameTime(const std::chrono::steady_clock::time_point clockT2,
+    std::chrono::steady_clock::time_point &clockT0, const std::size_t indexGame) const noexcept
 {
     auto timeElapsed2 = std::chrono::duration_cast
     <std::chrono::seconds>(clockT2 - clockT0);

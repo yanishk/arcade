@@ -21,7 +21,8 @@ arcade::Menu::Menu()
     _indexLib = 0;
 }
 
-void arcade::Menu::initText(std::vector<std::string> libName, std::vector<std::string> gameName)
+void arcade::Menu::initText(const std::vector<std::string> libName,
+    const std::vector<std::string> gameName) noexcept
 {
     std::size_t xPos = 300;
     std::size_t yPos = 200;
@@ -40,37 +41,37 @@ void arcade::Menu::initText(std::vector<std::string> libName, std::vector<std::s
     }
 }
 
-std::array<std::string, 23> arcade::Menu::getMap()
+std::array<std::string, 23> arcade::Menu::getMap() const noexcept
 {
     return _map;
 }
 
-std::vector<std::pair<std::string, std::pair<int, int>>> arcade::Menu::getText()
+std::vector<std::pair<std::string, std::pair<int, int>>> arcade::Menu::getText() const noexcept
 {
     return _textToDisplay;
 }
 
-std::size_t arcade::Menu::getMapCellSize()
+std::size_t arcade::Menu::getMapCellSize() const noexcept
 {
     return _sizeCell;
 }
 
-std::map<std::string, arcade::Color> arcade::Menu::getPattern()
+std::unordered_map<std::string, arcade::Color> arcade::Menu::getPattern() const noexcept
 {
     return _patternPath;
 }
 
-std::pair<std::size_t, std::size_t> arcade::Menu::getIndexes()
+std::pair<std::size_t, std::size_t> arcade::Menu::getIndexes() const noexcept
 {
     return std::make_pair(_indexLib, _indexGame);
 }
 
-void arcade::Menu::incrementTime()
+void arcade::Menu::incrementTime() noexcept
 {
     _time += 1;
 }
 
-void arcade::Menu::keyDown()
+void arcade::Menu::keyDown() noexcept
 {
     for (auto &it : _textToDisplay) {
         if (it.first == "->") {
@@ -90,7 +91,7 @@ void arcade::Menu::keyDown()
     }
 }
 
-void arcade::Menu::keyUp()
+void arcade::Menu::keyUp() noexcept
 {
     for (auto &it : _textToDisplay) {
         if (it.first == "->" && it.second.second > 200) {
@@ -105,7 +106,7 @@ void arcade::Menu::keyUp()
     }
 }
 
-void arcade::Menu::keyEnter(arcade::KeyPressed key)
+void arcade::Menu::keyEnter(const arcade::KeyPressed key) noexcept
 {
     int xPos = 0;
     int yPos = 0;
@@ -136,7 +137,7 @@ void arcade::Menu::keyEnter(arcade::KeyPressed key)
     }
 }
 
-arcade::GameStatus arcade::Menu::updateMap(arcade::KeyPressed key)
+arcade::GameStatus arcade::Menu::updateMap(arcade::KeyPressed key) noexcept
 {
     if (key == BACKSPACE || key == CLOSE_BUTTON)
         return QUIT;

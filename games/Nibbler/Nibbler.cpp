@@ -48,7 +48,7 @@ arcade::Nibbler::Nibbler() : _score(0), _time(0)
     stockPlayerPos();
 }
 
-void arcade::Nibbler::resetGame()
+void arcade::Nibbler::resetGame() noexcept
 {
     _map = _defaultMap;
     _snakePos.clear();
@@ -60,56 +60,56 @@ void arcade::Nibbler::resetGame()
     _textToDisplay.push_back(std::make_pair(_scoreText, std::make_pair(0, 0)));
 }
 
-std::array<std::string, 23> arcade::Nibbler::getMap()
+std::array<std::string, 23> arcade::Nibbler::getMap() const noexcept
 {
     return _map;
 }
 
-std::map<std::string, arcade::Color> arcade::Nibbler::getPattern()
+std::unordered_map<std::string, arcade::Color> arcade::Nibbler::getPattern() const noexcept
 {
     return _patternPath;
 }
 
-std::vector<std::pair<std::string, std::pair<int, int>>> arcade::Nibbler::getText()
+std::vector<std::pair<std::string, std::pair<int, int>>> arcade::Nibbler::getText() const noexcept
 {
     return _textToDisplay;
 }
 
-std::size_t arcade::Nibbler::getMapCellSize()
+std::size_t arcade::Nibbler::getMapCellSize() const noexcept
 {
     return _sizeCell;
 }
 
-void arcade::Nibbler::incrementTime()
+void arcade::Nibbler::incrementTime() noexcept
 {
     _time += 1;
 }
 
-std::pair<std::size_t, std::size_t> arcade::Nibbler::getIndexes()
+std::pair<std::size_t, std::size_t> arcade::Nibbler::getIndexes() const noexcept
 {
     return std::make_pair(0, 0);
 }
 
-bool arcade::Nibbler::isAvailable(char c)
+bool arcade::Nibbler::isAvailable(const char c) const noexcept
 {
     return (c == ' ' || c == '[' || c == ']');
 }
 
-bool arcade::Nibbler::isFood(char firstChar, char secondChar)
+bool arcade::Nibbler::isFood(const char firstChar, const char secondChar) const noexcept
 {
     return ((firstChar == '[' && secondChar == ']') ||
         (secondChar == '[' && firstChar == ']'));
 }
 
-bool arcade::Nibbler::isSnakeBody(char firstChar, char secondChar)
+bool arcade::Nibbler::isSnakeBody(const char firstChar, const char secondChar) const noexcept
 {
     return ((firstChar == '=' && secondChar == '=') ||
         (firstChar == '<' && secondChar == '=') ||
         (firstChar == '=' && secondChar == '<'));
 }
 
-bool arcade::Nibbler::isNeckPattern1(std::pair <std::size_t, std::size_t> cell1,
-    std::pair <std::size_t, std::size_t> cell2)
+bool arcade::Nibbler::isNeckPattern1(const std::pair <std::size_t, std::size_t> cell1,
+    const std::pair <std::size_t, std::size_t> cell2) const noexcept
 {
     return (_snakePos[_snakePos.size() - 3].first == cell1.first &&
         _snakePos[_snakePos.size() - 3].second == cell1.second &&
@@ -117,8 +117,8 @@ bool arcade::Nibbler::isNeckPattern1(std::pair <std::size_t, std::size_t> cell1,
         _snakePos[_snakePos.size() - 4].second == cell2.second);
 }
 
-bool arcade::Nibbler::isNeckPattern2(std::pair <std::size_t, std::size_t> cell1,
-    std::pair <std::size_t, std::size_t> cell2)
+bool arcade::Nibbler::isNeckPattern2(const std::pair <std::size_t, std::size_t> cell1,
+    const std::pair <std::size_t, std::size_t> cell2) const noexcept
 {
     return (_snakePos[_snakePos.size() - 3].first == cell2.first &&
         _snakePos[_snakePos.size() - 3].second == cell2.second &&
@@ -126,20 +126,20 @@ bool arcade::Nibbler::isNeckPattern2(std::pair <std::size_t, std::size_t> cell1,
         _snakePos[_snakePos.size() - 4].second == cell1.second);
 }
 
-bool arcade::Nibbler::isSnakeNeck(std::pair <std::size_t, std::size_t> cell1,
-    std::pair <std::size_t, std::size_t> cell2)
+bool arcade::Nibbler::isSnakeNeck(const std::pair <std::size_t, std::size_t> cell1,
+    const std::pair <std::size_t, std::size_t> cell2) const noexcept
 {
     return (isNeckPattern1(cell1, cell2) || isNeckPattern2(cell1, cell2));
 }
 
-bool arcade::Nibbler::checkLoose(std::pair <std::size_t, std::size_t> cell1,
-    std::pair <std::size_t, std::size_t> cell2)
+bool arcade::Nibbler::checkLoose(const std::pair <std::size_t, std::size_t> cell1,
+    const std::pair <std::size_t, std::size_t> cell2) const noexcept
 {
     return (isSnakeBody(_map[cell1.first][cell1.second],
         _map[cell2.first][cell2.second]) && !isSnakeNeck(cell1, cell2));
 }
 
-bool arcade::Nibbler::checkWin()
+bool arcade::Nibbler::checkWin() const noexcept
 {
     for (std::size_t i = 0; i != _map.size(); i += 1) {
         for (std::size_t y = 0; y != _map[0].size(); y += 1) {
@@ -151,40 +151,40 @@ bool arcade::Nibbler::checkWin()
     return true;
 }
 
-bool arcade::Nibbler::isTJunctionUp(std::size_t x,  std::size_t y)
+bool arcade::Nibbler::isTJunctionUp(const std::size_t x, const std::size_t y) const noexcept
 {
     return (_map[x - 1][y] == '#' &&
         _map[x][y - 2] == ' ' &&
         _map[x][y + 1] == ' ');
 }
-bool arcade::Nibbler::isTJunctionDown(std::size_t x,  std::size_t y)
+bool arcade::Nibbler::isTJunctionDown(const std::size_t x, const  std::size_t y) const noexcept
 {
     return (_map[x + 1][y] == '#' &&
         _map[x][y - 2] == ' ' &&
         _map[x][y + 1] == ' ');
 }
 
-bool arcade::Nibbler::isTJunctionRight(std::size_t x,  std::size_t y)
+bool arcade::Nibbler::isTJunctionRight(const std::size_t x, const std::size_t y) const noexcept
 {
     return (_map[x][y - 2] == '#' &&
         _map[x + 1][y] == ' ' &&
         _map[x - 1][y] == ' ');
 }
 
-bool arcade::Nibbler::isTJunctionLeft(std::size_t x,  std::size_t y)
+bool arcade::Nibbler::isTJunctionLeft(const std::size_t x, const std::size_t y) const noexcept
 {
     return (_map[x][y + 1] == '#' &&
         _map[x + 1][y] == ' ' &&
         _map[x - 1][y] == ' ');
 }
 
-bool arcade::Nibbler::isTJunction(std::size_t x,  std::size_t y)
+bool arcade::Nibbler::isTJunction(const std::size_t x, const std::size_t y) const noexcept
 {
     return (isTJunctionUp(x,y) || isTJunctionDown(x,y) ||
         isTJunctionRight(x,y) || isTJunctionLeft(x,y));
 }
 
-void arcade::Nibbler::increaseScore()
+void arcade::Nibbler::increaseScore() noexcept
 {
     _score += 100;
     _scoreText = "score: " + std::to_string(_score);
@@ -192,8 +192,8 @@ void arcade::Nibbler::increaseScore()
     _textToDisplay.push_back(std::make_pair(_scoreText, std::make_pair(0, 0)));
 }
 
-void arcade::Nibbler::growSnakeTail(std::pair <std::size_t, std::size_t> snakeTailCell1,
-    std::pair <std::size_t, std::size_t> snakeTailCell2)
+void arcade::Nibbler::growSnakeTail(const std::pair <std::size_t, std::size_t> snakeTailCell1,
+    const std::pair <std::size_t, std::size_t> snakeTailCell2) noexcept
 {
     _map[_snakePos[0].first][_snakePos[0].second] = '=';
     _map[snakeTailCell1.first][snakeTailCell1.second] = '<';
@@ -204,7 +204,7 @@ void arcade::Nibbler::growSnakeTail(std::pair <std::size_t, std::size_t> snakeTa
         std::make_pair(snakeTailCell1.first, snakeTailCell1.second));
 }
 
-arcade::GameStatus arcade::Nibbler::goUp(std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Nibbler::goUp(const std::size_t x, const std::size_t y) noexcept
 {
     bool foodEaten = false;
     std::pair <std::size_t, std::size_t> snakeTailCell1 =
@@ -229,7 +229,7 @@ arcade::GameStatus arcade::Nibbler::goUp(std::size_t x, std::size_t y)
     return PLAYING;
 }
 
-arcade::GameStatus arcade::Nibbler::goDown(std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Nibbler::goDown(const std::size_t x, const std::size_t y) noexcept
 {
     bool foodEaten = false;
     std::pair <std::size_t, std::size_t> snakeTailCell1 =
@@ -254,7 +254,7 @@ arcade::GameStatus arcade::Nibbler::goDown(std::size_t x, std::size_t y)
     return PLAYING;
 }
 
-arcade::GameStatus arcade::Nibbler::goLeft(std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Nibbler::goLeft(const std::size_t x, const std::size_t y) noexcept
 {
     bool foodEaten = false;
     std::pair <std::size_t, std::size_t> snakeTailCell1 =
@@ -279,7 +279,7 @@ arcade::GameStatus arcade::Nibbler::goLeft(std::size_t x, std::size_t y)
     return PLAYING;
 }
 
-arcade::GameStatus arcade::Nibbler::goRight(std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Nibbler::goRight(const std::size_t x, const std::size_t y) noexcept
 {
     bool foodEaten = false;
     std::pair <std::size_t, std::size_t> snakeTailCell1 =
@@ -304,9 +304,9 @@ arcade::GameStatus arcade::Nibbler::goRight(std::size_t x, std::size_t y)
     return PLAYING;
 }
 
-void arcade::Nibbler::updatePlayerPos(std::pair<std::size_t, std::size_t> newCell1,
-    std::pair<std::size_t, std::size_t> newCell2,
-    std::pair<std::size_t, std::size_t> playerHead)
+void arcade::Nibbler::updatePlayerPos(const std::pair<std::size_t, std::size_t> newCell1,
+    const std::pair<std::size_t, std::size_t> newCell2,
+    const std::pair<std::size_t, std::size_t> playerHead) noexcept
 {
     std::size_t i;
 
@@ -326,7 +326,7 @@ void arcade::Nibbler::updatePlayerPos(std::pair<std::size_t, std::size_t> newCel
     }
 }
 
-std::pair<std::size_t, std::size_t> arcade::Nibbler::getPlayerHeadPos()
+std::pair<std::size_t, std::size_t> arcade::Nibbler::getPlayerHeadPos() const noexcept
 {
     std::size_t i = 0;
     std::size_t y = 0;
@@ -341,7 +341,7 @@ std::pair<std::size_t, std::size_t> arcade::Nibbler::getPlayerHeadPos()
     return std::make_pair(i, y);
 }
 
-void arcade::Nibbler::stockPlayerPos()
+void arcade::Nibbler::stockPlayerPos() noexcept
 {
     for (std::size_t i = 0; i != _map.size(); i += 1) {
         for (std::size_t y = 0; y != _map[0].size(); y += 1) {
@@ -355,7 +355,7 @@ void arcade::Nibbler::stockPlayerPos()
     }
 }
 
-arcade::GameStatus arcade::Nibbler::updateMap(arcade::KeyPressed key)
+arcade::GameStatus arcade::Nibbler::updateMap(arcade::KeyPressed key) noexcept
 {
     std::pair<std::size_t, std::size_t> playerPos = getPlayerHeadPos();
     GameStatus status = PLAYING;
@@ -379,7 +379,8 @@ arcade::GameStatus arcade::Nibbler::updateMap(arcade::KeyPressed key)
     return status;
 }
 
-arcade::GameStatus arcade::Nibbler::movingPlayerRight(std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Nibbler::movingPlayerRight(const std::size_t x,
+    const std::size_t y) noexcept
 {
     if (checkLoose(std::make_pair(x, y + 1),
         std::make_pair(x, y + 2)))
@@ -389,7 +390,8 @@ arcade::GameStatus arcade::Nibbler::movingPlayerRight(std::size_t x, std::size_t
     return NO_ACTIVITY;
 }
 
-arcade::GameStatus arcade::Nibbler::movingPlayerUp(std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Nibbler::movingPlayerUp(const std::size_t x,
+    const std::size_t y) noexcept
 {
     if (checkLoose(std::make_pair(x - 1, y - 1),
         std::make_pair(x - 1, y)))
@@ -399,7 +401,8 @@ arcade::GameStatus arcade::Nibbler::movingPlayerUp(std::size_t x, std::size_t y)
     return NO_ACTIVITY;
 }
 
-arcade::GameStatus arcade::Nibbler::movingPlayerLeft(std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Nibbler::movingPlayerLeft(const std::size_t x,
+    const std::size_t y) noexcept
 {
     if (checkLoose(std::make_pair(x, y - 2),
         std::make_pair(x, y - 3)))
@@ -409,7 +412,8 @@ arcade::GameStatus arcade::Nibbler::movingPlayerLeft(std::size_t x, std::size_t 
     return NO_ACTIVITY;
 }
 
-arcade::GameStatus arcade::Nibbler::movingPlayerDown(std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Nibbler::movingPlayerDown(const std::size_t x,
+    const std::size_t y) noexcept
 {
     if (checkLoose(std::make_pair(x + 1, y - 1),
         std::make_pair(x + 1, y)))
@@ -419,8 +423,8 @@ arcade::GameStatus arcade::Nibbler::movingPlayerDown(std::size_t x, std::size_t 
     return NO_ACTIVITY;
 }
 
-arcade::GameStatus arcade::Nibbler::checkMovingPlayer(arcade::KeyPressed
-    lastMove, std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Nibbler::checkMovingPlayer(const arcade::KeyPressed
+    lastMove, const std::size_t x, const std::size_t y) noexcept
 {
     if (lastMove == RIGHT)
         return movingPlayerRight(x, y);
@@ -433,39 +437,39 @@ arcade::GameStatus arcade::Nibbler::checkMovingPlayer(arcade::KeyPressed
     return NO_ACTIVITY;
 }
 
-arcade::GameStatus arcade::Nibbler::checkRightCell(std::size_t x, std::size_t y,
-    KeyPressed &lastMove)
+arcade::GameStatus arcade::Nibbler::checkRightCell(const std::size_t x,
+    const std::size_t y, KeyPressed &lastMove) noexcept
 {
     goRight(x, y);
     lastMove = RIGHT;
     return PLAYING;
 }
 
-arcade::GameStatus arcade::Nibbler::checkUpCell(std::size_t x, std::size_t y,
-    KeyPressed &lastMove)
+arcade::GameStatus arcade::Nibbler::checkUpCell(const std::size_t x,
+    const std::size_t y, KeyPressed &lastMove) noexcept
 {
     goUp(x, y);
     lastMove = UP;
     return PLAYING;
 }
 
-arcade::GameStatus arcade::Nibbler::checkLeftCell(std::size_t x, std::size_t y,
-    KeyPressed &lastMove)
+arcade::GameStatus arcade::Nibbler::checkLeftCell(const std::size_t x,
+    const std::size_t y, KeyPressed &lastMove) noexcept
 {
     goLeft(x, y);
     lastMove = LEFT;
     return PLAYING;
 }
 
-arcade::GameStatus arcade::Nibbler::checkDownCell(std::size_t x, std::size_t y,
-    KeyPressed &lastMove)
+arcade::GameStatus arcade::Nibbler::checkDownCell(const std::size_t x,
+    const std::size_t y, KeyPressed &lastMove) noexcept
 {
     goDown(x, y);
     lastMove = DOWN;
     return PLAYING;
 }
 
-arcade::GameStatus arcade::Nibbler::nextPlayerMove()
+arcade::GameStatus arcade::Nibbler::nextPlayerMove() noexcept
 {
     std::pair<std::size_t, std::size_t> playerPos = getPlayerHeadPos();
     std::size_t x = playerPos.first;

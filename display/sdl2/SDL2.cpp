@@ -35,7 +35,7 @@ void arcade::SDL2::initFont(const char *fontPath)
         throw arcade::Error(SDL_GetError());
 }
 
-void arcade::SDL2::init(std::map<std::string, Color> pattern)
+void arcade::SDL2::init(const std::unordered_map<std::string, Color> pattern)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
     initWindow();
@@ -44,7 +44,7 @@ void arcade::SDL2::init(std::map<std::string, Color> pattern)
     pickColor(pattern);
 }
 
-arcade::KeyPressed arcade::SDL2::checkKeyPressed(SDL_Event event)
+arcade::KeyPressed arcade::SDL2::checkKeyPressed(const SDL_Event event) const noexcept
 {
     if (event.key.keysym.sym == SDLK_BACKSPACE)
         return BACKSPACE;
@@ -69,17 +69,17 @@ arcade::KeyPressed arcade::SDL2::checkKeyPressed(SDL_Event event)
     return OTHER;
 }
 
-void arcade::SDL2::setKey(arcade::KeyPressed newValue)
+void arcade::SDL2::setKey(const arcade::KeyPressed newValue) noexcept
 {
     _key = newValue;
 }
 
-arcade::KeyPressed arcade::SDL2::getKey()
+arcade::KeyPressed arcade::SDL2::getKey() const noexcept
 {
     return _key;
 }
 
-void arcade::SDL2::game()
+void arcade::SDL2::game() noexcept
 {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -92,7 +92,7 @@ void arcade::SDL2::game()
     SDL_RenderClear(_renderer);
 }
 
-void arcade::SDL2::stop()
+void arcade::SDL2::stop() noexcept
 {
     SDL_FreeSurface(_spriteSurface);
     SDL_DestroyTexture(_message);
@@ -102,7 +102,7 @@ void arcade::SDL2::stop()
     SDL_Quit();
 }
 
-void arcade::SDL2::displayMap(std::array<std::string, 23> map, std::size_t size)
+void arcade::SDL2::displayMap(const std::array<std::string, 23> map, const std::size_t size) noexcept
 {
     size_t y = 0;
     std::string hay;
@@ -129,7 +129,7 @@ void arcade::SDL2::displayMap(std::array<std::string, 23> map, std::size_t size)
     }
 }
 
-void arcade::SDL2::displayText(std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay)
+void arcade::SDL2::displayText(const std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay)
 {
     for (auto it : textToDisplay) {
         SDL_Color White = {255, 255, 255, 255};
@@ -145,41 +145,37 @@ void arcade::SDL2::displayText(std::vector<std::pair<std::string, std::pair<int,
     }
 }
 
-void arcade::SDL2::changeColor(std::map<std::string, Color> patternMap)
+void arcade::SDL2::changeColor(const std::unordered_map<std::string, Color> patternMap)
 {
     pickColor(patternMap);
 }
 
-void arcade::SDL2::pickColor(std::map<std::string, Color> patternMap)
+void arcade::SDL2::pickColor(const std::unordered_map<std::string, Color> patternMap)
 {
-    int posX = 0;
-    int posY = 0;
-
     for (auto it = patternMap.begin(); it != patternMap.end(); it++) {
         if (it->second == BLACK)
-            initRectShape(it->first, 0, 0, 0, posX, posY);
+            initRectShape(it->first, 0, 0, 0);
         if (it->second == WHITE)
-            initRectShape(it->first, 255, 255, 255, posX, posY);
+            initRectShape(it->first, 255, 255, 255);
         if (it->second == RED)
-            initRectShape(it->first, 255, 0, 0, posX, posY);
+            initRectShape(it->first, 255, 0, 0);
         if (it->second == BLUE)
-            initRectShape(it->first, 0, 0, 255, posX, posY);
+            initRectShape(it->first, 0, 0, 255);
         if (it->second == GREEN)
-            initRectShape(it->first, 0, 128, 0, posX, posY);
+            initRectShape(it->first, 0, 128, 0);
         if (it->second == YELLOW)
-            initRectShape(it->first, 255, 255, 0, posX, posY);
+            initRectShape(it->first, 255, 255, 0);
         if (it->second == YELLOW)
-            initRectShape(it->first, 255, 255, 0, posX, posY);
+            initRectShape(it->first, 255, 255, 0);
         if (it->second == CYAN)
-            initRectShape(it->first, 0, 255, 255, posX, posY);
+            initRectShape(it->first, 0, 255, 255);
         if (it->second == GRAY)
-            initRectShape(it->first, 150, 150, 150, posX, posY);
-        posX += 10;
-        posY += 10;
+            initRectShape(it->first, 150, 150, 150);
     }
 }
 
-void arcade::SDL2::initRectShape(std::string pattern, short r, short g, short b, int, int)
+void arcade::SDL2::initRectShape(const std::string pattern, const short r,
+    const short g, const short b)
 {
     SDL_Texture* spriteTexture = NULL;
 

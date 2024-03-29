@@ -19,20 +19,20 @@ namespace arcade
             NCurses() : _key(OTHER) {};
             ~NCurses() = default;
 
-            void init(std::map<std::string, Color> pattern) override;
-            void stop() override;
-            void game() override;
-            void changeColor(std::map<std::string, Color> patternMap) override;
-            void displayText(std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) override;
-            void displayMap(std::array<std::string, 23> map, std::size_t size) override;
-            arcade::KeyPressed getKey() override;
-            void setKey(arcade::KeyPressed newValue) override;
+            void init(const std::unordered_map<std::string, Color> pattern) noexcept override;
+            void stop() noexcept override;
+            void game() noexcept override;
+            void changeColor(const std::unordered_map<std::string, Color> patternMap) noexcept override;
+            void displayText(const std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) noexcept override;
+            void displayMap(const std::array<std::string, 23> map, const std::size_t size) noexcept override;
+            KeyPressed getKey() const noexcept override;
+            void setKey(const KeyPressed newValue) noexcept override;
 
         private:
-            void pickColor(std::map<std::string, Color> patternMap);
-            arcade::KeyPressed checkKeyPressed(int key);
+            void pickColor(const std::unordered_map<std::string, Color> patternMap) noexcept;
+            KeyPressed checkKeyPressed(const int key) const noexcept;
             KeyPressed _key;
-            std::map<std::string, Color> _charMap;
+            std::unordered_map<std::string, Color> _charMap;
             WINDOW *_window;
     };
 }

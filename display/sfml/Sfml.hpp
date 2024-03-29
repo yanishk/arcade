@@ -21,21 +21,21 @@ namespace arcade
             Sfml() : _key(OTHER) {};
             ~Sfml() = default;
 
-            void init(std::map<std::string, Color> pattern) override;
-            void stop() override;
-            void game() override;
-            void changeColor(std::map<std::string, Color> patternMap) override;
-            void displayText(std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) override;
-            void displayMap(std::array<std::string, 23> map, std::size_t size) override;
-            KeyPressed getKey() override;
-            void setKey(KeyPressed newValue) override;
+            void init(const std::unordered_map<std::string, Color> pattern) override;
+            void stop() noexcept override;
+            void game() noexcept override;
+            void changeColor(const std::unordered_map<std::string, Color> patternMap) noexcept override;
+            void displayText(const std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) noexcept override;
+            void displayMap(const std::array<std::string, 23> map, const std::size_t size) noexcept override;
+            KeyPressed getKey() const noexcept override;
+            void setKey(const KeyPressed newValue) noexcept override;
 
         private:
-            void initWindow();
-            void pickColor(std::map<std::string, Color> patternMap);
-            void initRectShape(std::string pattern, sf::Color color, int posX, int posY);
-            KeyPressed checkKeyPressed(sf::Event event);
-            std::map<std::string, sf::RectangleShape> _charMap;
+            void initWindow() noexcept;
+            void pickColor(const std::unordered_map<std::string, Color> patternMap) noexcept;
+            void initRectShape(const std::string pattern, const sf::Color color, const int posX, const int posY) noexcept;
+            KeyPressed checkKeyPressed(const sf::Event event) const noexcept;
+            std::unordered_map<std::string, sf::RectangleShape> _charMap;
             sf::RenderWindow _window;
             KeyPressed _key;
             sf::Font _font;

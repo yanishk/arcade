@@ -21,23 +21,24 @@ namespace arcade
             SDL2() : _key(OTHER) {};
             ~SDL2() = default;
 
-            void init(std::map<std::string, Color> pattern) override;
-            void stop() override;
-            void game() override;
-            void changeColor(std::map<std::string, Color> patternMap) override;
-            void displayText(std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) override;
-            void displayMap(std::array<std::string, 23> map, std::size_t size) override;
-            KeyPressed getKey() override;
-            void setKey(KeyPressed newValue) override;
+            void init(const std::unordered_map<std::string, Color> pattern) override;
+            void stop() noexcept override;
+            void game() noexcept override;
+            void changeColor(const std::unordered_map<std::string, Color> patternMap) override;
+            void displayText(const std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) override;
+            void displayMap(const std::array<std::string, 23> map, const std::size_t size) noexcept override;
+            KeyPressed getKey() const noexcept override;
+            void setKey(const KeyPressed newValue) noexcept override;
 
         private:
             void initWindow();
             void initSurface();
             void initFont(const char *fontPath);
-            void initRectShape(std::string pattern, short r, short g, short b, int xPos, int yPos);
-            void pickColor(std::map<std::string, Color> patternMap);
-            KeyPressed checkKeyPressed(SDL_Event event);
-            std::map<std::string, SDL_Texture *> _charMap;
+            void initRectShape(const std::string pattern, const short r,
+                const short g, const short b);
+            void pickColor(const std::unordered_map<std::string, Color> patternMap);
+            KeyPressed checkKeyPressed(const SDL_Event event) const noexcept;
+            std::unordered_map<std::string, SDL_Texture *> _charMap;
             SDL_Window *_window;
             SDL_Renderer *_renderer;
             SDL_Surface *_spriteSurface;

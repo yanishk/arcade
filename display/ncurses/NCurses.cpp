@@ -7,7 +7,7 @@
 
 #include "NCurses.hpp"
 
-void arcade::NCurses::init(std::map<std::string, Color> pattern)
+void arcade::NCurses::init(const std::unordered_map<std::string, Color> pattern) noexcept
 {
     initscr();
     noecho();
@@ -29,19 +29,19 @@ void arcade::NCurses::init(std::map<std::string, Color> pattern)
     pickColor(pattern);
 }
 
-void arcade::NCurses::stop()
+void arcade::NCurses::stop() noexcept
 {
     wclear(_window);
     delwin(_window);
     endwin();
 }
 
-void arcade::NCurses::game()
+void arcade::NCurses::game() noexcept
 {
     _key = checkKeyPressed(getch());
 }
 
-void arcade::NCurses::displayText(std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay)
+void arcade::NCurses::displayText(const std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) noexcept
 {
     for (auto it : textToDisplay) {
         wattron(_window, COLOR_PAIR(DEFAULT));
@@ -49,17 +49,17 @@ void arcade::NCurses::displayText(std::vector<std::pair<std::string, std::pair<i
     }
 }
 
-void arcade::NCurses::changeColor(std::map<std::string, Color> patternMap)
+void arcade::NCurses::changeColor(const std::unordered_map<std::string, Color> patternMap) noexcept
 {
     pickColor(patternMap);
 }
 
-void arcade::NCurses::pickColor(std::map<std::string, Color> patternMap)
+void arcade::NCurses::pickColor(const std::unordered_map<std::string, Color> patternMap) noexcept
 {
     _charMap = patternMap;
 }
 
-void arcade::NCurses::displayMap(std::array<std::string, 23> map, std::size_t size)
+void arcade::NCurses::displayMap(const std::array<std::string, 23> map, const std::size_t size) noexcept
 {
     int index = 1;
     std::string pattern;
@@ -83,7 +83,7 @@ void arcade::NCurses::displayMap(std::array<std::string, 23> map, std::size_t si
     wrefresh(_window);
 }
 
-arcade::KeyPressed arcade::NCurses::checkKeyPressed(int key)
+arcade::KeyPressed arcade::NCurses::checkKeyPressed(const int key) const noexcept
 {
     wclear(_window);
     if (key == KEY_UP)
@@ -109,12 +109,12 @@ arcade::KeyPressed arcade::NCurses::checkKeyPressed(int key)
     return OTHER;
 }
 
-void arcade::NCurses::setKey(arcade::KeyPressed newValue)
+void arcade::NCurses::setKey(const arcade::KeyPressed newValue) noexcept
 {
     _key = newValue;
 }
 
-arcade::KeyPressed arcade::NCurses::getKey()
+arcade::KeyPressed arcade::NCurses::getKey() const noexcept
 {
     return _key;
 }

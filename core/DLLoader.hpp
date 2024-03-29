@@ -14,7 +14,7 @@
 template<typename T>
 class DLLoader {
     public:
-        DLLoader(std::string pathLib) {
+        DLLoader(const std::string pathLib) {
             _handle = dlopen(pathLib.c_str(), RTLD_LAZY);
             if (!_handle)
                 throw arcade::Error(dlerror());

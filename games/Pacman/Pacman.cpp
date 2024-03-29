@@ -57,7 +57,7 @@ arcade::Pacman::Pacman() : _score(0), _time(0), _turn(0),
     _sizeCell = 1;
 }
 
-void arcade::Pacman::resetGame()
+void arcade::Pacman::resetGame() noexcept
 {
     _map = _defaultMap;
     _patternPath["G"] = RED;
@@ -82,28 +82,38 @@ void arcade::Pacman::resetGame()
     _textToDisplay.push_back(std::make_pair(_scoreText, std::make_pair(0, 0)));
 }
 
-std::map<std::string, arcade::Color> arcade::Pacman::getPattern()
+std::unordered_map<std::string, arcade::Color> arcade::Pacman::getPattern() const noexcept
 {
     return _patternPath;
 }
 
-std::size_t arcade::Pacman::getMapCellSize()
+std::size_t arcade::Pacman::getMapCellSize() const noexcept
 {
     return _sizeCell;
 }
 
-std::vector<std::pair<std::string, std::pair<int, int>>> arcade::Pacman::getText()
+std::vector<std::pair<std::string, std::pair<int, int>>> arcade::Pacman::getText() const noexcept
 {
     return _textToDisplay;
 }
 
-std::array<std::string, 23> arcade::Pacman::getMap()
+std::array<std::string, 23> arcade::Pacman::getMap() const noexcept
 {
     return _map;
 }
 
+std::pair<std::size_t, std::size_t> arcade::Pacman::getIndexes() const noexcept
+{
+    return std::make_pair(0, 0);
+}
+
+void arcade::Pacman::incrementTime() noexcept
+{
+    _time += 1;
+}
+
 std::pair<std::size_t, std::size_t> arcade::Pacman::getPos(char c,
-    std::array<std::string, 23> map)
+    const std::array<std::string, 23> map) const noexcept
 {
     std::size_t i = 0;
     std::size_t y = 0;
@@ -119,7 +129,7 @@ std::pair<std::size_t, std::size_t> arcade::Pacman::getPos(char c,
 }
 
 std::vector<std::pair<char,std::pair<std::size_t, std::size_t>>>
-    arcade::Pacman::getGhostsPos()
+    arcade::Pacman::getGhostsPos() const noexcept
 {
     std::size_t i = 0;
     std::size_t y = 0;
@@ -138,47 +148,37 @@ std::vector<std::pair<char,std::pair<std::size_t, std::size_t>>>
     return ghostsPos;
 }
 
-void arcade::Pacman::incrementTime()
-{
-    _time += 1;
-}
-
-std::pair<std::size_t, std::size_t> arcade::Pacman::getIndexes()
-{
-    return std::make_pair(0, 0);
-}
-
-bool arcade::Pacman::isAvailableForPlayer(char c)
+bool arcade::Pacman::isAvailableForPlayer(const char c) const noexcept
 {
     return (c == ' ' || c == '.' || c == '!' || c == 'G');
 }
 
-bool arcade::Pacman::isAvailableForGhost(char c)
+bool arcade::Pacman::isAvailableForGhost(const char c) const noexcept
 {
     return (c == ' ' || c == '.' || c == '!' || c == '/' || c == 'P' || c == 'G');
 }
 
-bool arcade::Pacman::isBigFood(char c)
+bool arcade::Pacman::isBigFood(const char c) const noexcept
 {
     return (c == '!');
 }
 
-bool arcade::Pacman::isLittleFood(char c)
+bool arcade::Pacman::isLittleFood(const char c) const noexcept
 {
     return (c == '.');
 }
 
-bool arcade::Pacman::isGhost(char c)
+bool arcade::Pacman::isGhost(const char c) const noexcept
 {
     return (c == 'G');
 }
 
-bool arcade::Pacman::isPlayer(char c)
+bool arcade::Pacman::isPlayer(const char c) const noexcept
 {
     return (c == 'P');
 }
 
-arcade::Pacman::Food arcade::Pacman::whichFood(char c)
+arcade::Pacman::Food arcade::Pacman::whichFood(const char c) noexcept
 {
     if (isBigFood(c)) {
         _canEatGhosts = true;
@@ -190,7 +190,7 @@ arcade::Pacman::Food arcade::Pacman::whichFood(char c)
     return arcade::Pacman::NOTAFOOD;
 }
 
-void arcade::Pacman::increaseScore(arcade::Pacman::Food foodType)
+void arcade::Pacman::increaseScore(const arcade::Pacman::Food foodType) noexcept
 {
     if (foodType == LITTLEFOOD)
         _score += 10;
@@ -201,7 +201,7 @@ void arcade::Pacman::increaseScore(arcade::Pacman::Food foodType)
     _textToDisplay.push_back(std::make_pair(_scoreText, std::make_pair(0, 0)));
 }
 
-void arcade::Pacman::resetGhostPosition(std::size_t i)
+void arcade::Pacman::resetGhostPosition(const std::size_t i) noexcept
 {
     _map[_defaultGhostsPos[i].second.first]
     [_defaultGhostsPos[i].second.second] = 'G';
@@ -213,7 +213,7 @@ void arcade::Pacman::resetGhostPosition(std::size_t i)
     _score += 200;
 }
 
-arcade::GameStatus arcade::Pacman::checkGhostUp(std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Pacman::checkGhostUp(const std::size_t x, const std::size_t y) noexcept
 {
     _map[x - 1][y] = _map[x][y];
     for (std::size_t i = 0; i != _ghostsPos.size(); i += 1) {
@@ -226,7 +226,7 @@ arcade::GameStatus arcade::Pacman::checkGhostUp(std::size_t x, std::size_t y)
 }
 
 
-arcade::GameStatus arcade::Pacman::checkGhostDown(std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Pacman::checkGhostDown(const std::size_t x, const std::size_t y) noexcept
 {
     _map[x + 1][y] = _map[x][y];
     for (std::size_t i = 0; i != _ghostsPos.size(); i += 1) {
@@ -238,7 +238,7 @@ arcade::GameStatus arcade::Pacman::checkGhostDown(std::size_t x, std::size_t y)
     return PLAYING;
 }
 
-arcade::GameStatus arcade::Pacman::checkGhostLeft(std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Pacman::checkGhostLeft(const std::size_t x, const std::size_t y) noexcept
 {
     _map[x][y - 1] = _map[x][y];
     for (std::size_t i = 0; i != _ghostsPos.size(); i += 1) {
@@ -250,7 +250,7 @@ arcade::GameStatus arcade::Pacman::checkGhostLeft(std::size_t x, std::size_t y)
     return PLAYING;
 }
 
-arcade::GameStatus arcade::Pacman::checkGhostRight(std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Pacman::checkGhostRight(const std::size_t x, const std::size_t y) noexcept
 {
     _map[x][y + 1] = _map[x][y];
     for (std::size_t i = 0; i != _ghostsPos.size(); i += 1) {
@@ -262,7 +262,7 @@ arcade::GameStatus arcade::Pacman::checkGhostRight(std::size_t x, std::size_t y)
     return PLAYING;
 }
 
-arcade::GameStatus arcade::Pacman::goUp(std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Pacman::goUp(const std::size_t x, const std::size_t y) noexcept
 {
     arcade::Pacman::Food foodType = whichFood(_map[x - 1][y]);
 
@@ -281,7 +281,7 @@ arcade::GameStatus arcade::Pacman::goUp(std::size_t x, std::size_t y)
     return PLAYING;
 }
 
-arcade::GameStatus arcade::Pacman::goDown(std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Pacman::goDown(const std::size_t x, const std::size_t y) noexcept
 {
     arcade::Pacman::Food foodType = whichFood(_map[x + 1][y]);
 
@@ -300,7 +300,7 @@ arcade::GameStatus arcade::Pacman::goDown(std::size_t x, std::size_t y)
     return PLAYING;
 }
 
-arcade::GameStatus arcade::Pacman::goLeft(std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Pacman::goLeft(const std::size_t x, const std::size_t y) noexcept
 {
     arcade::Pacman::Food foodType = NOTAFOOD;
 
@@ -325,7 +325,7 @@ arcade::GameStatus arcade::Pacman::goLeft(std::size_t x, std::size_t y)
     return PLAYING;
 }
 
-arcade::GameStatus arcade::Pacman::goRight(std::size_t x, std::size_t y)
+arcade::GameStatus arcade::Pacman::goRight(const std::size_t x, const std::size_t y) noexcept
 {
     arcade::Pacman::Food foodType = NOTAFOOD;
 
@@ -351,7 +351,7 @@ arcade::GameStatus arcade::Pacman::goRight(std::size_t x, std::size_t y)
 }
 
 arcade::GameStatus arcade::Pacman::ghostGoUp(std::size_t &x,
-    std::size_t &y, char &previousChar, int ghostIndex)
+    std::size_t &y, char &previousChar, const int ghostIndex) noexcept
 {
     if (isGhost(_map[x - 1][y]))
         return PLAYING;
@@ -368,7 +368,7 @@ arcade::GameStatus arcade::Pacman::ghostGoUp(std::size_t &x,
 }
 
 arcade::GameStatus arcade::Pacman::ghostGoDown(std::size_t &x,
-    std::size_t &y, char &previousChar, int ghostIndex)
+    std::size_t &y, char &previousChar, const int ghostIndex) noexcept
 {
     if (isGhost(_map[x + 1][y]))
         return PLAYING;
@@ -385,7 +385,7 @@ arcade::GameStatus arcade::Pacman::ghostGoDown(std::size_t &x,
 }
 
 arcade::GameStatus arcade::Pacman::ghostGoLeft(std::size_t &x,
-    std::size_t &y, char &previousChar, int ghostIndex)
+    std::size_t &y, char &previousChar, const int ghostIndex) noexcept
 {
     if (isGhost(_map[x][y - 1]))
         return PLAYING;
@@ -402,7 +402,7 @@ arcade::GameStatus arcade::Pacman::ghostGoLeft(std::size_t &x,
 }
 
 arcade::GameStatus arcade::Pacman::ghostGoRight(std::size_t &x,
-    std::size_t &y, char &previousChar, int ghostIndex)
+    std::size_t &y, char &previousChar, const int ghostIndex) noexcept
 {
     if (isGhost(_map[x][y + 1]))
         return PLAYING;
@@ -418,7 +418,7 @@ arcade::GameStatus arcade::Pacman::ghostGoRight(std::size_t &x,
     return PLAYING;
 }
 
-arcade::GameStatus arcade::Pacman::getOutOfBox()
+arcade::GameStatus arcade::Pacman::getOutOfBox() noexcept
 {
     GameStatus status = PLAYING;
 
@@ -435,7 +435,7 @@ arcade::GameStatus arcade::Pacman::getOutOfBox()
     return status;
 }
 
-arcade::GameStatus arcade::Pacman::checkGhostDirections(std::size_t i)
+arcade::GameStatus arcade::Pacman::checkGhostDirections(const std::size_t i) noexcept
 {
     std::size_t randomNumber = rand() % 4 + 1;
 
@@ -454,7 +454,7 @@ arcade::GameStatus arcade::Pacman::checkGhostDirections(std::size_t i)
     return NO_ACTIVITY;
 }
 
-arcade::GameStatus arcade::Pacman::moveGhosts()
+arcade::GameStatus arcade::Pacman::moveGhosts() noexcept
 {
     std::size_t countCantChase = 0;
     GameStatus status = PLAYING;
@@ -480,7 +480,7 @@ arcade::GameStatus arcade::Pacman::moveGhosts()
     return PLAYING;
 }
 
-void arcade::Pacman::setGhostsColor()
+void arcade::Pacman::setGhostsColor() noexcept
 {
     if (_canEatGhosts && _patternPath["G"] == RED)
         _patternPath["G"] = CYAN;
@@ -491,7 +491,7 @@ void arcade::Pacman::setGhostsColor()
     }
 }
 
-arcade::GameStatus arcade::Pacman::manageGhosts()
+arcade::GameStatus arcade::Pacman::manageGhosts() noexcept
 {
     GameStatus status = PLAYING;
 
@@ -513,7 +513,7 @@ arcade::GameStatus arcade::Pacman::manageGhosts()
     return status;
 }
 
-void arcade::Pacman::impulsePacman(arcade::KeyPressed &key, arcade::KeyPressed &lastKey)
+void arcade::Pacman::impulsePacman(arcade::KeyPressed &key, arcade::KeyPressed &lastKey) noexcept
 {
     if (_turn == 0)
         key = LEFT;
@@ -522,7 +522,7 @@ void arcade::Pacman::impulsePacman(arcade::KeyPressed &key, arcade::KeyPressed &
         key = lastKey;
 }
 
-arcade::GameStatus arcade::Pacman::restartGame(arcade::KeyPressed &lastKey)
+arcade::GameStatus arcade::Pacman::restartGame(arcade::KeyPressed &lastKey) noexcept
 {
     if (checkWin() == WON) {
         lastKey = OTHER;
@@ -533,7 +533,7 @@ arcade::GameStatus arcade::Pacman::restartGame(arcade::KeyPressed &lastKey)
 }
 
 arcade::GameStatus arcade::Pacman::manageKeys(arcade::KeyPressed &key,
-    arcade::KeyPressed &lastKey)
+    arcade::KeyPressed &lastKey) noexcept
 {
     std::pair<std::size_t, std::size_t> playerPos = getPos('P', _map);
     std::size_t x = playerPos.first;
@@ -557,7 +557,7 @@ arcade::GameStatus arcade::Pacman::manageKeys(arcade::KeyPressed &key,
     return status;
 }
 
-arcade::GameStatus arcade::Pacman::updateMap(arcade::KeyPressed key)
+arcade::GameStatus arcade::Pacman::updateMap(arcade::KeyPressed key) noexcept
 {
     static KeyPressed lastKey = OTHER;
     GameStatus status = PLAYING;
@@ -571,7 +571,7 @@ arcade::GameStatus arcade::Pacman::updateMap(arcade::KeyPressed key)
     return manageKeys(key, lastKey);
 }
 
-bool arcade::Pacman::checkWin()
+bool arcade::Pacman::checkWin() const noexcept
 {
     for (std::size_t i = 0; i != _map.size(); i += 1) {
         for (std::size_t y = 0; y != _map[0].size(); y += 1) {

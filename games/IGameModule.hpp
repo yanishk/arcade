@@ -10,7 +10,7 @@
 
 #include <string>
 #include <array>
-#include <map>
+#include <unordered_map>
 #include <vector>
 #include "KeyPressed.hpp"
 #include "GameStatus.hpp"
@@ -25,15 +25,15 @@ namespace arcade
             ~IGameModule() = default;
 
             virtual void resetGame() = 0;
-            virtual std::array<std::string, 23> getMap() = 0;
-            virtual std::size_t getMapCellSize() = 0;
-            virtual std::map<std::string, Color> getPattern() = 0;
-            virtual std::vector<std::pair<std::string, std::pair<int, int>>> getText() = 0;
+            virtual std::array<std::string, 23> getMap() const = 0;
+            virtual std::size_t getMapCellSize() const = 0;
+            virtual std::unordered_map<std::string, Color> getPattern() const = 0;
+            virtual std::vector<std::pair<std::string, std::pair<int, int>>> getText() const = 0;
             virtual void incrementTime() = 0;
-            virtual GameStatus updateMap(arcade::KeyPressed key) = 0;
-            virtual std::pair<std::size_t, std::size_t> getIndexes() = 0;
-            virtual void keyEnter(arcade::KeyPressed key) = 0;
-            virtual void initText(std::vector<std::string>, std::vector<std::string>) = 0;
+            virtual GameStatus updateMap(KeyPressed key) = 0;
+            virtual std::pair<std::size_t, std::size_t> getIndexes() const = 0;
+            virtual void keyEnter(const KeyPressed key) = 0;
+            virtual void initText(const std::vector<std::string>, const std::vector<std::string>) = 0;
     };
 }
 

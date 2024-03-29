@@ -18,65 +18,65 @@ namespace arcade
             Nibbler();
             ~Nibbler() = default;
 
-            void resetGame() override;
-            std::array<std::string, 23> getMap() override;
-            std::size_t getMapCellSize() override;
-            std::map<std::string, Color> getPattern() override;
-            std::vector<std::pair<std::string, std::pair<int, int>>> getText() override;
-            void incrementTime() override;
-            GameStatus updateMap(KeyPressed key) override;
-            void keyEnter(arcade::KeyPressed) override {};
-            void initText(std::vector<std::string>, std::vector<std::string>) override {};
-            std::pair<std::size_t, std::size_t> getIndexes() override;
+            void resetGame() noexcept override;
+            std::array<std::string, 23> getMap() const noexcept override;
+            std::size_t getMapCellSize() const noexcept override;
+            std::unordered_map<std::string, Color> getPattern() const noexcept override;
+            std::vector<std::pair<std::string, std::pair<int, int>>> getText() const noexcept override;
+            void incrementTime() noexcept override;
+            GameStatus updateMap(KeyPressed key) noexcept override;
+            void keyEnter(const KeyPressed) noexcept override {};
+            void initText(const std::vector<std::string>, const std::vector<std::string>) noexcept override {};
+            std::pair<std::size_t, std::size_t> getIndexes() const noexcept override;
 
         private:
-            GameStatus goUp(std::size_t x, std::size_t y);
-            GameStatus goDown(std::size_t x, std::size_t y);
-            GameStatus goLeft(std::size_t x, std::size_t y);
-            GameStatus goRight(std::size_t x, std::size_t y);
-            void stockPlayerPos();
-            std::pair<std::size_t, std::size_t> getPlayerHeadPos();
-            void updatePlayerPos(std::pair <std::size_t, std::size_t> newCell1,
-                std::pair <std::size_t, std::size_t> newCell2,
-                std::pair<std::size_t, std::size_t> playerHead);
-            void increaseScore();
-            void growSnakeTail(std::pair <std::size_t, std::size_t> snakeTailCell1,
-                std::pair <std::size_t, std::size_t> snakeTailCell2);
-            bool isAvailable(char c);
-            bool isFood(char firstChar, char secondChar);
-            bool isSnakeBody(char firstChar, char secondChar);
-            bool isNeckPattern1(std::pair <std::size_t, std::size_t> cell1,
-                    std::pair <std::size_t, std::size_t> cell2);
-            bool isNeckPattern2(std::pair <std::size_t, std::size_t> cell1,
-                std::pair <std::size_t, std::size_t> cell2);
-            bool isSnakeNeck(std::pair <std::size_t, std::size_t> cell1,
-                std::pair <std::size_t, std::size_t> cell2);
-            bool checkLoose(std::pair <std::size_t, std::size_t> cell1,
-                std::pair <std::size_t, std::size_t> cell2);
-            bool checkWin();
-            bool isTJunction(std::size_t x,  std::size_t y);
-            bool isTJunctionUp(std::size_t x,  std::size_t y);
-            bool isTJunctionDown(std::size_t x,  std::size_t y);
-            bool isTJunctionRight(std::size_t x,  std::size_t y);
-            bool isTJunctionLeft(std::size_t x,  std::size_t y);
-            GameStatus nextPlayerMove();
-            GameStatus checkRightCell(std::size_t x, std::size_t y,
-            KeyPressed &lastMove);
-            GameStatus checkUpCell(std::size_t x, std::size_t y,
-            KeyPressed &lastMove);
-            GameStatus checkLeftCell(std::size_t x, std::size_t y,
-            KeyPressed &lastMove);
-            GameStatus checkDownCell(std::size_t x, std::size_t y,
-            KeyPressed &lastMove);
-            GameStatus checkMovingPlayer(arcade::KeyPressed
-            lastMove, std::size_t x, std::size_t y);
-            GameStatus movingPlayerRight(std::size_t x, std::size_t y);
-            GameStatus movingPlayerUp(std::size_t x, std::size_t y);
-            GameStatus movingPlayerLeft(std::size_t x, std::size_t y);
-            GameStatus movingPlayerDown(std::size_t x, std::size_t y);
+            GameStatus goUp(const std::size_t x, const std::size_t y) noexcept;
+            GameStatus goDown(const std::size_t x, const std::size_t y) noexcept;
+            GameStatus goLeft(const std::size_t x, const std::size_t y) noexcept;
+            GameStatus goRight(const std::size_t x, const std::size_t y) noexcept;
+            void stockPlayerPos() noexcept;
+            std::pair<std::size_t, std::size_t> getPlayerHeadPos() const noexcept;
+            void updatePlayerPos(const std::pair <std::size_t, std::size_t> newCell1,
+                const std::pair <std::size_t, std::size_t> newCell2,
+                const std::pair<std::size_t, std::size_t> playerHead) noexcept;
+            void increaseScore() noexcept;
+            void growSnakeTail(const std::pair <std::size_t, std::size_t> snakeTailCell1,
+                const std::pair <std::size_t, std::size_t> snakeTailCell2) noexcept;
+            bool isAvailable(const char c) const noexcept;
+            bool isFood(const char firstChar, const char secondChar) const noexcept;
+            bool isSnakeBody(const char firstChar, const char secondChar) const noexcept;
+            bool isNeckPattern1(const std::pair <std::size_t, std::size_t> cell1,
+                    const std::pair <std::size_t, std::size_t> cell2) const noexcept;
+            bool isNeckPattern2(const std::pair <std::size_t, std::size_t> cell1,
+                const std::pair <std::size_t, std::size_t> cell2) const noexcept;
+            bool isSnakeNeck(const std::pair <std::size_t, std::size_t> cell1,
+                const std::pair <std::size_t, std::size_t> cell2) const noexcept;
+            bool checkLoose(const std::pair <std::size_t, std::size_t> cell1,
+                const std::pair <std::size_t, std::size_t> cell2) const noexcept;
+            bool checkWin() const noexcept;
+            bool isTJunction(const std::size_t x, const std::size_t y) const noexcept;
+            bool isTJunctionUp(const std::size_t x, const std::size_t y) const noexcept;
+            bool isTJunctionDown(const std::size_t x, const std::size_t y) const noexcept;
+            bool isTJunctionRight(const std::size_t x, const std::size_t y) const noexcept;
+            bool isTJunctionLeft(const std::size_t x, const std::size_t y) const noexcept;
+            GameStatus nextPlayerMove() noexcept;
+            GameStatus checkRightCell(const std::size_t x, const std::size_t y,
+            KeyPressed &lastMove) noexcept;
+            GameStatus checkUpCell(const std::size_t x, const std::size_t y,
+            KeyPressed &lastMove) noexcept;
+            GameStatus checkLeftCell(const std::size_t x, const std::size_t y,
+            KeyPressed &lastMove) noexcept;
+            GameStatus checkDownCell(const std::size_t x, const std::size_t y,
+            KeyPressed &lastMove) noexcept;
+            GameStatus checkMovingPlayer(const arcade::KeyPressed
+            lastMove, const std::size_t x, const std::size_t y) noexcept;
+            GameStatus movingPlayerRight(const std::size_t x, const std::size_t y) noexcept;
+            GameStatus movingPlayerUp(const std::size_t x, const std::size_t y) noexcept;
+            GameStatus movingPlayerLeft(const std::size_t x, const std::size_t y) noexcept;
+            GameStatus movingPlayerDown(const std::size_t x, const std::size_t y) noexcept;
             std::array<std::string, 23> _defaultMap;
             std::array<std::string, 23> _map;
-            std::map<std::string, Color> _patternPath;
+            std::unordered_map<std::string, Color> _patternPath;
             std::size_t _sizeCell;
             std::vector <std::pair<std::size_t, std::size_t>> _snakePos;
             std::vector<std::pair<std::string, std::pair<int, int>>> _textToDisplay;
