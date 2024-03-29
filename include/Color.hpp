@@ -12,13 +12,15 @@ namespace arcade
 {
     enum Color
     {
-        BLACK = 1,
-        WHITE = 2,
-        RED = 3,
-        BLUE = 4,
-        GREEN = 5,
-        YELLOW = 6,
-        WHITE_TEXT = 7
+        DEFAULT,
+        BLACK,
+        WHITE,
+        RED,
+        BLUE,
+        GREEN,
+        YELLOW,
+        GRAY,
+        CYAN
     };
 }
 

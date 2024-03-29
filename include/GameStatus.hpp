@@ -14,8 +14,10 @@ namespace arcade
     {
         PLAYING,
         WON,
+        WON_AND_RELOADED,
         LOOSE,
-        QUIT
+        QUIT,
+        NO_ACTIVITY
     };
 }
 

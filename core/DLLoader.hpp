@@ -21,7 +21,7 @@ class DLLoader {
             }
             dlerror();
         };
-        ~DLLoader();
+        ~DLLoader() = default;
 
         T *getInstance() {
             T *(*cosine)(void);
@@ -40,7 +40,6 @@ class DLLoader {
             }
         };
 
-    protected:
     private:
         void *_handle;
 };

@@ -18,11 +18,11 @@ namespace arcade
         LEFT,
         RIGHT,
         R,
-        BACKSPACE,
-        CLOSE_BUTTON,
         P,
         N,
         G,
+        BACKSPACE,
+        CLOSE_BUTTON,
         ENTER
     };
 }

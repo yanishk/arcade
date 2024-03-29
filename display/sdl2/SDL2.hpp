@@ -25,20 +25,23 @@ namespace arcade
             void init(std::map<std::string, Color> pattern) override;
             void stop() override;
             void game() override;
+            void changeColor(std::map<std::string, Color> patternMap) override;
             void displayText(std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) override;
-            void displayMap(std::array<std::string, 21> map, std::size_t size) override;
+            void displayMap(std::array<std::string, 23> map, std::size_t size) override;
             arcade::KeyPressed getKey() override;
             void setKey(arcade::KeyPressed newValue) override;
-            void pickColor(std::map<std::string, Color> patternMap) override;
 
         private:
             void initRectShape(std::string pattern, short r, short g, short b, int xPos, int yPos);
             void initWindow();
+            void initSurface();
             void initFont(const char *fontPath);
+            void pickColor(std::map<std::string, Color> patternMap);
             arcade::KeyPressed checkKeyPressed(SDL_Event event);
             std::map<std::string, SDL_Texture *> _charMap;
             SDL_Window *_window;
             SDL_Renderer *_renderer;
+            SDL_Surface *_spriteSurface;
             TTF_Font *_font;
             SDL_Texture *_message;
             KeyPressed _key;

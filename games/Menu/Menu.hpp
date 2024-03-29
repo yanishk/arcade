@@ -19,23 +19,24 @@ namespace arcade
             ~Menu() = default;
 
             void resetGame() override {};
-            std::array<std::string, 21> getMap() override;
+            std::array<std::string, 23> getMap() override;
             std::map<std::string, Color> getPattern() override;
             std::size_t getMapCellSize() override;
             std::vector<std::pair<std::string, std::pair<int, int>>> getText() override;
+            void incrementTime() override;
             GameStatus updateMap(arcade::KeyPressed key) override;
-            bool isAvailable(char c) override;
-            void keyDown();
-            void keyUp();
+            std::pair<std::size_t, std::size_t> getIndexes() override;
             void keyEnter(arcade::KeyPressed key) override;
             void initText(std::vector<std::string>, std::vector<std::string>) override;
-            std::pair<std::size_t, std::size_t> getIndexes() override;
 
         private:
+            void keyDown();
+            void keyUp();
             std::vector<std::pair<std::string, std::pair<int, int>>> _textToDisplay;
-            std::array<std::string, 21> _map;
+            std::array<std::string, 23> _map;
             std::map<std::string, arcade::Color> _patternPath;
             std::size_t _sizeCell;
+            std::size_t _time;
             bool _libSelected;
             bool _gameSelected;
             std::size_t _selectLibArrow;

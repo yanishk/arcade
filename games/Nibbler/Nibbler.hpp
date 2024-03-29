@@ -20,12 +20,12 @@ namespace arcade
             ~Nibbler() = default;
 
             void resetGame() override;
-            std::array<std::string, 21> getMap() override;
+            std::array<std::string, 23> getMap() override;
             std::size_t getMapCellSize() override;
             std::map<std::string, Color> getPattern() override;
             std::vector<std::pair<std::string, std::pair<int, int>>> getText() override;
+            void incrementTime() override;
             GameStatus updateMap(KeyPressed key) override;
-            bool isAvailable(char c) override;
             void keyEnter(arcade::KeyPressed) override {};
             void initText(std::vector<std::string>, std::vector<std::string>) override {};
             std::pair<std::size_t, std::size_t> getIndexes() override;
@@ -43,6 +43,7 @@ namespace arcade
             void increaseScore();
             void growSnakeTail(std::pair <std::size_t, std::size_t> snakeTailCell1,
                 std::pair <std::size_t, std::size_t> snakeTailCell2);
+            bool isAvailable(char c);
             bool isFood(char firstChar, char secondChar);
             bool isSnakeBody(char firstChar, char secondChar);
             bool isNeckPattern1(std::pair <std::size_t, std::size_t> cell1,
@@ -74,14 +75,15 @@ namespace arcade
             GameStatus movingPlayerUp(std::size_t x, std::size_t y);
             GameStatus movingPlayerLeft(std::size_t x, std::size_t y);
             GameStatus movingPlayerDown(std::size_t x, std::size_t y);
-            std::array<std::string, 21> _defaultMap;
-            std::array<std::string, 21> _map;
+            std::array<std::string, 23> _defaultMap;
+            std::array<std::string, 23> _map;
             std::map<std::string, Color> _patternPath;
             std::size_t _sizeCell;
             std::vector <std::pair<std::size_t, std::size_t>> _snakePos;
             std::vector<std::pair<std::string, std::pair<int, int>>> _textToDisplay;
             std::string _scoreText;
             std::size_t _score;
+            std::size_t _time = 0;
     };
 }
 

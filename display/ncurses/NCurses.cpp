@@ -15,13 +15,17 @@ void arcade::NCurses::init(std::map<std::string, Color> pattern)
     nodelay(stdscr, TRUE);
     start_color();
     curs_set(false);
-    init_pair(WHITE_TEXT, COLOR_WHITE, COLOR_BLACK);
+    init_pair(DEFAULT, COLOR_WHITE, COLOR_BLACK);
     init_pair(BLACK, COLOR_BLACK, COLOR_BLACK);
     init_pair(WHITE, COLOR_WHITE, COLOR_WHITE);
     init_pair(RED, COLOR_RED, COLOR_RED);
     init_pair(BLUE, COLOR_BLUE, COLOR_BLUE);
     init_pair(GREEN, COLOR_GREEN, COLOR_GREEN);
     init_pair(YELLOW, COLOR_YELLOW, COLOR_YELLOW);
+    init_pair(CYAN, COLOR_CYAN, COLOR_CYAN);
+    init_color(8, 150, 150, 150);
+    init_pair(GRAY, 8, 8);
+
     _window = newwin(500, 500, 0, 0);
     pickColor(pattern);
 }
@@ -41,30 +45,22 @@ void arcade::NCurses::game()
 void arcade::NCurses::displayText(std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay)
 {
     for (auto it : textToDisplay) {
-        wattron(_window, COLOR_PAIR(WHITE_TEXT));
+        wattron(_window, COLOR_PAIR(DEFAULT));
         mvwprintw(_window, (it.second.second * 0.03), (it.second.first * 0.1), "%s\n", it.first.c_str());
     }
 }
 
-void arcade::NCurses::pickColor(std::map<std::string, Color> patternMap)
+void arcade::NCurses::changeColor(std::map<std::string, Color> patternMap)
 {
-    for (auto it = patternMap.begin(); it != patternMap.end(); it++) {
-        if (it->second == BLACK)
-            _charMap[it->first] = BLACK;
-        if (it->second == WHITE)
-            _charMap[it->first] = WHITE;
-        if (it->second == RED)
-            _charMap[it->first] = RED;
-        if (it->second == BLUE)
-            _charMap[it->first] = BLUE;
-        if (it->second == GREEN)
-            _charMap[it->first] = GREEN;
-        if (it->second == YELLOW)
-            _charMap[it->first] = YELLOW;
-    }
+    pickColor(patternMap);
 }
 
-void arcade::NCurses::displayMap(std::array<std::string, 21> map, std::size_t size)
+void arcade::NCurses::pickColor(std::map<std::string, Color> patternMap)
+{
+    _charMap = patternMap;
+}
+
+void arcade::NCurses::displayMap(std::array<std::string, 23> map, std::size_t size)
 {
     int index = 1;
     std::string pattern;
@@ -83,6 +79,7 @@ void arcade::NCurses::displayMap(std::array<std::string, 21> map, std::size_t si
                 mvwprintw(_window, x + index, y, "  ");
             }
         }
+        wattroff(_window, COLOR_PAIR(colorChosen));
     }
     wrefresh(_window);
 }

@@ -26,13 +26,14 @@ namespace arcade
             void loop();
 
         private:
-            void managePlayerAutoMoves(std::chrono::steady_clock::time_point &clockT0, int index);
             size_t manageDynamicSwitchLib(std::size_t indexLib, size_t indexGame);
             size_t manageDynamicSwitchGame(std::size_t indexLib, size_t indexGame);
             void manageMenuSwitchLib(std::size_t indexLib, std::size_t indexGame, std::size_t tmp);
             void manageMenuSwitchGame(std::size_t indexLib, std::size_t indexGame, std::size_t tmp);
             void readLib(std::string libPath);
-            void readGame();
+            void incrementGameTime(std::chrono::steady_clock::time_point &clockT2,
+            std::chrono::steady_clock::time_point &clockT0, std::size_t indexGame);
+            void accelerateMovement(arcade::GameStatus &status, unsigned int &msTimer);
             std::vector<DLLoader<IDisplayModule> *> _libLoader;
             std::vector<DLLoader<IGameModule> *> _gameLoader;
             std::vector<arcade::IGameModule *> _game;

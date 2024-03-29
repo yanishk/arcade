@@ -9,7 +9,7 @@
 
 void arcade::SDL2::initWindow()
 {
-    _window = SDL_CreateWindow("SDL2", 20, 20, 1080, 1920,
+    _window = SDL_CreateWindow("SDL2", 20, 20, 1920, 1080,
         SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (!_window) {
         std::cerr << SDL_GetError() << std::endl;
@@ -20,6 +20,16 @@ void arcade::SDL2::initWindow()
         std::cerr << SDL_GetError() << std::endl;
         exit(84);
     }
+}
+
+void arcade::SDL2::initSurface()
+{
+    _spriteSurface = SDL_CreateRGBSurface(0, 780, 480, 32, 0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF);
+    if (!_spriteSurface) {
+        std::cerr << SDL_GetError() << std::endl;
+        exit(84);
+    }
+    return;
 }
 
 void arcade::SDL2::initFont(const char *fontPath)
@@ -39,6 +49,7 @@ void arcade::SDL2::init(std::map<std::string, Color> pattern)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
     initWindow();
+    initSurface();
     initFont("display/sdl2/asset/font/OpenSans-Regular.ttf");
     pickColor(pattern);
 }
@@ -93,6 +104,7 @@ void arcade::SDL2::game()
 
 void arcade::SDL2::stop()
 {
+    SDL_FreeSurface(_spriteSurface);
     SDL_DestroyTexture(_message);
     SDL_DestroyWindow(_window);
     TTF_CloseFont(_font);
@@ -100,7 +112,7 @@ void arcade::SDL2::stop()
     SDL_Quit();
 }
 
-void arcade::SDL2::displayMap(std::array<std::string, 21> map, std::size_t size)
+void arcade::SDL2::displayMap(std::array<std::string, 23> map, std::size_t size)
 {
     size_t y = 0;
     std::string hay;
@@ -147,30 +159,35 @@ void arcade::SDL2::displayText(std::vector<std::pair<std::string, std::pair<int,
     }
 }
 
+void arcade::SDL2::changeColor(std::map<std::string, Color> patternMap)
+{
+    pickColor(patternMap);
+}
+
 void arcade::SDL2::pickColor(std::map<std::string, Color> patternMap)
 {
     int posX = 0;
     int posY = 0;
 
     for (auto it = patternMap.begin(); it != patternMap.end(); it++) {
-        if (it->second == BLACK) {
+        if (it->second == BLACK)
             initRectShape(it->first, 0, 0, 0, posX, posY);
-        }
-        if (it->second == WHITE){
+        if (it->second == WHITE)
             initRectShape(it->first, 255, 255, 255, posX, posY);
-        }
-        if (it->second == RED) {
+        if (it->second == RED)
             initRectShape(it->first, 255, 0, 0, posX, posY);
-        }
-        if (it->second == BLUE) {
+        if (it->second == BLUE)
             initRectShape(it->first, 0, 0, 255, posX, posY);
-        }
-        if (it->second == GREEN) {
+        if (it->second == GREEN)
             initRectShape(it->first, 0, 128, 0, posX, posY);
-        }
-        if (it->second == YELLOW) {
+        if (it->second == YELLOW)
             initRectShape(it->first, 255, 255, 0, posX, posY);
-        }
+        if (it->second == YELLOW)
+            initRectShape(it->first, 255, 255, 0, posX, posY);
+        if (it->second == CYAN)
+            initRectShape(it->first, 0, 255, 255, posX, posY);
+        if (it->second == GRAY)
+            initRectShape(it->first, 150, 150, 150, posX, posY);
         posX += 10;
         posY += 10;
     }
@@ -178,18 +195,15 @@ void arcade::SDL2::pickColor(std::map<std::string, Color> patternMap)
 
 void arcade::SDL2::initRectShape(std::string pattern, short r, short g, short b, int, int)
 {
-    SDL_Surface *spriteSurface = SDL_CreateRGBSurface(0, 780, 480, 32, 0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF);
-    if (!spriteSurface) {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(84);
-    }
-    SDL_FillRect(spriteSurface, NULL, SDL_MapRGB(spriteSurface->format, r, g, b));
-    SDL_Texture* spriteTexture = SDL_CreateTextureFromSurface(_renderer, spriteSurface);
+    SDL_Texture* spriteTexture = NULL;
+
+    if (_charMap[pattern] != NULL)
+        free(_charMap[pattern]);
+    SDL_FillRect(_spriteSurface, NULL, SDL_MapRGB(_spriteSurface->format, r, g, b));
+    spriteTexture = SDL_CreateTextureFromSurface(_renderer, _spriteSurface);
     if (!spriteTexture) {
         std::cerr << SDL_GetError() << std::endl;
         exit(84);
     }
-
-    SDL_FreeSurface(spriteSurface);
     _charMap[pattern] = spriteTexture;
 }

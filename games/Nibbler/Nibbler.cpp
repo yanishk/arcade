@@ -8,7 +8,7 @@
 #include "Nibbler.hpp"
 #include <iostream>
 
-arcade::Nibbler::Nibbler() : _score(0)
+arcade::Nibbler::Nibbler() : _score(0), _time(0)
 {
     _defaultMap = {
         "######################################",
@@ -30,6 +30,8 @@ arcade::Nibbler::Nibbler() : _score(0)
         "##[]##########  ######  ##########[]##",
         "##            <=====8~              ##",
         "######################################",
+        "                                      ",
+        "                                      ",
         "                                      ",
         "                                      "
     };
@@ -53,11 +55,12 @@ void arcade::Nibbler::resetGame()
     stockPlayerPos();
     _textToDisplay.clear();
     _score = 0;
+    _time = 0;
     _scoreText = "score: " + std::to_string(_score);
     _textToDisplay.push_back(std::make_pair(_scoreText, std::make_pair(0, 0)));
 }
 
-std::array<std::string, 21> arcade::Nibbler::getMap()
+std::array<std::string, 23> arcade::Nibbler::getMap()
 {
     return _map;
 }
@@ -75,6 +78,16 @@ std::vector<std::pair<std::string, std::pair<int, int>>> arcade::Nibbler::getTex
 std::size_t arcade::Nibbler::getMapCellSize()
 {
     return _sizeCell;
+}
+
+void arcade::Nibbler::incrementTime()
+{
+    _time += 1;
+}
+
+std::pair<std::size_t, std::size_t> arcade::Nibbler::getIndexes()
+{
+    return std::make_pair(0, 0);
 }
 
 bool arcade::Nibbler::isAvailable(char c)
@@ -373,7 +386,7 @@ arcade::GameStatus arcade::Nibbler::movingPlayerRight(std::size_t x, std::size_t
         return LOOSE;
     if (isAvailable(_map[x][y + 1]) && isAvailable(_map[x][y + 2]))
         return goRight(x, y);
-    return QUIT;
+    return NO_ACTIVITY;
 }
 
 arcade::GameStatus arcade::Nibbler::movingPlayerUp(std::size_t x, std::size_t y)
@@ -383,7 +396,7 @@ arcade::GameStatus arcade::Nibbler::movingPlayerUp(std::size_t x, std::size_t y)
         return LOOSE;
     if (isAvailable(_map[x - 1][y - 1]) && isAvailable(_map[x - 1][y]))
         return goUp(x, y);
-    return QUIT;
+    return NO_ACTIVITY;
 }
 
 arcade::GameStatus arcade::Nibbler::movingPlayerLeft(std::size_t x, std::size_t y)
@@ -393,7 +406,7 @@ arcade::GameStatus arcade::Nibbler::movingPlayerLeft(std::size_t x, std::size_t 
         return LOOSE;
     if (isAvailable(_map[x][y - 2]) && isAvailable(_map[x][y - 3]))
         return goLeft(x, y);
-    return QUIT;
+    return NO_ACTIVITY;
 }
 
 arcade::GameStatus arcade::Nibbler::movingPlayerDown(std::size_t x, std::size_t y)
@@ -403,7 +416,7 @@ arcade::GameStatus arcade::Nibbler::movingPlayerDown(std::size_t x, std::size_t 
         return LOOSE;
     if (isAvailable(_map[x + 1][y - 1]) && isAvailable(_map[x + 1][y]))
         return goDown(x, y);
-    return QUIT;
+    return NO_ACTIVITY;
 }
 
 arcade::GameStatus arcade::Nibbler::checkMovingPlayer(arcade::KeyPressed
@@ -417,7 +430,7 @@ arcade::GameStatus arcade::Nibbler::checkMovingPlayer(arcade::KeyPressed
         return movingPlayerLeft(x, y);
     if (lastMove == DOWN)
         return movingPlayerDown(x, y);
-    return QUIT;
+    return NO_ACTIVITY;
 }
 
 arcade::GameStatus arcade::Nibbler::checkRightCell(std::size_t x, std::size_t y,
@@ -462,7 +475,7 @@ arcade::GameStatus arcade::Nibbler::nextPlayerMove()
 
     if (isTJunction(x, y))
         return PLAYING;
-    if (status != QUIT)
+    if (status != NO_ACTIVITY)
         return status;
     if (isAvailable(_map[x][y + 1]) && isAvailable(_map[x][y + 2]))
         return checkRightCell(x, y, lastMove);
@@ -473,9 +486,4 @@ arcade::GameStatus arcade::Nibbler::nextPlayerMove()
     if (isAvailable(_map[x + 1][y - 1]) && isAvailable(_map[x + 1][y]))
         return checkDownCell(x, y, lastMove);
     return PLAYING;
-}
-
-std::pair<std::size_t, std::size_t> arcade::Nibbler::getIndexes()
-{
-    return std::make_pair(0, 0);
 }

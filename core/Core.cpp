@@ -107,6 +107,26 @@ size_t arcade::Core::manageDynamicSwitchGame(std::size_t indexLib, std::size_t i
     return indexGame;
 }
 
+void arcade::Core::accelerateMovement(arcade::GameStatus &status, unsigned int &msTimer)
+{
+    if (status == WON_AND_RELOADED) {
+        if (msTimer >= 15)
+            msTimer -= 15;
+        status = PLAYING;
+    }
+}
+
+void arcade::Core::incrementGameTime(std::chrono::steady_clock::time_point &clockT2,
+    std::chrono::steady_clock::time_point &clockT0, std::size_t indexGame)
+{
+    auto timeElapsed2 = std::chrono::duration_cast
+    <std::chrono::seconds>(clockT2 - clockT0);
+    if (timeElapsed2.count() >= 1) {
+        _game[indexGame]->incrementTime();
+        clockT0 = std::chrono::steady_clock::now();
+    }
+}
+
 void arcade::Core::loop()
 {
     GameStatus status = PLAYING;
@@ -115,14 +135,17 @@ void arcade::Core::loop()
     std::size_t tmpLib = 0;
     std::size_t tmpGame = 0;
     auto clockT0 = std::chrono::steady_clock::now();
-    unsigned int msTimer = 140;
+    auto clockT1 = std::chrono::steady_clock::now();
+    unsigned int msTimer = 115;
 
     _lib[indexLib]->init(_game[indexGame]->getPattern());
     _game[indexGame]->initText(_libText, _gameText);
     while (status == PLAYING) {
-        auto clockT1 = std::chrono::steady_clock::now();
-        auto timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(clockT1 - clockT0);
+        auto clockT2 = std::chrono::steady_clock::now();
+        auto timeElapsed = std::chrono::duration_cast
+        <std::chrono::milliseconds>(clockT2 - clockT1);
         if (timeElapsed.count() > msTimer) {
+            _lib[indexLib]->changeColor(_game[indexGame]->getPattern());
             if (indexGame == 0) {
                 indexGame = _game[0]->getIndexes().second;
                 manageMenuSwitchGame(indexLib, indexGame, tmpGame);
@@ -136,13 +159,13 @@ void arcade::Core::loop()
             _game[indexGame]->getMapCellSize());
             _lib[indexLib]->game();
             status = _game[indexGame]->updateMap(_lib[indexLib]->getKey());
-            clockT0 = std::chrono::steady_clock::now();
-            if (indexGame != 0) {
-                indexGame = manageDynamicSwitchGame(indexLib, indexGame);
-                indexLib = manageDynamicSwitchLib(indexLib, indexGame);
-            }
+            clockT1 = std::chrono::steady_clock::now();
+            indexLib = manageDynamicSwitchLib(indexLib, indexGame);
+            indexGame = manageDynamicSwitchGame(indexLib, indexGame);
             _lib[indexLib]->setKey(OTHER);
+            incrementGameTime(clockT2, clockT0, indexGame);
         }
+        accelerateMovement(status, msTimer);
     }
     _lib[indexLib]->stop();
     for (auto it : _libLoader)

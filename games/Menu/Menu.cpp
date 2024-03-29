@@ -40,7 +40,7 @@ void arcade::Menu::initText(std::vector<std::string> libName, std::vector<std::s
     }
 }
 
-std::array<std::string, 21> arcade::Menu::getMap()
+std::array<std::string, 23> arcade::Menu::getMap()
 {
     return _map;
 }
@@ -58,6 +58,16 @@ std::size_t arcade::Menu::getMapCellSize()
 std::map<std::string, arcade::Color> arcade::Menu::getPattern()
 {
     return _patternPath;
+}
+
+std::pair<std::size_t, std::size_t> arcade::Menu::getIndexes()
+{
+    return std::make_pair(_indexLib, _indexGame);
+}
+
+void arcade::Menu::incrementTime()
+{
+    _time += 1;
 }
 
 void arcade::Menu::keyDown()
@@ -136,14 +146,4 @@ arcade::GameStatus arcade::Menu::updateMap(arcade::KeyPressed key)
         keyUp();
     keyEnter(key);
     return PLAYING;
-}
-
-bool arcade::Menu::isAvailable(char c)
-{
-    return (c == ' ');
-}
-
-std::pair<std::size_t, std::size_t> arcade::Menu::getIndexes()
-{
-    return std::make_pair(_indexLib, _indexGame);
 }

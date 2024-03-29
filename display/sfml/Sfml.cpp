@@ -20,36 +20,67 @@ void arcade::Sfml::init(std::map<std::string, Color> pattern)
         exit(84);
 }
 
+void arcade::Sfml::changeColor(std::map<std::string, Color> patternMap)
+{
+    for (auto it = patternMap.begin(); it != patternMap.end(); it++) {
+        if (it->second == BLACK)
+            _charMap[it->first].setFillColor(sf::Color::Black);
+        if (it->second == WHITE)
+            _charMap[it->first].setFillColor(sf::Color::White);
+        if (it->second == RED)
+            _charMap[it->first].setFillColor(sf::Color::Red);
+        if (it->second == BLUE)
+            _charMap[it->first].setFillColor(sf::Color::Blue);
+        if (it->second == GREEN)
+            _charMap[it->first].setFillColor(sf::Color::Green);
+        if (it->second == YELLOW)
+            _charMap[it->first].setFillColor(sf::Color::Yellow);
+        if (it->second == CYAN)
+            _charMap[it->first].setFillColor(sf::Color::Cyan);
+        if (it->second == GRAY)
+            _charMap[it->first].setFillColor(sf::Color(150, 150, 150));
+    }
+}
+
+void arcade::Sfml::initRectShape(std::string pattern, sf::Color color, int posX, int posY)
+{
+    sf::RectangleShape rect;
+
+    rect.setSize(sf::Vector2f(40, 40));
+    rect.setPosition(posY, posX);
+    rect.setFillColor(color);
+
+    _charMap[pattern] = rect;
+}
+
 void arcade::Sfml::pickColor(std::map<std::string, Color> patternMap)
 {
     int posX = 0;
     int posY = 0;
 
     for (auto it = patternMap.begin(); it != patternMap.end(); it++) {
-        if (it->second == BLACK) {
+        if (it->second == BLACK)
             initRectShape(it->first, sf::Color::Black, posX, posY);
-        }
-        if (it->second == WHITE){
+        if (it->second == WHITE)
             initRectShape(it->first, sf::Color::White, posX, posY);
-        }
-        if (it->second == RED) {
+        if (it->second == RED)
             initRectShape(it->first, sf::Color::Red, posX, posY);
-        }
-        if (it->second == BLUE) {
+        if (it->second == BLUE)
             initRectShape(it->first, sf::Color::Blue, posX, posY);
-        }
-        if (it->second == GREEN) {
+        if (it->second == GREEN)
             initRectShape(it->first, sf::Color::Green, posX, posY);
-        }
-        if (it->second == YELLOW) {
+        if (it->second == YELLOW)
             initRectShape(it->first, sf::Color::Yellow, posX, posY);
-        }
+        if (it->second == CYAN)
+            initRectShape(it->first, sf::Color::Cyan, posX, posY);
+        if (it->second == GRAY)
+            initRectShape(it->first, sf::Color(150, 150, 150), posX, posY);
         posX += 10;
         posY += 10;
     }
 }
 
-void arcade::Sfml::displayMap(std::array<std::string, 21> map, std::size_t size)
+void arcade::Sfml::displayMap(std::array<std::string, 23> map, std::size_t size)
 {
     size_t y = 0;
     std::string hay;
@@ -88,17 +119,6 @@ void arcade::Sfml::displayText(std::vector<std::pair<std::string, std::pair<int,
         text.setPosition(it.second.first, it.second.second);
         _window.draw(text);
     }
-}
-
-void arcade::Sfml::initRectShape(std::string pattern, sf::Color color, int posX, int posY)
-{
-    sf::RectangleShape rect;
-
-    rect.setSize(sf::Vector2f(40, 40));
-    rect.setPosition(posY, posX);
-    rect.setFillColor(color);
-
-    _charMap[pattern] = rect;
 }
 
 void arcade::Sfml::game()
