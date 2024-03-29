@@ -8,12 +8,12 @@
 #ifndef IDISPLAYMODULE_HPP_
 #define IDISPLAYMODULE_HPP_
 
-#include "KeyPressed.hpp"
-#include "Color.hpp"
 #include <string>
 #include <map>
 #include <array>
 #include <vector>
+#include "KeyPressed.hpp"
+#include "Color.hpp"
 
 namespace arcade
 {
@@ -29,8 +29,8 @@ namespace arcade
             virtual void changeColor(std::map<std::string, Color> patternMap) = 0;
             virtual void displayText(std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) = 0;
             virtual void displayMap(std::array<std::string, 23> map, std::size_t size) = 0;
-            virtual arcade::KeyPressed getKey() = 0;
-            virtual void setKey(arcade::KeyPressed newValue) = 0;
+            virtual KeyPressed getKey() = 0;
+            virtual void setKey(KeyPressed newValue) = 0;
     };
 }
 

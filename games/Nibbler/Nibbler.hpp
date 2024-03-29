@@ -9,7 +9,6 @@
 #define NIBBLER_HPP_
 
 #include "IGameModule.hpp"
-#include <map>
 
 namespace arcade
 {

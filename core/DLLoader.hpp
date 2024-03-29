@@ -9,35 +9,30 @@
 #define DLLOADER_HPP_
 
 #include <dlfcn.h>
+#include "Error.hpp"
 
 template<typename T>
 class DLLoader {
     public:
         DLLoader(std::string pathLib) {
             _handle = dlopen(pathLib.c_str(), RTLD_LAZY);
-            if (!_handle) {
-                fprintf(stderr, "%s\n", dlerror());
-                exit(84);
-            }
-            dlerror();
+            if (!_handle)
+                throw arcade::Error(dlerror());
         };
         ~DLLoader() = default;
 
         T *getInstance() {
             T *(*cosine)(void);
             cosine = (T*(*)(void)) dlsym(_handle, "entryPoint");
-            char *error = dlerror();
-            if (error != NULL) {
-                fprintf(stderr, "%s\n", error);
-                exit(84);
-            }
+            char *errorMessage = dlerror();
+            if (errorMessage != NULL)
+                throw arcade::Error(errorMessage);
             return (*cosine)();
         };
 
         void closeLib() {
-            if (dlclose(_handle) != 0) {
-                exit(84);
-            }
+            if (dlclose(_handle) != 0)
+                throw arcade::Error(dlerror());
         };
 
     private:

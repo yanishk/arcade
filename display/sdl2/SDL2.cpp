@@ -6,43 +6,33 @@
 */
 
 #include "SDL2.hpp"
+#include "Error.hpp"
 
 void arcade::SDL2::initWindow()
 {
     _window = SDL_CreateWindow("SDL2", 20, 20, 1920, 1080,
         SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-    if (!_window) {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(84);
-    }
+    if (!_window)
+        throw arcade::Error(SDL_GetError());
     _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_PRESENTVSYNC);
-    if (!_renderer) {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(84);
-    }
+    if (!_renderer)
+        throw arcade::Error(SDL_GetError());
 }
 
 void arcade::SDL2::initSurface()
 {
     _spriteSurface = SDL_CreateRGBSurface(0, 780, 480, 32, 0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF);
-    if (!_spriteSurface) {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(84);
-    }
-    return;
+    if (!_spriteSurface)
+        throw arcade::Error(SDL_GetError());
 }
 
 void arcade::SDL2::initFont(const char *fontPath)
 {
-    if (TTF_Init() == -1) {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(84);
-    }
+    if (TTF_Init() == -1)
+        throw arcade::Error(SDL_GetError());
     _font = TTF_OpenFont(fontPath, 20);
-    if (!_font) {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(84);
-    }
+    if (!_font)
+        throw arcade::Error(SDL_GetError());
 }
 
 void arcade::SDL2::init(std::map<std::string, Color> pattern)
@@ -144,15 +134,11 @@ void arcade::SDL2::displayText(std::vector<std::pair<std::string, std::pair<int,
     for (auto it : textToDisplay) {
         SDL_Color White = {255, 255, 255, 255};
         SDL_Surface *surfaceMsg = TTF_RenderText_Solid(_font, it.first.c_str(), White);
-        if (!surfaceMsg) {
-            std::cerr << SDL_GetError() << std::endl;
-            exit(84);
-        }
+        if (!surfaceMsg)
+            throw arcade::Error(SDL_GetError());
         _message = SDL_CreateTextureFromSurface(_renderer, surfaceMsg);
-        if (!_message) {
-            std::cerr << SDL_GetError() << std::endl;
-            exit(84);
-        }
+        if (!_message)
+            throw arcade::Error(SDL_GetError());
         SDL_Rect Message_rect = {it.second.first, it.second.second, surfaceMsg->w, surfaceMsg->h};
         SDL_FreeSurface(surfaceMsg);
         SDL_RenderCopy(_renderer, _message, NULL, &Message_rect);
@@ -201,9 +187,7 @@ void arcade::SDL2::initRectShape(std::string pattern, short r, short g, short b,
         free(_charMap[pattern]);
     SDL_FillRect(_spriteSurface, NULL, SDL_MapRGB(_spriteSurface->format, r, g, b));
     spriteTexture = SDL_CreateTextureFromSurface(_renderer, _spriteSurface);
-    if (!spriteTexture) {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(84);
-    }
+    if (!spriteTexture)
+        throw arcade::Error(SDL_GetError());
     _charMap[pattern] = spriteTexture;
 }

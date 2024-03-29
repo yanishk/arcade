@@ -6,18 +6,21 @@
 */
 
 #include "Sfml.hpp"
+#include "Error.hpp"
 
 void arcade::Sfml::initWindow()
 {
     _window.create(sf::VideoMode(1920, 1080), "SFML", sf::Style::Default);
 }
 
+#include <iostream>
+
 void arcade::Sfml::init(std::map<std::string, Color> pattern)
 {
     initWindow();
     pickColor(pattern);
     if (!_font.loadFromFile("display/sfml/asset/font/OpenSans-Regular.ttf"))
-        exit(84);
+        throw arcade::Error("Font not found");
 }
 
 void arcade::Sfml::changeColor(std::map<std::string, Color> patternMap)
@@ -49,7 +52,6 @@ void arcade::Sfml::initRectShape(std::string pattern, sf::Color color, int posX,
     rect.setSize(sf::Vector2f(40, 40));
     rect.setPosition(posY, posX);
     rect.setFillColor(color);
-
     _charMap[pattern] = rect;
 }
 

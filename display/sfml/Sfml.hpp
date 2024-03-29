@@ -15,7 +15,8 @@
 
 namespace arcade
 {
-    class Sfml : virtual public IDisplayModule {
+    class Sfml : virtual public IDisplayModule
+    {
         public:
             Sfml() : _key(OTHER) {};
             ~Sfml() = default;
@@ -26,14 +27,14 @@ namespace arcade
             void changeColor(std::map<std::string, Color> patternMap) override;
             void displayText(std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) override;
             void displayMap(std::array<std::string, 23> map, std::size_t size) override;
-            arcade::KeyPressed getKey() override;
-            void setKey(arcade::KeyPressed newValue) override;
+            KeyPressed getKey() override;
+            void setKey(KeyPressed newValue) override;
 
         private:
-            void initRectShape(std::string pattern, sf::Color color, int posX, int posY);
             void initWindow();
             void pickColor(std::map<std::string, Color> patternMap);
-            arcade::KeyPressed checkKeyPressed(sf::Event event);
+            void initRectShape(std::string pattern, sf::Color color, int posX, int posY);
+            KeyPressed checkKeyPressed(sf::Event event);
             std::map<std::string, sf::RectangleShape> _charMap;
             sf::RenderWindow _window;
             KeyPressed _key;

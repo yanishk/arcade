@@ -11,7 +11,6 @@
 #include "IDisplayModule.hpp"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include <map>
 #include <iostream>
 
 namespace arcade
@@ -28,16 +27,16 @@ namespace arcade
             void changeColor(std::map<std::string, Color> patternMap) override;
             void displayText(std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) override;
             void displayMap(std::array<std::string, 23> map, std::size_t size) override;
-            arcade::KeyPressed getKey() override;
-            void setKey(arcade::KeyPressed newValue) override;
+            KeyPressed getKey() override;
+            void setKey(KeyPressed newValue) override;
 
         private:
-            void initRectShape(std::string pattern, short r, short g, short b, int xPos, int yPos);
             void initWindow();
             void initSurface();
             void initFont(const char *fontPath);
+            void initRectShape(std::string pattern, short r, short g, short b, int xPos, int yPos);
             void pickColor(std::map<std::string, Color> patternMap);
-            arcade::KeyPressed checkKeyPressed(SDL_Event event);
+            KeyPressed checkKeyPressed(SDL_Event event);
             std::map<std::string, SDL_Texture *> _charMap;
             SDL_Window *_window;
             SDL_Renderer *_renderer;

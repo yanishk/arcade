@@ -36,33 +36,33 @@ core_fclean: core_clean
 	$(RM) $(NAME)
 
 games:
-	cd games/Nibbler && make
-	cd games/Pacman && make
-	cd games/Menu && make
+	make -C games/Menu
+	make -C games/Nibbler
+	make -C games/Pacman
 
 games_clean:
-	cd games/Nibbler && make clean
-	cd games/Pacman && make clean
-	cd games/Menu && make clean
+	make clean -C games/Menu
+	make clean -C games/Nibbler
+	make clean -C games/Pacman
 
 games_fclean:
-	cd games/Nibbler && make fclean
-	cd games/Pacman && make fclean
-	cd games/Menu && make fclean
+	make fclean -C games/Menu
+	make fclean -C games/Nibbler
+	make fclean -C games/Pacman
 
 graphicals:
-	cd display/ncurses && make
-	cd display/sdl2 && make
-	cd display/sfml && make
+	make -C display/ncurses
+	make -C display/sdl2
+	make -C display/sfml
 
 graphicals_clean:
-	cd display/ncurses && make clean
-	cd display/sdl2 && make clean
-	cd display/sfml && make clean
+	make clean -C display/ncurses
+	make clean -C display/sdl2
+	make clean -C display/sfml
 
 graphicals_fclean:
-	cd display/ncurses && make fclean
-	cd display/sdl2 && make fclean
-	cd display/sfml && make fclean
+	make fclean -C display/ncurses
+	make fclean -C display/sdl2
+	make fclean -C display/sfml
 
 .PHONY :  all clean fclean re core games graphicals

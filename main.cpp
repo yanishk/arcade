@@ -15,6 +15,12 @@ int main(int ac, char **av)
         std::cerr << "invalid number of arguments" << std::endl;
         return 84;
     }
-    arcade::Core core(av[1]);
-    core.loop();
+    try {
+        arcade::Core core(av[1]);
+        core.loop();
+    } catch (const arcade::Error &e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
+    }
+    return 0;
 }

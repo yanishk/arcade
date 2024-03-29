@@ -7,8 +7,8 @@
 
 #include <dlfcn.h>
 #include <iostream>
-#include "Core.hpp"
 #include <filesystem>
+#include "Core.hpp"
 
 void arcade::Core::readLib(std::string libPath)
 {
@@ -21,7 +21,7 @@ void arcade::Core::readLib(std::string libPath)
         }
     }
     if (_libLoader.size() == 0)
-        exit(84);
+        throw arcade::Error("Invalid number of graphics libraries");
     for (auto &entry : std::filesystem::directory_iterator(path)) {
         for (auto it = _libName.begin(); it != _libName.end(); it++) {
             if (*it == entry.path().string() && *it != libPath) {

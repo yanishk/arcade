@@ -9,7 +9,6 @@
 #define PACMAN_HPP_
 
 #include "IGameModule.hpp"
-#include "KeyPressed.hpp"
 
 namespace arcade
 {

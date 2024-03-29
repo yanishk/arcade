@@ -10,7 +10,6 @@
 
 #include "IDisplayModule.hpp"
 #include <ncurses.h>
-#include <array>
 
 namespace arcade
 {

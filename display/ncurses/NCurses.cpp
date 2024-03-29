@@ -25,7 +25,6 @@ void arcade::NCurses::init(std::map<std::string, Color> pattern)
     init_pair(CYAN, COLOR_CYAN, COLOR_CYAN);
     init_color(8, 150, 150, 150);
     init_pair(GRAY, 8, 8);
-
     _window = newwin(500, 500, 0, 0);
     pickColor(pattern);
 }
