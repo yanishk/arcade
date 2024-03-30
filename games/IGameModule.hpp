@@ -25,6 +25,8 @@ namespace arcade
             ~IGameModule() = default;
 
             virtual void resetGame() = 0;
+            virtual std::string getGameName() const = 0;
+            virtual std::size_t getScore() const = 0;
             virtual std::array<std::string, 23> getMap() const = 0;
             virtual std::size_t getMapCellSize() const = 0;
             virtual std::unordered_map<std::string, Color> getPattern() const = 0;

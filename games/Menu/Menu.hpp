@@ -18,7 +18,9 @@ namespace arcade
             Menu();
             ~Menu() = default;
 
-            void resetGame() override {};
+            void resetGame() noexcept override {};
+            std::string getGameName() const noexcept override;
+            std::size_t getScore() const noexcept override;
             std::array<std::string, 23> getMap() const noexcept override;
             std::unordered_map<std::string, Color> getPattern() const noexcept override;
             std::size_t getMapCellSize() const noexcept override;
@@ -35,6 +37,7 @@ namespace arcade
             std::vector<std::pair<std::string, std::pair<int, int>>> _textToDisplay;
             std::array<std::string, 23> _map;
             std::unordered_map<std::string, Color> _patternPath;
+            std::string _gameName;
             std::size_t _sizeCell;
             std::size_t _time;
             bool _libSelected;

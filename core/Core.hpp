@@ -33,7 +33,9 @@ namespace arcade
             size_t manageDynamicSwitchGame(const std::size_t indexLib, size_t indexGame) const;
             void incrementGameTime(const std::chrono::steady_clock::time_point clockT2,
             std::chrono::steady_clock::time_point &clockT0, const std::size_t indexGame) const noexcept;
-            void accelerateMovement(GameStatus &status, unsigned int &msTimer) const noexcept;
+            void updateGame(GameStatus &status, unsigned int &msTimer, const std::size_t indexGame, const std::size_t score) const noexcept;
+            std::vector<std::pair<std::string, std::pair<int, int>>> getGameScores(std::string gameName) const noexcept;
+            void updateScoreFile(std::string gameName, std::size_t score) const noexcept;
             std::vector<DLLoader<IDisplayModule> *> _libLoader;
             std::vector<DLLoader<IGameModule> *> _gameLoader;
             std::vector<arcade::IGameModule *> _game;

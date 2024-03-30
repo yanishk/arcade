@@ -19,6 +19,7 @@ arcade::Menu::Menu()
     _selectLibArrow = 0;
     _indexGame = 0;
     _indexLib = 0;
+    _gameName = "Menu";
 }
 
 void arcade::Menu::initText(const std::vector<std::string> libName,
@@ -69,6 +70,16 @@ std::pair<std::size_t, std::size_t> arcade::Menu::getIndexes() const noexcept
 void arcade::Menu::incrementTime() noexcept
 {
     _time += 1;
+}
+
+std::string arcade::Menu::getGameName() const noexcept
+{
+    return _gameName;
+}
+
+std::size_t arcade::Menu::getScore() const noexcept
+{
+    return 0;
 }
 
 void arcade::Menu::keyDown() noexcept

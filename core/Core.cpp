@@ -8,6 +8,7 @@
 #include <dlfcn.h>
 #include <iostream>
 #include <filesystem>
+#include <fstream>
 #include "Core.hpp"
 
 void arcade::Core::readLib(const std::string libPath)
@@ -21,7 +22,7 @@ void arcade::Core::readLib(const std::string libPath)
         }
     }
     if (_libLoader.size() == 0)
-        throw arcade::Error("Invalid number of graphics libraries");
+        throw arcade::Error("");
     for (auto &entry : std::filesystem::directory_iterator(path)) {
         for (auto it = _libName.begin(); it != _libName.end(); it++) {
             if (*it == entry.path().string() && *it != libPath) {
@@ -97,6 +98,7 @@ size_t arcade::Core::manageDynamicSwitchLib(std::size_t indexLib, const std::siz
 size_t arcade::Core::manageDynamicSwitchGame(const std::size_t indexLib, std::size_t indexGame) const
 {
     if (_lib[indexLib]->getKey() == G) {
+        updateScoreFile(_game[indexGame]->getGameName(), _game[indexGame]->getScore());
         _game[indexGame]->resetGame();
         _lib[indexLib]->stop();
             indexGame += 1;
@@ -107,11 +109,18 @@ size_t arcade::Core::manageDynamicSwitchGame(const std::size_t indexLib, std::si
     return indexGame;
 }
 
-void arcade::Core::accelerateMovement(arcade::GameStatus &status, unsigned int &msTimer) const noexcept
+void arcade::Core::updateGame(arcade::GameStatus &status, unsigned int &msTimer,
+    const std::size_t indexGame, const std::size_t score) const noexcept
 {
     if (status == WON_AND_RELOADED) {
+        updateScoreFile(_game[indexGame]->getGameName(), score);
         if (msTimer >= 15)
             msTimer -= 15;
+        status = PLAYING;
+    }
+    if (status == LOOSE || status == WON) {
+        updateScoreFile(_game[indexGame]->getGameName(), _game[indexGame]->getScore());
+        _game[indexGame]->resetGame();
         status = PLAYING;
     }
 }
@@ -127,6 +136,49 @@ void arcade::Core::incrementGameTime(const std::chrono::steady_clock::time_point
     }
 }
 
+std::vector<std::pair<std::string, std::pair<int, int>>>
+    arcade::Core::getGameScores(std::string gameName) const noexcept
+{
+    std::vector<std::pair<std::string, std::pair<int, int>>>
+        scoreList;
+    std::string fileToRead = "." + gameName + ".scores";
+    std::string scoreLine;
+    int x = 1300;
+    int y = 100;
+
+    std::ifstream scoreFile(fileToRead);
+    if (!scoreFile.is_open())
+        return scoreList;
+    scoreList.push_back(std::make_pair(gameName + " scores:", std::make_pair(x, y)));
+    x += 15;
+    y += 80;
+    while (std::getline(scoreFile, scoreLine)) {
+        scoreList.push_back(std::make_pair(scoreLine, std::make_pair(x, y)));
+        y += 60;
+        if (y >= 900) {
+            x += 200;
+            y = 180;
+        }
+    }
+    scoreFile.close();
+    return scoreList;
+}
+
+void arcade::Core::updateScoreFile(std::string gameName, std::size_t score) const noexcept
+{
+    std::string fileToWrite;
+    std::string playerName = "player1";
+
+    if (gameName == "Menu")
+        return;
+    fileToWrite = "." + gameName + ".scores";
+    std::ofstream scoreFile(fileToWrite, std::ios::app);
+    if (!scoreFile.is_open())
+        return;
+    scoreFile << playerName << ": " << score << std::endl;
+    scoreFile.close();
+}
+
 void arcade::Core::loop()
 {
     GameStatus status = PLAYING;
@@ -134,6 +186,7 @@ void arcade::Core::loop()
     std::size_t indexGame = 0;
     std::size_t tmpLib = 0;
     std::size_t tmpGame = 0;
+    std::size_t score = 0;
     auto clockT0 = std::chrono::steady_clock::now();
     auto clockT1 = std::chrono::steady_clock::now();
     unsigned int msTimer = 115;
@@ -145,6 +198,7 @@ void arcade::Core::loop()
         auto timeElapsed = std::chrono::duration_cast
         <std::chrono::milliseconds>(clockT2 - clockT1);
         if (timeElapsed.count() > msTimer) {
+            score = _game[indexGame]->getScore();
             _lib[indexLib]->changeColor(_game[indexGame]->getPattern());
             if (indexGame == 0) {
                 indexGame = _game[0]->getIndexes().second;
@@ -155,6 +209,7 @@ void arcade::Core::loop()
                 tmpLib = indexLib;
             }
             _lib[indexLib]->displayText(_game[indexGame]->getText());
+            _lib[indexLib]->displayText(getGameScores(_game[indexGame]->getGameName()));
             _lib[indexLib]->displayMap(_game[indexGame]->getMap(),
             _game[indexGame]->getMapCellSize());
             _lib[indexLib]->game();
@@ -165,8 +220,9 @@ void arcade::Core::loop()
             _lib[indexLib]->setKey(OTHER);
             incrementGameTime(clockT2, clockT0, indexGame);
         }
-        accelerateMovement(status, msTimer);
+        updateGame(status, msTimer, indexGame, score);
     }
+    updateScoreFile(_game[indexGame]->getGameName(), _game[indexGame]->getScore());
     _lib[indexLib]->stop();
     for (auto it : _libLoader)
         it->closeLib();

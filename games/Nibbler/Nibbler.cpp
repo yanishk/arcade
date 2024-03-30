@@ -8,7 +8,7 @@
 #include "Nibbler.hpp"
 #include <iostream>
 
-arcade::Nibbler::Nibbler() : _score(0), _time(0)
+arcade::Nibbler::Nibbler() : _score(0), _time(0), _gameName("Nibbler")
 {
     _defaultMap = {
         "######################################",
@@ -58,6 +58,16 @@ void arcade::Nibbler::resetGame() noexcept
     _time = 0;
     _scoreText = "score: " + std::to_string(_score);
     _textToDisplay.push_back(std::make_pair(_scoreText, std::make_pair(0, 0)));
+}
+
+std::string arcade::Nibbler::getGameName() const noexcept
+{
+    return _gameName;
+}
+
+std::size_t arcade::Nibbler::getScore() const noexcept
+{
+    return _score;
 }
 
 std::array<std::string, 23> arcade::Nibbler::getMap() const noexcept

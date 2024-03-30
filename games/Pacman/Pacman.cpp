@@ -8,8 +8,8 @@
 #include "Pacman.hpp"
 #include <iostream>
 
-arcade::Pacman::Pacman() : _score(0), _time(0), _turn(0),
-    _canEatGhosts(false)
+arcade::Pacman::Pacman() : _gameName("Pacman"), _score(0),
+    _time(0), _turn(0), _canEatGhosts(false)
 {
     _defaultMap = {
         "###############################",
@@ -65,6 +65,7 @@ void arcade::Pacman::resetGame() noexcept
     _defaultGhostsPos.clear();
     _ghostsPos.clear();
     _ghostsCanChase.clear();
+    _firstExit.clear();
     _jailTime.clear();
     _canEatGhosts = false;
     _defaultGhostsPos = getGhostsPos();
@@ -80,6 +81,16 @@ void arcade::Pacman::resetGame() noexcept
     _score = 0;
     _scoreText = "score: " + std::to_string(_score);
     _textToDisplay.push_back(std::make_pair(_scoreText, std::make_pair(0, 0)));
+}
+
+std::string arcade::Pacman::getGameName() const noexcept
+{
+    return _gameName;
+}
+
+std::size_t arcade::Pacman::getScore() const noexcept
+{
+    return _score;
 }
 
 std::unordered_map<std::string, arcade::Color> arcade::Pacman::getPattern() const noexcept
@@ -575,7 +586,7 @@ bool arcade::Pacman::checkWin() const noexcept
 {
     for (std::size_t i = 0; i != _map.size(); i += 1) {
         for (std::size_t y = 0; y != _map[0].size(); y += 1) {
-            if (_map[i][y] == '.' || _map[i][y] == '!') {
+            if (_map[i][y] == '!') {
                 return false;
             }
         }

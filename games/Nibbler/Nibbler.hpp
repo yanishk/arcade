@@ -19,6 +19,8 @@ namespace arcade
             ~Nibbler() = default;
 
             void resetGame() noexcept override;
+            std::string getGameName() const noexcept override;
+            std::size_t getScore() const noexcept override;
             std::array<std::string, 23> getMap() const noexcept override;
             std::size_t getMapCellSize() const noexcept override;
             std::unordered_map<std::string, Color> getPattern() const noexcept override;
@@ -82,7 +84,8 @@ namespace arcade
             std::vector<std::pair<std::string, std::pair<int, int>>> _textToDisplay;
             std::string _scoreText;
             std::size_t _score;
-            std::size_t _time = 0;
+            std::size_t _time;
+            std::string _gameName;
     };
 }
 
