@@ -107,11 +107,13 @@ size_t arcade::Core::manageDynamicSwitchLib(std::size_t indexLib, const std::siz
             _lib[indexLib]->stop();
             indexLib++;
             _lib[indexLib]->init(_game[indexGame]->getPattern());
+            return indexLib;
         }
         if (_lib[indexLib]->getKey() == P && indexLib > 0) {
             _lib[indexLib]->stop();
             indexLib--;
             _lib[indexLib]->init(_game[indexGame]->getPattern());
+            return indexLib;
         }
     }
     return indexLib;
