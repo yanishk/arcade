@@ -18,7 +18,8 @@ namespace arcade
         LOOSE,
         QUIT,
         NO_ACTIVITY,
-        MENU
+        MENU,
+        RESET
     };
 }
 

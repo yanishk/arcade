@@ -21,19 +21,22 @@ namespace arcade
 
             void init(const std::unordered_map<std::string, Color> pattern) noexcept override;
             void stop() noexcept override;
-            void game() noexcept override;
+            void game(const std::string gameName) noexcept override;
             void changeColor(const std::unordered_map<std::string, Color> patternMap) noexcept override;
             void displayText(const std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) noexcept override;
             void displayMap(const std::array<std::string, 23> map, const std::size_t size) noexcept override;
             KeyPressed getKey() const noexcept override;
             void setKey(const KeyPressed newValue) noexcept override;
+            std::string getPlayerName() const noexcept override;
 
         private:
             void pickColor(const std::unordered_map<std::string, Color> patternMap) noexcept;
+            void savePlayerName(const std::string gameName) noexcept;
             KeyPressed checkKeyPressed(const int key) const noexcept;
             KeyPressed _key;
-            std::unordered_map<std::string, Color> _charMap;
             WINDOW *_window;
+            std::string _playerName;
+            std::unordered_map<std::string, Color> _charMap;
     };
 }
 

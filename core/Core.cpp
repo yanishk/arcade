@@ -53,7 +53,7 @@ void arcade::Core::readLib(const std::string libPath)
         _game.push_back(it->getInstance());
 }
 
-arcade::Core::Core(const std::string libPath)
+arcade::Core::Core(const std::string libPath) : _indexLib(0), _indexGame(0), _tmpLib(0), _tmpGame(0), _score(0)
 {
     _libName =
     {
@@ -103,7 +103,7 @@ size_t arcade::Core::manageDynamicSwitchLib(std::size_t indexLib, const std::siz
     return indexLib;
 }
 
-size_t arcade::Core::manageDynamicSwitchGame(const std::size_t indexLib, std::size_t indexGame) const
+size_t arcade::Core::manageDynamicSwitchGame(const std::size_t indexLib, std::size_t indexGame)
 {
     if (indexGame != 0) {
         if (_lib[indexLib]->getKey() == G) {
@@ -120,12 +120,16 @@ size_t arcade::Core::manageDynamicSwitchGame(const std::size_t indexLib, std::si
 }
 
 void arcade::Core::updateGame(arcade::GameStatus &status, unsigned int &msTimer,
-    const std::size_t indexGame, const std::size_t score) const noexcept
+    const std::size_t indexGame, const std::size_t score) noexcept
 {
     if (status == WON_AND_RELOADED) {
         updateScoreFile(_game[indexGame]->getGameName(), score);
         if (msTimer >= 15)
             msTimer -= 15;
+        status = PLAYING;
+    }
+    if (status == RESET) {
+        updateScoreFile(_game[indexGame]->getGameName(), score);
         status = PLAYING;
     }
     if (status == LOOSE || status == WON) {
@@ -147,7 +151,7 @@ void arcade::Core::incrementGameTime(const std::chrono::steady_clock::time_point
 }
 
 std::vector<std::pair<std::string, std::pair<int, int>>>
-    arcade::Core::getGameScores(std::string gameName) const noexcept
+    arcade::Core::getGameScores(const std::string gameName) const noexcept
 {
     std::vector<std::pair<std::string, std::pair<int, int>>>
         scoreList;
@@ -174,18 +178,19 @@ std::vector<std::pair<std::string, std::pair<int, int>>>
     return scoreList;
 }
 
-void arcade::Core::updateScoreFile(std::string gameName, std::size_t score) const noexcept
+void arcade::Core::updateScoreFile(const std::string gameName, const std::size_t score) noexcept
 {
     std::string fileToWrite;
-    std::string playerName = "player1";
 
     if (gameName == "Menu")
         return;
+    if (_playerName.empty())
+        _playerName = "marvin";
     fileToWrite = "." + gameName + ".scores";
     std::ofstream scoreFile(fileToWrite, std::ios::app);
     if (!scoreFile.is_open())
         return;
-    scoreFile << playerName << ": " << score << std::endl;
+    scoreFile << _playerName << ": " << score << std::endl;
     scoreFile.close();
 }
 
@@ -209,6 +214,7 @@ void arcade::Core::choseOptionMenu() noexcept
         _indexGame = _game[0]->getIndexes().second;
         manageMenuSwitchGame(_indexLib, _indexGame, _tmpGame);
         _tmpGame = _indexGame;
+        _playerName = _lib[_indexLib]->getPlayerName();
         _indexLib = _game[0]->getIndexes().first;
         manageMenuSwitchLib(_indexLib, _indexGame, _tmpLib);
         _tmpLib = _indexLib;
@@ -224,7 +230,7 @@ arcade::GameStatus arcade::Core::mainGame(GameStatus status) noexcept
     _lib[_indexLib]->displayText(getGameScores(_game[_indexGame]->getGameName()));
     _lib[_indexLib]->displayMap(_game[_indexGame]->getMap(),
     _game[_indexGame]->getMapCellSize());
-    _lib[_indexLib]->game();
+    _lib[_indexLib]->game(_game[_indexGame]->getGameName());
     status = _game[_indexGame]->updateMap(_lib[_indexLib]->getKey());
     status = handleMenuKey(status);
     return status;

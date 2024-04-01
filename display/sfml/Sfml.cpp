@@ -121,7 +121,27 @@ void arcade::Sfml::displayText(const std::vector<std::pair<std::string, std::pai
     }
 }
 
-void arcade::Sfml::game() noexcept
+void arcade::Sfml::displayPlayerName(const std::string gameName) noexcept
+{
+    sf::Text text;
+
+    if (gameName != "Menu")
+        return;
+    text.setFont(_font);
+    text.setString("Player name: " + _playerName);
+    text.setCharacterSize(24);
+    text.setFillColor(sf::Color::White);
+    text.setPosition(0, 0);
+    _window.draw(text);
+}
+
+void arcade::Sfml::savePlayerName(const sf::Event event) noexcept
+{
+    if (event.text.unicode < 128)
+        _playerName += static_cast<char>(event.text.unicode);
+}
+
+void arcade::Sfml::game(const std::string gameName) noexcept
 {
     sf::Event event;
 
@@ -130,7 +150,10 @@ void arcade::Sfml::game() noexcept
             _key = CLOSE_BUTTON;
         if (event.type == sf::Event::KeyPressed)
             _key = checkKeyPressed(event);
+        if (gameName == "Menu" && event.type == sf::Event::TextEntered)
+            savePlayerName(event);
     }
+    displayPlayerName(gameName);
     _window.display();
     _window.clear();
 }
@@ -170,6 +193,11 @@ arcade::KeyPressed arcade::Sfml::checkKeyPressed(const sf::Event event) const no
 arcade::KeyPressed arcade::Sfml::getKey() const noexcept
 {
     return _key;
+}
+
+std::string arcade::Sfml::getPlayerName() const noexcept
+{
+    return _playerName;
 }
 
 void arcade::Sfml::stop() noexcept

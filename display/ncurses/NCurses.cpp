@@ -11,11 +11,9 @@
 void arcade::NCurses::init(const std::unordered_map<std::string, Color> pattern) noexcept
 {
     initscr();
-    noecho();
     keypad(stdscr, TRUE);
     nodelay(stdscr, TRUE);
     start_color();
-    curs_set(false);
     init_pair(DEFAULT, COLOR_WHITE, COLOR_BLACK);
     init_pair(BLACK, COLOR_BLACK, COLOR_BLACK);
     init_pair(WHITE, COLOR_WHITE, COLOR_WHITE);
@@ -36,8 +34,30 @@ void arcade::NCurses::stop() noexcept
     endwin();
 }
 
-void arcade::NCurses::game() noexcept
+void arcade::NCurses::savePlayerName(const std::string gameName) noexcept
 {
+    static int turn = 0;
+    char tmp[80] = {0};
+
+    if (gameName == "Menu") {
+        if (turn == 0) {
+            mvwprintw(_window, 0, 0, "Player name: ");
+            wgetstr(_window, tmp);
+            _playerName.assign(tmp);
+        }
+        mvwprintw(_window, 0, 0, "Player name: %s\n", _playerName.c_str());
+        wrefresh(_window);
+    }
+    if (turn == 0) {
+        noecho();
+        curs_set(false);
+        turn += 1;
+    }
+}
+
+void arcade::NCurses::game(const std::string gameName) noexcept
+{
+    savePlayerName(gameName);
     _key = checkKeyPressed(getch());
 }
 
@@ -119,4 +139,9 @@ void arcade::NCurses::setKey(const arcade::KeyPressed newValue) noexcept
 arcade::KeyPressed arcade::NCurses::getKey() const noexcept
 {
     return _key;
+}
+
+std::string arcade::NCurses::getPlayerName() const noexcept
+{
+    return _playerName;
 }

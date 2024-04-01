@@ -18,17 +18,18 @@ namespace arcade
     class SDL2 : virtual public IDisplayModule
     {
         public:
-            SDL2() : _key(OTHER) {};
-            ~SDL2() = default;
+            SDL2();
+            ~SDL2();
 
             void init(const std::unordered_map<std::string, Color> pattern) override;
             void stop() noexcept override;
-            void game() noexcept override;
+            void game(const std::string gameName) noexcept override;
             void changeColor(const std::unordered_map<std::string, Color> patternMap) override;
             void displayText(const std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) override;
             void displayMap(const std::array<std::string, 23> map, const std::size_t size) noexcept override;
             KeyPressed getKey() const noexcept override;
             void setKey(const KeyPressed newValue) noexcept override;
+            std::string getPlayerName() const noexcept override;
 
         private:
             void initWindow();
@@ -38,6 +39,7 @@ namespace arcade
                 const short g, const short b);
             void pickColor(const std::unordered_map<std::string, Color> patternMap);
             KeyPressed checkKeyPressed(const SDL_Event event) const noexcept;
+            void displayPlayerName(const std::string gameName);
             std::unordered_map<std::string, SDL_Texture *> _charMap;
             SDL_Window *_window;
             SDL_Renderer *_renderer;
@@ -45,6 +47,7 @@ namespace arcade
             TTF_Font *_font;
             SDL_Texture *_message;
             KeyPressed _key;
+            std::string _playerName;
     };
 }
 

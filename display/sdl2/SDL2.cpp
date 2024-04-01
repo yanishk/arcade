@@ -8,6 +8,19 @@
 #include "SDL2.hpp"
 #include "Error.hpp"
 
+arcade::SDL2::SDL2() : _key(OTHER)
+{
+    SDL_Init(SDL_INIT_EVERYTHING);
+    initFont("display/asset/font/OpenSans-Regular.ttf");
+}
+
+arcade::SDL2::~SDL2()
+{
+    TTF_CloseFont(_font);
+    TTF_Quit();
+    SDL_Quit();
+}
+
 void arcade::SDL2::initWindow()
 {
     _window = SDL_CreateWindow("SDL2", 20, 20, 1920, 1080,
@@ -37,10 +50,8 @@ void arcade::SDL2::initFont(const char *fontPath)
 
 void arcade::SDL2::init(const std::unordered_map<std::string, Color> pattern)
 {
-    SDL_Init(SDL_INIT_EVERYTHING);
     initWindow();
     initSurface();
-    initFont("display/asset/font/OpenSans-Regular.ttf");
     pickColor(pattern);
 }
 
@@ -81,7 +92,25 @@ arcade::KeyPressed arcade::SDL2::getKey() const noexcept
     return _key;
 }
 
-void arcade::SDL2::game() noexcept
+void arcade::SDL2::displayPlayerName(const std::string gameName)
+{
+    if (gameName != "Menu")
+        return;
+    std::string playerName = "Player name: " + _playerName;
+    SDL_Color White = {255, 255, 255, 255};
+    SDL_Surface *surfaceMsg = TTF_RenderText_Solid(_font, playerName.c_str(), White);
+    SDL_Rect Message_rect;
+    if (!surfaceMsg)
+        throw arcade::Error(SDL_GetError());
+    _message = SDL_CreateTextureFromSurface(_renderer, surfaceMsg);
+    if (!_message)
+        throw arcade::Error(SDL_GetError());
+    Message_rect = {0, 0, surfaceMsg->w, surfaceMsg->h};
+    SDL_FreeSurface(surfaceMsg);
+    SDL_RenderCopy(_renderer, _message, NULL, &Message_rect);
+}
+
+void arcade::SDL2::game(const std::string gameName) noexcept
 {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -89,7 +118,10 @@ void arcade::SDL2::game() noexcept
             _key = CLOSE_BUTTON;
         if (event.type == SDL_KEYDOWN)
             _key = checkKeyPressed(event);
+        if (gameName == "Menu" && event.type == SDL_TEXTINPUT)
+            _playerName += event.text.text;
     }
+    displayPlayerName(gameName);
     SDL_RenderPresent(_renderer);
     SDL_RenderClear(_renderer);
 }
@@ -99,9 +131,6 @@ void arcade::SDL2::stop() noexcept
     SDL_FreeSurface(_spriteSurface);
     SDL_DestroyTexture(_message);
     SDL_DestroyWindow(_window);
-    TTF_CloseFont(_font);
-    TTF_Quit();
-    SDL_Quit();
 }
 
 void arcade::SDL2::displayMap(const std::array<std::string, 23> map, const std::size_t size) noexcept
@@ -188,4 +217,9 @@ void arcade::SDL2::initRectShape(const std::string pattern, const short r,
     if (!spriteTexture)
         throw arcade::Error(SDL_GetError());
     _charMap[pattern] = spriteTexture;
+}
+
+std::string arcade::SDL2::getPlayerName() const noexcept
+{
+    return _playerName;
 }

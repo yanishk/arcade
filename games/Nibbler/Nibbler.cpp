@@ -382,8 +382,10 @@ arcade::GameStatus arcade::Nibbler::updateMap(arcade::KeyPressed key) noexcept
         status = goLeft(playerPos.first, playerPos.second);
     if (key == RIGHT)
         status = goRight(playerPos.first, playerPos.second);
-    if (key == R)
+    if (key == R) {
         resetGame();
+        status = RESET;
+    }
     if (nextPlayerMove() == LOOSE)
         return LOOSE;
     if (key == M)
