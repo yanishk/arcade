@@ -128,7 +128,6 @@ void arcade::SDL2::game(const std::string gameName) noexcept
 
 void arcade::SDL2::stop() noexcept
 {
-    SDL_FreeSurface(_spriteSurface);
     SDL_DestroyTexture(_message);
     SDL_DestroyWindow(_window);
 }

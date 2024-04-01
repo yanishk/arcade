@@ -38,6 +38,7 @@ namespace arcade
             KeyPressed checkKeyPressed(const sf::Event event) const noexcept;
             void savePlayerName(const sf::Event event) noexcept;
             void displayPlayerName(const std::string gameName) noexcept;
+            bool isKeyAccepted(const KeyPressed key) const noexcept;
             std::unordered_map<std::string, sf::RectangleShape> _charMap;
             sf::RenderWindow _window;
             KeyPressed _key;

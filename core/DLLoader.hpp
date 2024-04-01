@@ -21,13 +21,13 @@ class DLLoader {
         };
         ~DLLoader() = default;
 
-        T *getInstance() {
+        std::unique_ptr<T> getInstance() {
             T *(*cosine)(void);
             cosine = (T*(*)(void)) dlsym(_handle, "entryPoint");
             char *errorMessage = dlerror();
             if (errorMessage != NULL)
                 throw arcade::Error(errorMessage);
-            return (*cosine)();
+            return std::unique_ptr<T>((*cosine)());
         };
 
         void closeLib() {

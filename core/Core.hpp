@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include <memory>
 #include "IDisplayModule.hpp"
 #include "IGameModule.hpp"
 #include "DLLoader.hpp"
@@ -26,6 +27,7 @@ namespace arcade
             void loop();
 
         private:
+            void endLoop() const noexcept;
             void readLib(const std::string libPath);
             void manageMenuSwitchLib(const std::size_t indexLib, const std::size_t indexGame, const std::size_t tmp) const;
             void manageMenuSwitchGame(const std::size_t indexLib, const std::size_t indexGame, const std::size_t tmp) const;
@@ -39,16 +41,15 @@ namespace arcade
             arcade::GameStatus handleMenuKey(GameStatus status) noexcept;
             void choseOptionMenu() noexcept;
             arcade::GameStatus mainGame(GameStatus status) noexcept;
-            void endLoop() const noexcept;
             void createObjectLoader(const std::string libPath) noexcept;
-            std::vector<DLLoader<IDisplayModule> *> _libLoader;
-            std::vector<DLLoader<IGameModule> *> _gameLoader;
-            std::vector<arcade::IGameModule *> _game;
-            std::vector<arcade::IDisplayModule *> _lib;
+            std::vector<std::unique_ptr<DLLoader<IDisplayModule>>> _libLoader;
+            std::vector<std::unique_ptr<DLLoader<IGameModule>>> _gameLoader;
+            std::vector<std::unique_ptr<arcade::IGameModule>> _game;
+            std::vector<std::unique_ptr<arcade::IDisplayModule>> _lib;
             std::vector<std::string> _gameText;
             std::vector<std::string> _libText;
-            std::array<std::string, 3> _libName;
-            std::array<std::string, 3> _gameName;
+            std::array<std::string, 13> _libName;
+            std::array<std::string, 7> _gameName;
             std::string _playerName;
             std::size_t _indexLib;
             std::size_t _indexGame;

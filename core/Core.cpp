@@ -18,16 +18,16 @@ void arcade::Core::createObjectLoader(const std::string libPath) noexcept
     for (auto &entry : std::filesystem::directory_iterator(path)) {
         for (auto it = _libName.begin(); it != _libName.end(); it++) {
             if (*it == entry.path().string() && *it != libPath) {
-                _libLoader.push_back(new DLLoader<IDisplayModule>(*it));
+                _libLoader.push_back(std::make_unique<DLLoader<IDisplayModule>>(*it));
                 _libText.push_back(*it);
             }
         }
         for (auto it = _gameName.begin(); it != _gameName.end(); it++) {
             if (*it == entry.path().string() && *it == "lib/arcade_menu.so") {
-                _gameLoader.insert(_gameLoader.begin(), new DLLoader<IGameModule>(*it));
+                _gameLoader.insert(_gameLoader.begin(), std::make_unique<DLLoader<IGameModule>>(*it));
                 _gameText.insert(_gameText.begin(), *it);
             } else if (*it == entry.path().string()) {
-                _gameLoader.push_back(new DLLoader<IGameModule>(*it));
+                _gameLoader.push_back(std::make_unique<DLLoader<IGameModule>>(*it));
                 _gameText.push_back(*it);
             }
         }
@@ -39,7 +39,7 @@ void arcade::Core::readLib(const std::string libPath)
 
     for (auto it = _libName.begin(); it != _libName.end(); it++) {
         if (*it == libPath) {
-            _libLoader.push_back(new DLLoader<IDisplayModule>(libPath));
+            _libLoader.push_back(std::make_unique<DLLoader<IDisplayModule>>(libPath));
             _libText.push_back(libPath);
         }
     }
@@ -49,7 +49,7 @@ void arcade::Core::readLib(const std::string libPath)
     for (auto &it : _libLoader) {
         _lib.push_back(it->getInstance());
     }
-    for (auto it : _gameLoader)
+    for (auto &it : _gameLoader)
         _game.push_back(it->getInstance());
 }
 
@@ -57,15 +57,29 @@ arcade::Core::Core(const std::string libPath) : _indexLib(0), _indexGame(0), _tm
 {
     _libName =
     {
+        "lib/arcade_ndk++.so",
+        "lib/arcade_aalib.so",
+        "lib/arcade_libcaca.so",
+        "lib/arcade_allegro5.so",
+        "lib/arcade_xlib.so",
+        "lib/arcade_gtk+.so",
+        "lib/arcade_irrlicht.so",
+        "lib/arcade_opengl.so",
+        "lib/arcade_vulkan.so",
+        "lib/arcade_qt5.so",
         "lib/arcade_sdl2.so",
         "lib/arcade_sfml.so",
-        "lib/arcade_ncurses.so",
+        "lib/arcade_ncurses.so"
     };
     _gameName =
     {
         "lib/arcade_menu.so",
+        "lib/arcade_snake.so",
         "lib/arcade_nibbler.so",
-        "lib/arcade_pacman.so"
+        "lib/arcade_pacman.so",
+        "lib/arcade_qix.so",
+        "lib/arcade_centipede.so",
+        "lib/arcade_solarfox.so"
     };
     readLib(libPath);
 }
@@ -221,6 +235,19 @@ void arcade::Core::choseOptionMenu() noexcept
     }
 }
 
+void arcade::Core::endLoop() const noexcept
+{
+    _lib[_indexLib]->stop();
+    for (auto &it : _libLoader) {
+        it->closeLib();
+        delete (&it);
+    }
+    for (auto &it : _gameLoader) {
+        it->closeLib();
+        delete (&it);
+    }
+}
+
 arcade::GameStatus arcade::Core::mainGame(GameStatus status) noexcept
 {
     _score = _game[_indexGame]->getScore();
@@ -234,15 +261,6 @@ arcade::GameStatus arcade::Core::mainGame(GameStatus status) noexcept
     status = _game[_indexGame]->updateMap(_lib[_indexLib]->getKey());
     status = handleMenuKey(status);
     return status;
-}
-
-void arcade::Core::endLoop() const noexcept
-{
-    _lib[_indexLib]->stop();
-    for (auto it : _libLoader)
-        it->closeLib();
-    for (auto it : _gameLoader)
-        it->closeLib();
 }
 
 void arcade::Core::loop()
@@ -269,5 +287,5 @@ void arcade::Core::loop()
         updateGame(status, msTimer, _indexGame, _score);
     }
     updateScoreFile(_game[_indexGame]->getGameName(), _game[_indexGame]->getScore());
-    endLoop();
+    _lib[_indexLib]->stop();
 }

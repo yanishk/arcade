@@ -137,8 +137,13 @@ void arcade::Sfml::displayPlayerName(const std::string gameName) noexcept
 
 void arcade::Sfml::savePlayerName(const sf::Event event) noexcept
 {
-    if (event.text.unicode < 128)
+    if (event.text.unicode < 128 && isKeyAccepted(_key))
         _playerName += static_cast<char>(event.text.unicode);
+}
+
+bool arcade::Sfml::isKeyAccepted(const KeyPressed key) const noexcept
+{
+    return (key != UP && key != DOWN && key != LEFT && key != RIGHT && key != ENTER);
 }
 
 void arcade::Sfml::game(const std::string gameName) noexcept
