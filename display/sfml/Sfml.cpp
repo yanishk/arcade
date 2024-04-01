@@ -82,12 +82,12 @@ void arcade::Sfml::pickColor(const std::unordered_map<std::string, Color> patter
 
 void arcade::Sfml::displayMap(const std::array<std::string, 23> map, const std::size_t size) noexcept
 {
-    size_t y = 0;
+    std::size_t y = 0;
     std::string hay;
     int xPos = 50;
     int yPos = 0;
 
-    for (size_t x = 0; x != map.size(); x += 1) {
+    for (std::size_t x = 0; x != map.size(); x += 1) {
         while (y != map[0].size()) {
             if (size == 2)
                 hay = std::string(1, map[x][y]) + std::string(1, map[x][y+1]);

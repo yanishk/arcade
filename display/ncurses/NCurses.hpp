@@ -32,7 +32,7 @@ namespace arcade
         private:
             void pickColor(const std::unordered_map<std::string, Color> patternMap) noexcept;
             void savePlayerName(const std::string gameName) noexcept;
-            KeyPressed checkKeyPressed(const int key) const noexcept;
+            KeyPressed checkKeyPressed(const unsigned int key) const noexcept;
             KeyPressed _key;
             WINDOW *_window;
             std::string _playerName;

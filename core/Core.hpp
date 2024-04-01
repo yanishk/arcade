@@ -31,8 +31,8 @@ namespace arcade
             void readLib(const std::string libPath);
             void manageMenuSwitchLib(const std::size_t indexLib, const std::size_t indexGame, const std::size_t tmp) const;
             void manageMenuSwitchGame(const std::size_t indexLib, const std::size_t indexGame, const std::size_t tmp) const;
-            size_t manageDynamicSwitchLib(std::size_t indexLib, const size_t indexGame) const;
-            size_t manageDynamicSwitchGame(const std::size_t indexLib, size_t indexGame);
+            std::size_t manageDynamicSwitchLib(std::size_t indexLib, const std::size_t indexGame) const;
+            std::size_t manageDynamicSwitchGame(const std::size_t indexLib, std::size_t indexGame);
             void incrementGameTime(const std::chrono::steady_clock::time_point clockT2,
             std::chrono::steady_clock::time_point &clockT0, const std::size_t indexGame) const noexcept;
             void updateGame(GameStatus &status, unsigned int &msTimer, const std::size_t indexGame, const std::size_t score) noexcept;

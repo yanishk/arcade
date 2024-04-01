@@ -362,7 +362,7 @@ arcade::GameStatus arcade::Pacman::goRight(const std::size_t x, const std::size_
 }
 
 arcade::GameStatus arcade::Pacman::ghostGoUp(std::size_t &x,
-    std::size_t &y, char &previousChar, const int ghostIndex) noexcept
+    std::size_t &y, char &previousChar, const std::size_t ghostIndex) noexcept
 {
     if (isGhost(_map[x - 1][y]))
         return PLAYING;
@@ -379,7 +379,7 @@ arcade::GameStatus arcade::Pacman::ghostGoUp(std::size_t &x,
 }
 
 arcade::GameStatus arcade::Pacman::ghostGoDown(std::size_t &x,
-    std::size_t &y, char &previousChar, const int ghostIndex) noexcept
+    std::size_t &y, char &previousChar, const std::size_t ghostIndex) noexcept
 {
     if (isGhost(_map[x + 1][y]))
         return PLAYING;
@@ -396,7 +396,7 @@ arcade::GameStatus arcade::Pacman::ghostGoDown(std::size_t &x,
 }
 
 arcade::GameStatus arcade::Pacman::ghostGoLeft(std::size_t &x,
-    std::size_t &y, char &previousChar, const int ghostIndex) noexcept
+    std::size_t &y, char &previousChar, const std::size_t ghostIndex) noexcept
 {
     if (isGhost(_map[x][y - 1]))
         return PLAYING;
@@ -413,7 +413,7 @@ arcade::GameStatus arcade::Pacman::ghostGoLeft(std::size_t &x,
 }
 
 arcade::GameStatus arcade::Pacman::ghostGoRight(std::size_t &x,
-    std::size_t &y, char &previousChar, const int ghostIndex) noexcept
+    std::size_t &y, char &previousChar, const std::size_t ghostIndex) noexcept
 {
     if (isGhost(_map[x][y + 1]))
         return PLAYING;

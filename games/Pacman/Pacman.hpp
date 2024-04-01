@@ -51,10 +51,10 @@ namespace arcade
             GameStatus goDown(const std::size_t x, const std::size_t y) noexcept;
             GameStatus goLeft(const std::size_t x, const std::size_t y) noexcept;
             GameStatus goRight(const std::size_t x, const std::size_t y) noexcept;
-            GameStatus ghostGoUp(std::size_t &x, std::size_t &y, char &previousChar, const int ghostIndex) noexcept;
-            GameStatus ghostGoDown(std::size_t &x, std::size_t &y, char &previousChar, const int ghostIndex) noexcept;
-            GameStatus ghostGoLeft(std::size_t &x, std::size_t &y, char &previousChar, const int ghostIndex) noexcept;
-            GameStatus ghostGoRight(std::size_t &x, std::size_t &y, char &previousChar, const int ghostIndex) noexcept;
+            GameStatus ghostGoUp(std::size_t &x, std::size_t &y, char &previousChar, const std::size_t ghostIndex) noexcept;
+            GameStatus ghostGoDown(std::size_t &x, std::size_t &y, char &previousChar, const std::size_t ghostIndex) noexcept;
+            GameStatus ghostGoLeft(std::size_t &x, std::size_t &y, char &previousChar, const std::size_t ghostIndex) noexcept;
+            GameStatus ghostGoRight(std::size_t &x, std::size_t &y, char &previousChar, const std::size_t ghostIndex) noexcept;
             GameStatus restartGame(KeyPressed &lastKey) noexcept;
             GameStatus checkGhostDirections(const std::size_t i) noexcept;
             GameStatus getOutOfBox() noexcept;

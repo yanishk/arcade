@@ -36,7 +36,7 @@ void arcade::NCurses::stop() noexcept
 
 void arcade::NCurses::savePlayerName(const std::string gameName) noexcept
 {
-    static int turn = 0;
+    static std::size_t turn = 0;
     char tmp[80] = {0};
 
     if (gameName == "Menu") {
@@ -81,7 +81,7 @@ void arcade::NCurses::pickColor(const std::unordered_map<std::string, Color> pat
 
 void arcade::NCurses::displayMap(const std::array<std::string, 23> map, const std::size_t size) noexcept
 {
-    int index = 1;
+    std::size_t index = 1;
     std::string pattern;
     unsigned int colorChosen;
 
@@ -103,7 +103,7 @@ void arcade::NCurses::displayMap(const std::array<std::string, 23> map, const st
     wrefresh(_window);
 }
 
-arcade::KeyPressed arcade::NCurses::checkKeyPressed(const int key) const noexcept
+arcade::KeyPressed arcade::NCurses::checkKeyPressed(const unsigned int key) const noexcept
 {
     wclear(_window);
     if (key == KEY_UP)

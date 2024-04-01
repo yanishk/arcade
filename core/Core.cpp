@@ -100,7 +100,7 @@ void arcade::Core::manageMenuSwitchGame(const std::size_t indexLib, const std::s
     }
 }
 
-size_t arcade::Core::manageDynamicSwitchLib(std::size_t indexLib, const std::size_t indexGame) const
+std::size_t arcade::Core::manageDynamicSwitchLib(std::size_t indexLib, const std::size_t indexGame) const
 {
     if (indexGame != 0) {
         if (_lib[indexLib]->getKey() == N && indexLib < 2) {
@@ -119,7 +119,7 @@ size_t arcade::Core::manageDynamicSwitchLib(std::size_t indexLib, const std::siz
     return indexLib;
 }
 
-size_t arcade::Core::manageDynamicSwitchGame(const std::size_t indexLib, std::size_t indexGame)
+std::size_t arcade::Core::manageDynamicSwitchGame(const std::size_t indexLib, std::size_t indexGame)
 {
     if (indexGame != 0) {
         if (_lib[indexLib]->getKey() == G) {
