@@ -21,6 +21,7 @@ namespace arcade
         P,
         N,
         G,
+        M,
         BACKSPACE,
         CLOSE_BUTTON,
         ENTER

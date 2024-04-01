@@ -36,6 +36,11 @@ namespace arcade
             void updateGame(GameStatus &status, unsigned int &msTimer, const std::size_t indexGame, const std::size_t score) const noexcept;
             std::vector<std::pair<std::string, std::pair<int, int>>> getGameScores(std::string gameName) const noexcept;
             void updateScoreFile(std::string gameName, std::size_t score) const noexcept;
+            arcade::GameStatus handleMenuKey(GameStatus status) noexcept;
+            void choseOptionMenu() noexcept;
+            arcade::GameStatus mainGame(GameStatus status) noexcept;
+            void endLoop() const noexcept;
+            void createObjectLoader(const std::string libPath) noexcept;
             std::vector<DLLoader<IDisplayModule> *> _libLoader;
             std::vector<DLLoader<IGameModule> *> _gameLoader;
             std::vector<arcade::IGameModule *> _game;
@@ -44,6 +49,11 @@ namespace arcade
             std::vector<std::string> _libText;
             std::array<std::string, 3> _libName;
             std::array<std::string, 3> _gameName;
+            std::size_t _indexLib = 0;
+            std::size_t _indexGame = 0;
+            std::size_t _tmpLib = 0;
+            std::size_t _tmpGame = 0;
+            std::size_t _score = 0;
     };
 }
 

@@ -18,7 +18,7 @@ namespace arcade
             Menu();
             ~Menu() = default;
 
-            void resetGame() noexcept override {};
+            void resetGame() noexcept override;
             std::string getGameName() const noexcept override;
             std::size_t getScore() const noexcept override;
             std::array<std::string, 23> getMap() const noexcept override;

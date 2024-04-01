@@ -563,6 +563,8 @@ arcade::GameStatus arcade::Pacman::manageKeys(arcade::KeyPressed &key,
         status = goRight(x, y);
     if (key == R)
         resetGame();
+    if (key == M)
+        return MENU;
     if (key != OTHER)
         lastKey = key;
     return status;

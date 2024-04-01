@@ -159,3 +159,25 @@ arcade::GameStatus arcade::Menu::updateMap(arcade::KeyPressed key) noexcept
     keyEnter(key);
     return PLAYING;
 }
+
+void arcade::Menu::resetGame() noexcept
+{
+    _libSelected = false;
+    _gameSelected = false;
+    _selectGameArrow = 0;
+    _selectLibArrow = 0;
+    _indexGame = 0;
+    _indexLib = 0;
+
+    for(auto &it : _textToDisplay) {
+        if (it.first == "->") {
+            it.second.first = 200;
+            it.second.second = 200;
+        }
+        if (it.first == "X") {
+            it.second.first = 5000;
+            it.second.second = 0;
+        }
+    }
+    _textToDisplay.pop_back();
+}

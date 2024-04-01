@@ -386,6 +386,8 @@ arcade::GameStatus arcade::Nibbler::updateMap(arcade::KeyPressed key) noexcept
         resetGame();
     if (nextPlayerMove() == LOOSE)
         return LOOSE;
+    if (key == M)
+        return MENU;
     return status;
 }
 

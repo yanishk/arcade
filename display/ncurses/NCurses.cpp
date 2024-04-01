@@ -6,6 +6,7 @@
 */
 
 #include "NCurses.hpp"
+#include <iostream>
 
 void arcade::NCurses::init(const std::unordered_map<std::string, Color> pattern) noexcept
 {
@@ -31,7 +32,6 @@ void arcade::NCurses::init(const std::unordered_map<std::string, Color> pattern)
 
 void arcade::NCurses::stop() noexcept
 {
-    wclear(_window);
     delwin(_window);
     endwin();
 }
@@ -102,6 +102,8 @@ arcade::KeyPressed arcade::NCurses::checkKeyPressed(const int key) const noexcep
         return N;
     if (std::toupper(key) == 'G')
         return G;
+    if (std::toupper(key) == 'M')
+        return M;
     if (key == KEY_BACKSPACE)
         return BACKSPACE;
     if (key == 10)

@@ -17,7 +17,8 @@ namespace arcade
         WON_AND_RELOADED,
         LOOSE,
         QUIT,
-        NO_ACTIVITY
+        NO_ACTIVITY,
+        MENU
     };
 }
 

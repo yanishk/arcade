@@ -160,6 +160,8 @@ arcade::KeyPressed arcade::Sfml::checkKeyPressed(const sf::Event event) const no
         return N;
     if (event.key.code == sf::Keyboard::G)
         return G;
+    if (event.key.code == sf::Keyboard::M)
+        return M;
     if (event.key.code == sf::Keyboard::Enter)
         return ENTER;
     return OTHER;

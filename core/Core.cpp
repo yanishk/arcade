@@ -11,18 +11,10 @@
 #include <fstream>
 #include "Core.hpp"
 
-void arcade::Core::readLib(const std::string libPath)
+void arcade::Core::createObjectLoader(const std::string libPath) noexcept
 {
     std::string path = "lib";
 
-    for (auto it = _libName.begin(); it != _libName.end(); it++) {
-        if (*it == libPath) {
-            _libLoader.push_back(new DLLoader<IDisplayModule>(libPath));
-            _libText.push_back(libPath);
-        }
-    }
-    if (_libLoader.size() == 0)
-        throw arcade::Error("");
     for (auto &entry : std::filesystem::directory_iterator(path)) {
         for (auto it = _libName.begin(); it != _libName.end(); it++) {
             if (*it == entry.path().string() && *it != libPath) {
@@ -40,6 +32,20 @@ void arcade::Core::readLib(const std::string libPath)
             }
         }
     }
+}
+
+void arcade::Core::readLib(const std::string libPath)
+{
+
+    for (auto it = _libName.begin(); it != _libName.end(); it++) {
+        if (*it == libPath) {
+            _libLoader.push_back(new DLLoader<IDisplayModule>(libPath));
+            _libText.push_back(libPath);
+        }
+    }
+    if (_libLoader.size() == 0)
+        throw arcade::Error("");
+    createObjectLoader(libPath);
     for (auto &it : _libLoader) {
         _lib.push_back(it->getInstance());
     }
@@ -82,29 +88,33 @@ void arcade::Core::manageMenuSwitchGame(const std::size_t indexLib, const std::s
 
 size_t arcade::Core::manageDynamicSwitchLib(std::size_t indexLib, const std::size_t indexGame) const
 {
-    if (_lib[indexLib]->getKey() == N && indexLib < 2) {
-        _lib[indexLib]->stop();
-        indexLib++;
-        _lib[indexLib]->init(_game[indexGame]->getPattern());
-    }
-    if (_lib[indexLib]->getKey() == P && indexLib > 0) {
-        _lib[indexLib]->stop();
-        indexLib--;
-        _lib[indexLib]->init(_game[indexGame]->getPattern());
+    if (indexGame != 0) {
+        if (_lib[indexLib]->getKey() == N && indexLib < 2) {
+            _lib[indexLib]->stop();
+            indexLib++;
+            _lib[indexLib]->init(_game[indexGame]->getPattern());
+        }
+        if (_lib[indexLib]->getKey() == P && indexLib > 0) {
+            _lib[indexLib]->stop();
+            indexLib--;
+            _lib[indexLib]->init(_game[indexGame]->getPattern());
+        }
     }
     return indexLib;
 }
 
 size_t arcade::Core::manageDynamicSwitchGame(const std::size_t indexLib, std::size_t indexGame) const
 {
-    if (_lib[indexLib]->getKey() == G) {
-        updateScoreFile(_game[indexGame]->getGameName(), _game[indexGame]->getScore());
-        _game[indexGame]->resetGame();
-        _lib[indexLib]->stop();
-            indexGame += 1;
-        if (indexGame >= _gameText.size())
-            indexGame = 1;
-        _lib[indexLib]->init(_game[indexGame]->getPattern());
+    if (indexGame != 0) {
+        if (_lib[indexLib]->getKey() == G) {
+            updateScoreFile(_game[indexGame]->getGameName(), _game[indexGame]->getScore());
+            _game[indexGame]->resetGame();
+            _lib[indexLib]->stop();
+                indexGame += 1;
+            if (indexGame >= _gameText.size())
+                indexGame = 1;
+            _lib[indexLib]->init(_game[indexGame]->getPattern());
+        }
     }
     return indexGame;
 }
@@ -179,53 +189,79 @@ void arcade::Core::updateScoreFile(std::string gameName, std::size_t score) cons
     scoreFile.close();
 }
 
+arcade::GameStatus arcade::Core::handleMenuKey(GameStatus status) noexcept
+{
+    if (status == MENU) {
+        _indexGame = 0;
+        _tmpGame = 0;
+        _lib[_indexLib]->stop();
+        _indexLib = 0;
+        _lib[_indexLib]->init(_game[_indexGame]->getPattern());
+        _game[_indexGame]->resetGame();
+        status = PLAYING;
+    }
+    return status;
+}
+
+void arcade::Core::choseOptionMenu() noexcept
+{
+    if (_indexGame == 0) {
+        _indexGame = _game[0]->getIndexes().second;
+        manageMenuSwitchGame(_indexLib, _indexGame, _tmpGame);
+        _tmpGame = _indexGame;
+        _indexLib = _game[0]->getIndexes().first;
+        manageMenuSwitchLib(_indexLib, _indexGame, _tmpLib);
+        _tmpLib = _indexLib;
+    }
+}
+
+arcade::GameStatus arcade::Core::mainGame(GameStatus status) noexcept
+{
+    _score = _game[_indexGame]->getScore();
+    _lib[_indexLib]->changeColor(_game[_indexGame]->getPattern());
+    choseOptionMenu();
+    _lib[_indexLib]->displayText(_game[_indexGame]->getText());
+    _lib[_indexLib]->displayText(getGameScores(_game[_indexGame]->getGameName()));
+    _lib[_indexLib]->displayMap(_game[_indexGame]->getMap(),
+    _game[_indexGame]->getMapCellSize());
+    _lib[_indexLib]->game();
+    status = _game[_indexGame]->updateMap(_lib[_indexLib]->getKey());
+    status = handleMenuKey(status);
+    return status;
+}
+
+void arcade::Core::endLoop() const noexcept
+{
+    _lib[_indexLib]->stop();
+    for (auto it : _libLoader)
+        it->closeLib();
+    for (auto it : _gameLoader)
+        it->closeLib();
+}
+
 void arcade::Core::loop()
 {
     GameStatus status = PLAYING;
-    std::size_t indexLib = 0;
-    std::size_t indexGame = 0;
-    std::size_t tmpLib = 0;
-    std::size_t tmpGame = 0;
-    std::size_t score = 0;
     auto clockT0 = std::chrono::steady_clock::now();
     auto clockT1 = std::chrono::steady_clock::now();
     unsigned int msTimer = 115;
 
-    _lib[indexLib]->init(_game[indexGame]->getPattern());
-    _game[indexGame]->initText(_libText, _gameText);
+    _lib[_indexLib]->init(_game[_indexGame]->getPattern());
+    _game[_indexGame]->initText(_libText, _gameText);
     while (status == PLAYING) {
         auto clockT2 = std::chrono::steady_clock::now();
         auto timeElapsed = std::chrono::duration_cast
         <std::chrono::milliseconds>(clockT2 - clockT1);
         if (timeElapsed.count() > msTimer) {
-            score = _game[indexGame]->getScore();
-            _lib[indexLib]->changeColor(_game[indexGame]->getPattern());
-            if (indexGame == 0) {
-                indexGame = _game[0]->getIndexes().second;
-                manageMenuSwitchGame(indexLib, indexGame, tmpGame);
-                tmpGame = indexGame;
-                indexLib = _game[0]->getIndexes().first;
-                manageMenuSwitchLib(indexLib, indexGame, tmpLib);
-                tmpLib = indexLib;
-            }
-            _lib[indexLib]->displayText(_game[indexGame]->getText());
-            _lib[indexLib]->displayText(getGameScores(_game[indexGame]->getGameName()));
-            _lib[indexLib]->displayMap(_game[indexGame]->getMap(),
-            _game[indexGame]->getMapCellSize());
-            _lib[indexLib]->game();
-            status = _game[indexGame]->updateMap(_lib[indexLib]->getKey());
+            status = mainGame(status);
             clockT1 = std::chrono::steady_clock::now();
-            indexLib = manageDynamicSwitchLib(indexLib, indexGame);
-            indexGame = manageDynamicSwitchGame(indexLib, indexGame);
-            _lib[indexLib]->setKey(OTHER);
-            incrementGameTime(clockT2, clockT0, indexGame);
+            _indexLib = manageDynamicSwitchLib(_indexLib, _indexGame);
+            _indexGame = manageDynamicSwitchGame(_indexLib, _indexGame);
+            _lib[_indexLib]->setKey(OTHER);
+            incrementGameTime(clockT2, clockT0, _indexGame);
         }
-        updateGame(status, msTimer, indexGame, score);
+        updateGame(status, msTimer, _indexGame, _score);
     }
-    updateScoreFile(_game[indexGame]->getGameName(), _game[indexGame]->getScore());
-    _lib[indexLib]->stop();
-    for (auto it : _libLoader)
-        it->closeLib();
-    for (auto it : _gameLoader)
-        it->closeLib();
+    updateScoreFile(_game[_indexGame]->getGameName(), _game[_indexGame]->getScore());
+    endLoop();
 }
