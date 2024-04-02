@@ -53,8 +53,11 @@ void arcade::Core::readLib(const std::string libPath)
         _game.push_back(it->getInstance());
 }
 
-arcade::Core::Core(const std::string libPath) : _indexLib(0), _indexGame(0), _tmpLib(0), _tmpGame(0), _score(0)
+arcade::Core::Core(std::string libPath) : _indexLib(0), _indexGame(0), _tmpLib(0), _tmpGame(0), _score(0)
 {
+    if (libPath.compare(0, 2, "./") == 0)
+        libPath.erase(libPath.begin(), libPath.begin()+2);
+
     _libName =
     {
         "lib/arcade_ndk++.so",
