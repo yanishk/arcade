@@ -34,7 +34,6 @@ namespace arcade
             virtual void incrementTime() = 0;
             virtual GameStatus updateMap(KeyPressed key) = 0;
             virtual std::pair<std::size_t, std::size_t> getIndexes() const = 0;
-            virtual void keyEnter(const KeyPressed key) = 0;
             virtual void initText(const std::vector<std::string>, const std::vector<std::string>) = 0;
     };
 }

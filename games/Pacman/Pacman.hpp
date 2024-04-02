@@ -36,7 +36,6 @@ namespace arcade
             void incrementTime() noexcept override;
             GameStatus updateMap(KeyPressed key) noexcept override;
             std::pair<std::size_t, std::size_t> getIndexes() const noexcept override;
-            void keyEnter(const KeyPressed) noexcept override {};
             void initText(const std::vector<std::string>, const std::vector<std::string>) noexcept override {};
 
         private:
