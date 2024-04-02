@@ -259,7 +259,7 @@ arcade::GameStatus arcade::Core::mainGame(GameStatus status) noexcept
     _lib[_indexLib]->displayText(getGameScores(_game[_indexGame]->getGameName()));
     _lib[_indexLib]->displayMap(_game[_indexGame]->getMap(),
     _game[_indexGame]->getMapCellSize());
-    _lib[_indexLib]->game(_game[_indexGame]->getGameName());
+    _lib[_indexLib]->handleEvent(_game[_indexGame]->getGameName());
     status = _game[_indexGame]->updateMap(_lib[_indexLib]->getKey());
     status = handleMenuKey(status);
     return status;

@@ -110,7 +110,7 @@ void arcade::SDL2::displayPlayerName(const std::string gameName)
     SDL_RenderCopy(_renderer, _message, NULL, &Message_rect);
 }
 
-void arcade::SDL2::game(const std::string gameName) noexcept
+void arcade::SDL2::handleEvent(const std::string gameName) noexcept
 {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {

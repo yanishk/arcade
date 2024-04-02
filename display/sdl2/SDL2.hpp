@@ -23,7 +23,7 @@ namespace arcade
 
             void init(const std::unordered_map<std::string, Color> pattern) override;
             void stop() noexcept override;
-            void game(const std::string gameName) noexcept override;
+            void handleEvent(const std::string gameName) noexcept override;
             void changeColor(const std::unordered_map<std::string, Color> patternMap) override;
             void displayText(const std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) override;
             void displayMap(const std::array<std::string, 23> map, const std::size_t size) noexcept override;

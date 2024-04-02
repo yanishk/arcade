@@ -146,7 +146,7 @@ bool arcade::Sfml::isKeyAccepted(const KeyPressed key) const noexcept
     return (key != UP && key != DOWN && key != LEFT && key != RIGHT && key != ENTER);
 }
 
-void arcade::Sfml::game(const std::string gameName) noexcept
+void arcade::Sfml::handleEvent(const std::string gameName) noexcept
 {
     sf::Event event;
 

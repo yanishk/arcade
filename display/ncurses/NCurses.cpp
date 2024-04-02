@@ -55,7 +55,7 @@ void arcade::NCurses::savePlayerName(const std::string gameName) noexcept
     }
 }
 
-void arcade::NCurses::game(const std::string gameName) noexcept
+void arcade::NCurses::handleEvent(const std::string gameName) noexcept
 {
     savePlayerName(gameName);
     _key = checkKeyPressed(getch());

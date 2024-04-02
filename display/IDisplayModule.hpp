@@ -25,7 +25,7 @@ namespace arcade
 
             virtual void init(const std::unordered_map<std::string, Color> pattern) = 0;
             virtual void stop() = 0;
-            virtual void game(const std::string gameName) = 0;
+            virtual void handleEvent(const std::string gameName) = 0;
             virtual void changeColor(const std::unordered_map<std::string, Color> patternMap) = 0;
             virtual void displayText(const std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) = 0;
             virtual void displayMap(const std::array<std::string, 23> map, const std::size_t size) = 0;
