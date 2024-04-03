@@ -92,13 +92,14 @@ void arcade::NCurses::displayMap(const std::array<std::string, 23> map, const st
             else
                 pattern = std::string(1, map[x][y]);
             auto it = _charMap.find(pattern);
-            colorChosen = static_cast<int>(it->second.first);
             if (it != _charMap.end()) {
+                colorChosen = static_cast<int>(it->second.first);
+                colorChosen = static_cast<int>(it->second.first);
                 wattron(_window, COLOR_PAIR(colorChosen));
                 mvwprintw(_window, x + index, y, "  ");
+                wattroff(_window, COLOR_PAIR(colorChosen));
             }
         }
-        wattroff(_window, COLOR_PAIR(colorChosen));
     }
     wrefresh(_window);
 }

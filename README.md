@@ -47,15 +47,15 @@ The Color Enum:
 ```C++
     enum Color
     {
-    DEFAULT,
-    BLACK,
-    WHITE,
-    RED,
-    BLUE,
-    GREEN,
-    YELLOW,
-    GRAY,
-    CYAN
+        DEFAULT,
+        BLACK,
+        WHITE,
+        RED,
+        BLUE,
+        GREEN,
+        YELLOW,
+        GRAY,
+        CYAN
     };
 ```
 
@@ -63,19 +63,19 @@ The KeyPressed Enum:
 ```C++
     enum KeyPressed
     {
-    OTHER,
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-    R,
-    P,
-    N,
-    G,
-    M,
-    BACKSPACE,
-    CLOSE_BUTTON,
-    ENTER
+        OTHER,
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT,
+        R,
+        P,
+        N,
+        G,
+        M,
+        BACKSPACE,
+        CLOSE_BUTTON,
+        ENTER
     };
 ```
 
@@ -85,14 +85,14 @@ status of the game and handle it in our core accordingly.
 ```C++
     enum GameStatus
     {
-    PLAYING,
-    WON,
-    WON_AND_RELOADED,
-    LOOSE,
-    QUIT,
-    NO_ACTIVITY,
-    MENU,
-    RESET
+        PLAYING,
+        WON,
+        WON_AND_RELOADED,
+        LOOSE,
+        QUIT,
+        NO_ACTIVITY,
+        MENU,
+        RESET
     };
 ```
 
@@ -127,7 +127,6 @@ seconds that pass.
 - getIndexes(): returns two ints associated with the vectors containing respectively the game libraries and the display libraries.
 - initText(const std::vector<std::string>, const std::vector<std::string>): initialize a vector of string (to send it to the core and then the display)
 
-                                ------------------------------
 
 IDisplayModule interface:
 ```C++
