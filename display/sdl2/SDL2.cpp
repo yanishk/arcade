@@ -153,6 +153,7 @@ void arcade::SDL2::displayMap(const std::array<std::string, 23> map, const std::
             if (it != _charMap.end()) {
                 SDL_Rect spriteRect = {xPos, yPos, 40, 40};
                 SDL_RenderCopy(_renderer, it->second.first, NULL, &spriteRect);
+                SDL_RenderCopy(_renderer, it->second.second, NULL, &spriteRect);
             }
             xPos += 40;
             y += size;
@@ -189,22 +190,54 @@ void arcade::SDL2::changeColor(const std::unordered_map<std::string, std::pair<C
 void arcade::SDL2::pickColor(const std::unordered_map<std::string, std::pair<Color, std::string>> patternMap)
 {
     for (auto it = patternMap.begin(); it != patternMap.end(); it++) {
-        if (it->second.first == BLACK)
-            initRectShape(it->first, 0, 0, 0);
-        if (it->second.first == WHITE)
-            initRectShape(it->first, 255, 255, 255);
-        if (it->second.first == RED)
-            initRectShape(it->first, 255, 0, 0);
-        if (it->second.first == BLUE)
-            initRectShape(it->first, 0, 0, 255);
-        if (it->second.first == GREEN)
-            initRectShape(it->first, 0, 128, 0);
-        if (it->second.first == YELLOW)
-            initRectShape(it->first, 255, 255, 0);
-        if (it->second.first == CYAN)
-            initRectShape(it->first, 0, 255, 255);
-        if (it->second.first == GRAY)
-            initRectShape(it->first, 150, 150, 150);
+        if (it->second.first == BLACK) {
+            if (it->second.second.empty())
+                initRectShape(it->first, 0, 0, 0);
+            else
+                initSprite(it->first, it->second.second);
+        }
+        if (it->second.first == WHITE) {
+            if (it->second.second.empty())
+                initRectShape(it->first, 255, 255, 255);
+            else
+                initSprite(it->first, it->second.second);
+        }
+        if (it->second.first == RED) {
+            if (it->second.second.empty())
+                initRectShape(it->first, 255, 0, 0);
+            else
+                initSprite(it->first, it->second.second);
+        }
+        if (it->second.first == BLUE) {
+            if (it->second.second.empty())
+                initRectShape(it->first, 0, 0, 255);
+            else
+                initSprite(it->first, it->second.second);
+        }
+        if (it->second.first == GREEN) {
+            if (it->second.second.empty())
+                initRectShape(it->first, 0, 128, 0);
+            else
+                initSprite(it->first, it->second.second);
+        }
+        if (it->second.first == YELLOW) {
+            if (it->second.second.empty())
+                initRectShape(it->first, 255, 255, 0);
+            else
+                initSprite(it->first, it->second.second);
+        }
+        if (it->second.first == CYAN) {
+            if (it->second.second.empty())
+                initRectShape(it->first, 0, 255, 255);
+            else
+                initSprite(it->first, it->second.second);
+        }
+        if (it->second.first == GRAY) {
+            if (it->second.second.empty())
+                initRectShape(it->first, 150, 150, 150);
+            else
+                initSprite(it->first, it->second.second);
+        }
     }
 }
 
@@ -220,6 +253,17 @@ void arcade::SDL2::initRectShape(const std::string pattern, const short r,
     if (!spriteTexture)
         throw arcade::Error(SDL_GetError());
     _charMap[pattern].first = spriteTexture;
+}
+
+void arcade::SDL2::initSprite(const std::string pattern, const std::string pathFile)
+{
+    SDL_Surface* sprite;
+    SDL_Texture* texture;
+
+    sprite = SDL_LoadBMP(pathFile.c_str());
+        // throw arcade::Error("Could not find sprite");
+    texture = SDL_CreateTextureFromSurface(_renderer, sprite);
+    _charMap[pattern].second = texture;
 }
 
 std::string arcade::SDL2::getPlayerName() const noexcept

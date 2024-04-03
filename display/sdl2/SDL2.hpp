@@ -40,7 +40,8 @@ namespace arcade
             void pickColor(const std::unordered_map<std::string, std::pair<Color, std::string>> patternMap);
             KeyPressed checkKeyPressed(const SDL_Event event) const noexcept;
             void displayPlayerName(const std::string gameName);
-            std::unordered_map<std::string, std::pair<SDL_Texture *, SDL_Surface *>> _charMap;
+            std::unordered_map<std::string, std::pair<SDL_Texture *, SDL_Texture *>> _charMap;
+            void initSprite(const std::string pattern, const std::string pathFile);
             SDL_Window *_window;
             SDL_Renderer *_renderer;
             SDL_Surface *_spriteSurface;
