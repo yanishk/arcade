@@ -34,7 +34,7 @@ namespace arcade
         private:
             void initWindow();
             void initSurface();
-            void initFont(const char *fontPath);
+            void initFont(const std::string &fontPath);
             void initRectShape(const std::string pattern, const short r,
                 const short g, const short b);
             void pickColor(const std::unordered_map<std::string, Color> patternMap);

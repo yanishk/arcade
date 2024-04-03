@@ -11,7 +11,7 @@
 arcade::SDL2::SDL2() : _key(OTHER)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
-    initFont("display/asset/font/OpenSans-Regular.ttf");
+    initFont("assets/font/OpenSans-Regular.ttf");
 }
 
 arcade::SDL2::~SDL2()
@@ -39,11 +39,11 @@ void arcade::SDL2::initSurface()
         throw arcade::Error(SDL_GetError());
 }
 
-void arcade::SDL2::initFont(const char *fontPath)
+void arcade::SDL2::initFont(const std::string &fontPath)
 {
     if (TTF_Init() == -1)
         throw arcade::Error(SDL_GetError());
-    _font = TTF_OpenFont(fontPath, 20);
+    _font = TTF_OpenFont(fontPath.c_str(), 20);
     if (!_font)
         throw arcade::Error(SDL_GetError());
 }
@@ -108,6 +108,8 @@ void arcade::SDL2::displayPlayerName(const std::string gameName)
     Message_rect = {0, 0, surfaceMsg->w, surfaceMsg->h};
     SDL_FreeSurface(surfaceMsg);
     SDL_RenderCopy(_renderer, _message, NULL, &Message_rect);
+    if (_message != NULL)
+        SDL_DestroyTexture(_message);
 }
 
 void arcade::SDL2::handleEvent(const std::string gameName) noexcept
@@ -128,8 +130,10 @@ void arcade::SDL2::handleEvent(const std::string gameName) noexcept
 
 void arcade::SDL2::stop() noexcept
 {
-    SDL_DestroyTexture(_message);
-    SDL_DestroyWindow(_window);
+    if (_message != NULL)
+        SDL_DestroyTexture(_message);
+    if (_window != NULL)
+        SDL_DestroyWindow(_window);
 }
 
 void arcade::SDL2::displayMap(const std::array<std::string, 23> map, const std::size_t size) noexcept
@@ -172,6 +176,8 @@ void arcade::SDL2::displayText(const std::vector<std::pair<std::string, std::pai
         SDL_Rect Message_rect = {it.second.first, it.second.second, surfaceMsg->w, surfaceMsg->h};
         SDL_FreeSurface(surfaceMsg);
         SDL_RenderCopy(_renderer, _message, NULL, &Message_rect);
+        if (_message != NULL)
+            SDL_DestroyTexture(_message);
     }
 }
 
@@ -193,8 +199,6 @@ void arcade::SDL2::pickColor(const std::unordered_map<std::string, Color> patter
             initRectShape(it->first, 0, 0, 255);
         if (it->second == GREEN)
             initRectShape(it->first, 0, 128, 0);
-        if (it->second == YELLOW)
-            initRectShape(it->first, 255, 255, 0);
         if (it->second == YELLOW)
             initRectShape(it->first, 255, 255, 0);
         if (it->second == CYAN)
