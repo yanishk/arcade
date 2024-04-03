@@ -38,9 +38,9 @@ namespace arcade
             void updateGame(GameStatus &status, unsigned int &msTimer, const std::size_t indexGame, const std::size_t score) noexcept;
             std::vector<std::pair<std::string, std::pair<int, int>>> getGameScores(const std::string gameName) const noexcept;
             void updateScoreFile(const std::string gameName, const std::size_t score) noexcept;
-            arcade::GameStatus handleMenuKey(GameStatus status) noexcept;
-            void choseOptionMenu() noexcept;
-            arcade::GameStatus mainGame(GameStatus status) noexcept;
+            arcade::GameStatus handleMenuKey(GameStatus status);
+            void choseOptionMenu();
+            arcade::GameStatus mainGame(GameStatus status);
             void createObjectLoader(const std::string libPath) noexcept;
             std::vector<std::unique_ptr<DLLoader<IDisplayModule>>> _libLoader;
             std::vector<std::unique_ptr<DLLoader<IGameModule>>> _gameLoader;

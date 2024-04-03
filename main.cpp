@@ -18,7 +18,7 @@ int main(int ac, char **av)
     try {
         arcade::Core core(av[1]);
         core.loop();
-    } catch (const arcade::Error &e) {
+    } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return 84;
     }

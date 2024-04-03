@@ -37,7 +37,7 @@ arcade::Pacman::Pacman() : _gameName("Pacman"), _score(0),
         "                               "
     };
     _map = _defaultMap;
-    _patternPath["#"] = std::make_pair(BLUE, "display/asset/sprite/pacman_wall.png");
+    _patternPath["#"] = std::make_pair(BLUE, "assets/sprites/pacman_wall.png");
     _patternPath[" "] = std::make_pair(BLACK, "");
     _patternPath["."] = std::make_pair(WHITE, "");
     _patternPath["!"] = std::make_pair(GREEN, "");

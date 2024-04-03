@@ -94,7 +94,6 @@ void arcade::NCurses::displayMap(const std::array<std::string, 23> map, const st
             auto it = _charMap.find(pattern);
             if (it != _charMap.end()) {
                 colorChosen = static_cast<int>(it->second.first);
-                colorChosen = static_cast<int>(it->second.first);
                 wattron(_window, COLOR_PAIR(colorChosen));
                 mvwprintw(_window, x + index, y, "  ");
                 wattroff(_window, COLOR_PAIR(colorChosen));

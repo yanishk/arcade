@@ -46,9 +46,8 @@ void arcade::Core::readLib(const std::string libPath)
     if (_libLoader.size() == 0)
         throw arcade::Error("");
     createObjectLoader(libPath);
-    for (auto &it : _libLoader) {
+    for (auto &it : _libLoader)
         _lib.push_back(it->getInstance());
-    }
     for (auto &it : _gameLoader)
         _game.push_back(it->getInstance());
 }
@@ -213,7 +212,7 @@ void arcade::Core::updateScoreFile(const std::string gameName, const std::size_t
     scoreFile.close();
 }
 
-arcade::GameStatus arcade::Core::handleMenuKey(GameStatus status) noexcept
+arcade::GameStatus arcade::Core::handleMenuKey(GameStatus status)
 {
     if (status == MENU) {
         _indexGame = 0;
@@ -227,7 +226,7 @@ arcade::GameStatus arcade::Core::handleMenuKey(GameStatus status) noexcept
     return status;
 }
 
-void arcade::Core::choseOptionMenu() noexcept
+void arcade::Core::choseOptionMenu()
 {
     if (_indexGame == 0) {
         _indexGame = _game[0]->getIndexes().second;
@@ -253,7 +252,7 @@ void arcade::Core::endLoop() const noexcept
     }
 }
 
-arcade::GameStatus arcade::Core::mainGame(GameStatus status) noexcept
+arcade::GameStatus arcade::Core::mainGame(GameStatus status)
 {
     _score = _game[_indexGame]->getScore();
     _lib[_indexLib]->changeColor(_game[_indexGame]->getPattern());
