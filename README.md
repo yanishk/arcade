@@ -109,7 +109,7 @@ IGameModule Interface:
             virtual std::size_t getScore() const = 0;
             virtual std::array<std::string, 23> getMap() const = 0;
             virtual std::size_t getMapCellSize() const = 0;
-            virtual std::unordered_map<std::string, Color> getPattern() const = 0;
+            virtual std::unordered_map<std::string, std::pair<Color, std::string>> getPattern() const = 0;
             virtual std::vector<std::pair<std::string, std::pair<int, int>>> getText() const = 0;
             virtual void incrementTime() = 0;
             virtual GameStatus updateMap(KeyPressed key) = 0;
@@ -120,7 +120,7 @@ IGameModule Interface:
 
 Our two games, Pacman and Nibbler, inherit from the IGameModule Interface which is composed of the following methods:
 - resetGame: reset to their beginning states all the variables of the class
-- getPattern(): returns an unordered_map composed of an std::string which represents a pattern present in the game map and a Color value from the Color enum.
+- getPattern(): returns an unordered_map composed of an std::string which represents a pattern present in the game map and a pair composed of a Color value from the Color enum, and an std::string containing the path of the desired sprite
 - incrementTime(): increments an std::size_t variable which represents the
 seconds that pass.
 - updateMap(KeyPressed key): update the game map based on the last user input (defined in the KeyPressed enum).
@@ -136,11 +136,10 @@ IDisplayModule interface:
             IDisplayModule() = default;
             ~IDisplayModule() = default;
 
-            virtual void init(const std::unordered_map<std::string, Color> pattern) = 0;
+            virtual void init(const std::unordered_map<std::string, std::pair<Color, std::string>> pattern) = 0;
             virtual void stop() = 0;
             virtual void handleEvent(const std::string gameName) = 0;
-            virtual void changeColor(const
-            std::unordered_map<std::string, Color> patternMap) = 0;
+            virtual void changeColor(const std::unordered_map<std::string, std::pair<Color, std::string>> patternMap) = 0;
             virtual void displayText(const std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) = 0;
             virtual void displayMap(const std::array<std::string, 23> map, const std::size_t size) = 0;
             virtual KeyPressed getKey() const = 0;
@@ -150,7 +149,7 @@ IDisplayModule interface:
 ```
 
 Our three libraries, SFML / Ncurses / SDL2, inherit from the IDisplayModule Interface which is composed of the following methods:
-- init(const std::unordered_map<std::string, Color> pattern) : Initializes
+- init(const std::unordered_map<std::string, std::pair<Color, std::string>> pattern) : Initializes
 all the resources that will be used throughout the execution of the display. It
 fills a map composed of the pattern retrieved through our map and its
 corresponding object to display.
