@@ -36,12 +36,12 @@ arcade::Nibbler::Nibbler() : _score(0), _time(0), _gameName("Nibbler")
         "                                      "
     };
     _map = _defaultMap;
-    _patternPath["##"] = WHITE;
-    _patternPath["  "] = BLACK;
-    _patternPath["[]"] = RED;
-    _patternPath["=="] = BLUE;
-    _patternPath["8~"] = GREEN;
-    _patternPath["<="] = YELLOW;
+    _patternPath["##"] = std::make_pair(WHITE, "display/asset/sprite/brick_wall.bmp");
+    _patternPath["  "] = std::make_pair(BLACK, "");
+    _patternPath["[]"] = std::make_pair(RED, "");
+    _patternPath["=="] = std::make_pair(BLUE, "");
+    _patternPath["8~"] = std::make_pair(GREEN, "");
+    _patternPath["<="] = std::make_pair(YELLOW, "");
     _scoreText = "score: " + std::to_string(_score);
     _textToDisplay.push_back(std::make_pair(_scoreText, std::make_pair(0, 0)));
     _sizeCell = 2;
@@ -75,7 +75,7 @@ std::array<std::string, 23> arcade::Nibbler::getMap() const noexcept
     return _map;
 }
 
-std::unordered_map<std::string, arcade::Color> arcade::Nibbler::getPattern() const noexcept
+std::unordered_map<std::string, std::pair<arcade::Color, std::string>> arcade::Nibbler::getPattern() const noexcept
 {
     return _patternPath;
 }

@@ -31,7 +31,7 @@ namespace arcade
             std::size_t getScore() const noexcept override;
             std::array<std::string, 23> getMap() const noexcept override;
             std::size_t getMapCellSize() const noexcept override;
-            std::unordered_map<std::string, Color> getPattern() const noexcept override;
+            std::unordered_map<std::string, std::pair<Color, std::string>> getPattern() const noexcept override;
             std::vector<std::pair<std::string, std::pair<int, int>>> getText() const noexcept override;
             void incrementTime() noexcept override;
             GameStatus updateMap(KeyPressed key) noexcept override;
@@ -74,7 +74,7 @@ namespace arcade
             bool checkWin() const noexcept;
             std::array<std::string, 23> _defaultMap;
             std::array<std::string, 23> _map;
-            std::unordered_map<std::string, Color> _patternPath;
+            std::unordered_map<std::string, std::pair<Color, std::string>> _patternPath;
             std::size_t _sizeCell;
             std::vector<std::pair<std::string, std::pair<int, int>>> _textToDisplay;
             std::vector<std::pair<char,std::pair<std::size_t, std::size_t>>> _defaultGhostsPos;

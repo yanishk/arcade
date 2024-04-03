@@ -37,13 +37,13 @@ arcade::Pacman::Pacman() : _gameName("Pacman"), _score(0),
         "                               "
     };
     _map = _defaultMap;
-    _patternPath["#"] = BLUE;
-    _patternPath[" "] = BLACK;
-    _patternPath["."] = WHITE;
-    _patternPath["!"] = GREEN;
-    _patternPath["P"] = YELLOW;
-    _patternPath["G"] = RED;
-    _patternPath["/"] = BLUE;
+    _patternPath["#"] = std::make_pair(BLUE, "display/asset/sprite/pacman_wall.png");
+    _patternPath[" "] = std::make_pair(BLACK, "");
+    _patternPath["."] = std::make_pair(WHITE, "");
+    _patternPath["!"] = std::make_pair(GREEN, "");
+    _patternPath["P"] = std::make_pair(YELLOW, "");
+    _patternPath["G"] = std::make_pair(RED, "");
+    _patternPath["/"] = std::make_pair(BLUE, "");
     _defaultGhostsPos = getGhostsPos();
     _ghostsPos = _defaultGhostsPos;
     for (std::size_t i = 0; i != _ghostsPos.size(); i += 1)
@@ -60,7 +60,7 @@ arcade::Pacman::Pacman() : _gameName("Pacman"), _score(0),
 void arcade::Pacman::resetGame() noexcept
 {
     _map = _defaultMap;
-    _patternPath["G"] = RED;
+    _patternPath["G"] = std::make_pair(RED, "");
     _textToDisplay.clear();
     _defaultGhostsPos.clear();
     _ghostsPos.clear();
@@ -93,7 +93,7 @@ std::size_t arcade::Pacman::getScore() const noexcept
     return _score;
 }
 
-std::unordered_map<std::string, arcade::Color> arcade::Pacman::getPattern() const noexcept
+std::unordered_map<std::string, std::pair<arcade::Color, std::string>> arcade::Pacman::getPattern() const noexcept
 {
     return _patternPath;
 }
@@ -493,11 +493,11 @@ arcade::GameStatus arcade::Pacman::moveGhosts() noexcept
 
 void arcade::Pacman::setGhostsColor() noexcept
 {
-    if (_canEatGhosts && _patternPath["G"] == RED)
-        _patternPath["G"] = CYAN;
+    if (_canEatGhosts && _patternPath["G"].first == RED)
+        _patternPath["G"] = std::make_pair(CYAN, "");
     if (_canEatGhosts && _time >= 10 &&
-        _patternPath["G"] == CYAN) {
-        _patternPath["G"] = RED;
+        _patternPath["G"].first == CYAN) {
+        _patternPath["G"] = std::make_pair(RED, "");
         _canEatGhosts = false;
     }
 }

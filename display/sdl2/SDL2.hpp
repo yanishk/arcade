@@ -21,10 +21,10 @@ namespace arcade
             SDL2();
             ~SDL2();
 
-            void init(const std::unordered_map<std::string, Color> pattern) override;
+            void init(const std::unordered_map<std::string, std::pair<Color, std::string>> pattern) override;
             void stop() noexcept override;
             void handleEvent(const std::string gameName) noexcept override;
-            void changeColor(const std::unordered_map<std::string, Color> patternMap) override;
+            void changeColor(const std::unordered_map<std::string, std::pair<Color, std::string>> patternMap) override;
             void displayText(const std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) override;
             void displayMap(const std::array<std::string, 23> map, const std::size_t size) noexcept override;
             KeyPressed getKey() const noexcept override;
@@ -37,10 +37,10 @@ namespace arcade
             void initFont(const std::string &fontPath);
             void initRectShape(const std::string pattern, const short r,
                 const short g, const short b);
-            void pickColor(const std::unordered_map<std::string, Color> patternMap);
+            void pickColor(const std::unordered_map<std::string, std::pair<Color, std::string>> patternMap);
             KeyPressed checkKeyPressed(const SDL_Event event) const noexcept;
             void displayPlayerName(const std::string gameName);
-            std::unordered_map<std::string, SDL_Texture *> _charMap;
+            std::unordered_map<std::string, std::pair<SDL_Texture *, SDL_Surface *>> _charMap;
             SDL_Window *_window;
             SDL_Renderer *_renderer;
             SDL_Surface *_spriteSurface;

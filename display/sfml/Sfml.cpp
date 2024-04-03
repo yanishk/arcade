@@ -7,13 +7,14 @@
 
 #include "Sfml.hpp"
 #include "Error.hpp"
+#include <iostream>
 
 void arcade::Sfml::initWindow() noexcept
 {
     _window.create(sf::VideoMode(1920, 1080), "SFML", sf::Style::Default);
 }
 
-void arcade::Sfml::init(const std::unordered_map<std::string, Color> pattern)
+void arcade::Sfml::init(const std::unordered_map<std::string, std::pair<Color, std::string>> pattern)
 {
     initWindow();
     pickColor(pattern);
@@ -21,25 +22,27 @@ void arcade::Sfml::init(const std::unordered_map<std::string, Color> pattern)
         throw arcade::Error("Font not found");
 }
 
-void arcade::Sfml::changeColor(const std::unordered_map<std::string, Color> patternMap) noexcept
+void arcade::Sfml::changeColor(const std::unordered_map<std::string, std::pair<Color, std::string>> patternMap) noexcept
 {
     for (auto it = patternMap.begin(); it != patternMap.end(); it++) {
-        if (it->second == BLACK)
-            _charMap[it->first].setFillColor(sf::Color::Black);
-        if (it->second == WHITE)
-            _charMap[it->first].setFillColor(sf::Color::White);
-        if (it->second == RED)
-            _charMap[it->first].setFillColor(sf::Color::Red);
-        if (it->second == BLUE)
-            _charMap[it->first].setFillColor(sf::Color::Blue);
-        if (it->second == GREEN)
-            _charMap[it->first].setFillColor(sf::Color::Green);
-        if (it->second == YELLOW)
-            _charMap[it->first].setFillColor(sf::Color::Yellow);
-        if (it->second == CYAN)
-            _charMap[it->first].setFillColor(sf::Color::Cyan);
-        if (it->second == GRAY)
-            _charMap[it->first].setFillColor(sf::Color(150, 150, 150));
+        if (!it->second.second.empty()) {
+            if (it->second.first == BLACK)
+                _charMap[it->first].first.setFillColor(sf::Color::Black);
+            if (it->second.first == WHITE)
+                _charMap[it->first].first.setFillColor(sf::Color::White);
+            if (it->second.first == RED)
+                _charMap[it->first].first.setFillColor(sf::Color::Red);
+            if (it->second.first == BLUE)
+                _charMap[it->first].first.setFillColor(sf::Color::Blue);
+            if (it->second.first == GREEN)
+                _charMap[it->first].first.setFillColor(sf::Color::Green);
+            if (it->second.first == YELLOW)
+                _charMap[it->first].first.setFillColor(sf::Color::Yellow);
+            if (it->second.first == CYAN)
+                _charMap[it->first].first.setFillColor(sf::Color::Cyan);
+            if (it->second.first == GRAY)
+                _charMap[it->first].first.setFillColor(sf::Color(150, 150, 150));
+        }
     }
 }
 
@@ -50,31 +53,72 @@ void arcade::Sfml::initRectShape(const std::string pattern, const sf::Color colo
     rect.setSize(sf::Vector2f(40, 40));
     rect.setPosition(posY, posX);
     rect.setFillColor(color);
-    _charMap[pattern] = rect;
+    _charMap[pattern].first = rect;
 }
 
-void arcade::Sfml::pickColor(const std::unordered_map<std::string, Color> patternMap) noexcept
+void arcade::Sfml::initSprite(const std::string pattern, const int posX, const int posY, const std::string pathFile)
+{
+    if (!spriteStruct._texture.loadFromFile(pathFile))
+        throw arcade::Error("Sprite not found");
+    spriteStruct._sprite.setTexture(spriteStruct._texture);
+    spriteStruct._sprite.setPosition(posY, posX);
+    _charMap[pattern].second = spriteStruct._sprite;
+}
+
+void arcade::Sfml::pickColor(const std::unordered_map<std::string, std::pair<Color, std::string>> patternMap)
 {
     int posX = 0;
     int posY = 0;
 
     for (auto it = patternMap.begin(); it != patternMap.end(); it++) {
-        if (it->second == BLACK)
-            initRectShape(it->first, sf::Color::Black, posX, posY);
-        if (it->second == WHITE)
-            initRectShape(it->first, sf::Color::White, posX, posY);
-        if (it->second == RED)
-            initRectShape(it->first, sf::Color::Red, posX, posY);
-        if (it->second == BLUE)
-            initRectShape(it->first, sf::Color::Blue, posX, posY);
-        if (it->second == GREEN)
-            initRectShape(it->first, sf::Color::Green, posX, posY);
-        if (it->second == YELLOW)
-            initRectShape(it->first, sf::Color::Yellow, posX, posY);
-        if (it->second == CYAN)
-            initRectShape(it->first, sf::Color::Cyan, posX, posY);
-        if (it->second == GRAY)
-            initRectShape(it->first, sf::Color(150, 150, 150), posX, posY);
+        if (it->second.first == BLACK) {
+            if (it->second.second.empty())
+                initRectShape(it->first, sf::Color::Black, posX, posY);
+            else
+                initSprite(it->first, posX, posY, it->second.second);
+        }
+        if (it->second.first == WHITE) {
+            if (it->second.second.empty())
+                initRectShape(it->first, sf::Color::White, posX, posY);
+            else
+                initSprite(it->first, posX, posY, it->second.second);
+        }
+        if (it->second.first == RED) {
+            if (it->second.second.empty())
+                initRectShape(it->first, sf::Color::Red, posX, posY);
+            else
+                initSprite(it->first, posX, posY, it->second.second);
+        }
+        if (it->second.first == BLUE) {
+            if (it->second.second.empty())
+                initRectShape(it->first, sf::Color::Blue, posX, posY);
+            else
+                initSprite(it->first, posX, posY, it->second.second);
+        }
+        if (it->second.first == GREEN) {
+            if (it->second.second.empty())
+                initRectShape(it->first, sf::Color::Green, posX, posY);
+            else
+                initSprite(it->first, posX, posY, it->second.second);
+        }
+        if (it->second.first == YELLOW) {
+            if (it->second.second.empty())
+                initRectShape(it->first, sf::Color::Yellow, posX, posY);
+            else
+                initSprite(it->first, posX, posY, it->second.second);
+        }
+        if (it->second.first == CYAN) {
+            if (it->second.second.empty())
+                initRectShape(it->first, sf::Color::Cyan, posX, posY);
+            else
+                initSprite(it->first, posX, posY, it->second.second);
+        }
+        if (it->second.first == GRAY) {
+            if (it->second.second.empty())
+                initRectShape(it->first, sf::Color(150, 150, 150), posX, posY);
+            else
+                initSprite(it->first, posX, posY, it->second.second);
+        }
         posX += 10;
         posY += 10;
     }
@@ -95,8 +139,10 @@ void arcade::Sfml::displayMap(const std::array<std::string, 23> map, const std::
                 hay = std::string(1, map[x][y]);
             auto it = _charMap.find(hay);
             if (it != _charMap.end()) {
-                it->second.setPosition(yPos, xPos);
-                _window.draw(it->second);
+                it->second.first.setPosition(yPos, xPos);
+                it->second.second.setPosition(yPos, xPos);
+                _window.draw(it->second.first);
+                _window.draw(it->second.second);
             }
             yPos += 40;
             y += size;

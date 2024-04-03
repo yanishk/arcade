@@ -48,7 +48,7 @@ void arcade::SDL2::initFont(const std::string &fontPath)
         throw arcade::Error(SDL_GetError());
 }
 
-void arcade::SDL2::init(const std::unordered_map<std::string, Color> pattern)
+void arcade::SDL2::init(const std::unordered_map<std::string, std::pair<Color, std::string>> pattern)
 {
     initWindow();
     initSurface();
@@ -152,7 +152,7 @@ void arcade::SDL2::displayMap(const std::array<std::string, 23> map, const std::
             auto it = _charMap.find(hay);
             if (it != _charMap.end()) {
                 SDL_Rect spriteRect = {xPos, yPos, 40, 40};
-                SDL_RenderCopy(_renderer, it->second, NULL, &spriteRect);
+                SDL_RenderCopy(_renderer, it->second.first, NULL, &spriteRect);
             }
             xPos += 40;
             y += size;
@@ -181,29 +181,29 @@ void arcade::SDL2::displayText(const std::vector<std::pair<std::string, std::pai
     }
 }
 
-void arcade::SDL2::changeColor(const std::unordered_map<std::string, Color> patternMap)
+void arcade::SDL2::changeColor(const std::unordered_map<std::string, std::pair<Color, std::string>> patternMap)
 {
     pickColor(patternMap);
 }
 
-void arcade::SDL2::pickColor(const std::unordered_map<std::string, Color> patternMap)
+void arcade::SDL2::pickColor(const std::unordered_map<std::string, std::pair<Color, std::string>> patternMap)
 {
     for (auto it = patternMap.begin(); it != patternMap.end(); it++) {
-        if (it->second == BLACK)
+        if (it->second.first == BLACK)
             initRectShape(it->first, 0, 0, 0);
-        if (it->second == WHITE)
+        if (it->second.first == WHITE)
             initRectShape(it->first, 255, 255, 255);
-        if (it->second == RED)
+        if (it->second.first == RED)
             initRectShape(it->first, 255, 0, 0);
-        if (it->second == BLUE)
+        if (it->second.first == BLUE)
             initRectShape(it->first, 0, 0, 255);
-        if (it->second == GREEN)
+        if (it->second.first == GREEN)
             initRectShape(it->first, 0, 128, 0);
-        if (it->second == YELLOW)
+        if (it->second.first == YELLOW)
             initRectShape(it->first, 255, 255, 0);
-        if (it->second == CYAN)
+        if (it->second.first == CYAN)
             initRectShape(it->first, 0, 255, 255);
-        if (it->second == GRAY)
+        if (it->second.first == GRAY)
             initRectShape(it->first, 150, 150, 150);
     }
 }
@@ -213,13 +213,13 @@ void arcade::SDL2::initRectShape(const std::string pattern, const short r,
 {
     SDL_Texture* spriteTexture = NULL;
 
-    if (_charMap[pattern] != NULL)
-        free(_charMap[pattern]);
+    if (_charMap[pattern].first != NULL)
+        free(_charMap[pattern].first);
     SDL_FillRect(_spriteSurface, NULL, SDL_MapRGB(_spriteSurface->format, r, g, b));
     spriteTexture = SDL_CreateTextureFromSurface(_renderer, _spriteSurface);
     if (!spriteTexture)
         throw arcade::Error(SDL_GetError());
-    _charMap[pattern] = spriteTexture;
+    _charMap[pattern].first = spriteTexture;
 }
 
 std::string arcade::SDL2::getPlayerName() const noexcept

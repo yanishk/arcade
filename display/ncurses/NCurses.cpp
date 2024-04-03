@@ -8,7 +8,7 @@
 #include "NCurses.hpp"
 #include <iostream>
 
-void arcade::NCurses::init(const std::unordered_map<std::string, Color> pattern) noexcept
+void arcade::NCurses::init(const std::unordered_map<std::string, std::pair<Color, std::string>> pattern) noexcept
 {
     initscr();
     keypad(stdscr, TRUE);
@@ -69,12 +69,12 @@ void arcade::NCurses::displayText(const std::vector<std::pair<std::string, std::
     }
 }
 
-void arcade::NCurses::changeColor(const std::unordered_map<std::string, Color> patternMap) noexcept
+void arcade::NCurses::changeColor(const std::unordered_map<std::string, std::pair<Color, std::string>> patternMap) noexcept
 {
     pickColor(patternMap);
 }
 
-void arcade::NCurses::pickColor(const std::unordered_map<std::string, Color> patternMap) noexcept
+void arcade::NCurses::pickColor(const std::unordered_map<std::string, std::pair<Color, std::string>> patternMap) noexcept
 {
     _charMap = patternMap;
 }
@@ -92,7 +92,7 @@ void arcade::NCurses::displayMap(const std::array<std::string, 23> map, const st
             else
                 pattern = std::string(1, map[x][y]);
             auto it = _charMap.find(pattern);
-            colorChosen = static_cast<int>(it->second);
+            colorChosen = static_cast<int>(it->second.first);
             if (it != _charMap.end()) {
                 wattron(_window, COLOR_PAIR(colorChosen));
                 mvwprintw(_window, x + index, y, "  ");

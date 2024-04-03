@@ -57,7 +57,7 @@ std::size_t arcade::Menu::getMapCellSize() const noexcept
     return _sizeCell;
 }
 
-std::unordered_map<std::string, arcade::Color> arcade::Menu::getPattern() const noexcept
+std::unordered_map<std::string, std::pair<arcade::Color, std::string>> arcade::Menu::getPattern() const noexcept
 {
     return _patternPath;
 }
