@@ -46,7 +46,8 @@ namespace arcade
             std::size_t _selectGameArrow;
             std::size_t _indexLib;
             std::size_t _indexGame;
-
+            std::size_t _nbLib;
+            std::size_t _nbGame;
     };
 }
 

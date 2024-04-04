@@ -19,6 +19,8 @@ arcade::Menu::Menu()
     _selectLibArrow = 0;
     _indexGame = 0;
     _indexLib = 0;
+    _nbGame = 0;
+    _nbLib = 0;
     _gameName = "Menu";
 }
 
@@ -31,6 +33,7 @@ void arcade::Menu::initText(const std::vector<std::string> libName,
     for (auto it : libName) {
         _textToDisplay.push_back(std::make_pair(it, std::make_pair(xPos, yPos)));
         yPos += 300;
+        _nbLib += 1;
     }
     xPos = 1400;
     yPos = 200;
@@ -39,6 +42,7 @@ void arcade::Menu::initText(const std::vector<std::string> libName,
             continue;
         _textToDisplay.push_back(std::make_pair(it, std::make_pair(xPos, yPos)));
         yPos += 300;
+        _nbGame += 1;
     }
 }
 
@@ -86,18 +90,18 @@ void arcade::Menu::keyDown() noexcept
 {
     for (auto &it : _textToDisplay) {
         if (it.first == "->") {
-            if ((_libSelected == false && it.second.second < 800)
-            || (_libSelected == true && it.second.second < 500)) {
+            if (_libSelected == false && _selectLibArrow < (_nbLib - 1)) {
                 it.second.second += 300;
-                if (_libSelected == false)
-                    _selectLibArrow += 1;
-                if (_libSelected == true)
-                    _selectGameArrow += 1;
+                _selectLibArrow += 1;
             }
-        }
-        if (it.first == "<-") {
-            if (_libSelected == true && it.second.second < 500)
+            if (_libSelected == true && _selectGameArrow < (_nbGame - 1)) {
                 it.second.second += 300;
+                _selectGameArrow += 1;
+                for (auto &it : _textToDisplay) {
+                    if (it.first == "<-")
+                        it.second.second += 300;
+                }
+            }
         }
     }
 }
@@ -105,15 +109,20 @@ void arcade::Menu::keyDown() noexcept
 void arcade::Menu::keyUp() noexcept
 {
     for (auto &it : _textToDisplay) {
-        if (it.first == "->" && it.second.second > 200) {
-            it.second.second -= 300;
-            if (_libSelected == false)
+        if (it.first == "->") {
+            if (_libSelected == false && _selectLibArrow > 0) {
                 _selectLibArrow -= 1;
-            if (_libSelected == true)
+                it.second.second -= 300;
+            }
+            if (_libSelected == true && _selectGameArrow > 0) {
                 _selectGameArrow -= 1;
+                it.second.second -= 300;
+                for (auto &it : _textToDisplay) {
+                    if (it.first == "<-")
+                        it.second.second -= 300;
+                }
+            }
         }
-        if (it.first == "<-" && it.second.second > 200)
-            it.second.second -= 300;
     }
 }
 

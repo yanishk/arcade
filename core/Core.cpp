@@ -109,7 +109,7 @@ void arcade::Core::manageMenuSwitchGame(const std::size_t indexLib, const std::s
 std::size_t arcade::Core::manageDynamicSwitchLib(std::size_t indexLib, const std::size_t indexGame) const
 {
     if (indexGame != 0) {
-        if (_lib[indexLib]->getKey() == N && indexLib < 2) {
+        if (_lib[indexLib]->getKey() == N && indexLib < (_lib.size() - 1)) {
             _lib[indexLib]->stop();
             indexLib++;
             _lib[indexLib]->init(_game[indexGame]->getPattern());
@@ -132,7 +132,7 @@ std::size_t arcade::Core::manageDynamicSwitchGame(const std::size_t indexLib, st
             updateScoreFile(_game[indexGame]->getGameName(), _game[indexGame]->getScore());
             _game[indexGame]->resetGame();
             _lib[indexLib]->stop();
-                indexGame += 1;
+            indexGame += 1;
             if (indexGame >= _gameText.size())
                 indexGame = 1;
             _lib[indexLib]->init(_game[indexGame]->getPattern());
