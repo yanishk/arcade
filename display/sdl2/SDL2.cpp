@@ -261,7 +261,6 @@ void arcade::SDL2::initSprite(const std::string pattern, const std::string pathF
     SDL_Texture* texture;
 
     sprite = SDL_LoadBMP(pathFile.c_str());
-        // throw arcade::Error("Could not find sprite");
     texture = SDL_CreateTextureFromSurface(_renderer, sprite);
     _charMap[pattern].second = texture;
 }

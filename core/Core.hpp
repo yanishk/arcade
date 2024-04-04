@@ -41,7 +41,7 @@ namespace arcade
             arcade::GameStatus handleMenuKey(GameStatus status);
             void choseOptionMenu();
             arcade::GameStatus mainGame(GameStatus status);
-            void createObjectLoader(const std::string libPath) noexcept;
+            void createObjectLoader(const std::string libPath);
             std::vector<std::unique_ptr<DLLoader<IDisplayModule>>> _libLoader;
             std::vector<std::unique_ptr<DLLoader<IGameModule>>> _gameLoader;
             std::vector<std::unique_ptr<arcade::IGameModule>> _game;

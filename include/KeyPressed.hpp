@@ -24,7 +24,8 @@ namespace arcade
         M,
         BACKSPACE,
         CLOSE_BUTTON,
-        ENTER
+        ENTER,
+        SPACE
     };
 }
 

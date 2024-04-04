@@ -9,9 +9,10 @@
 #include <iostream>
 #include <filesystem>
 #include <fstream>
+#include <algorithm>
 #include "Core.hpp"
 
-void arcade::Core::createObjectLoader(const std::string libPath) noexcept
+void arcade::Core::createObjectLoader(const std::string libPath)
 {
     std::string path = "lib";
 
@@ -32,6 +33,9 @@ void arcade::Core::createObjectLoader(const std::string libPath) noexcept
             }
         }
     }
+    auto it = std::find(_gameText.begin(), _gameText.end(), "lib/arcade_menu.so");
+    if (_gameLoader.empty() || (_gameText.size() == 1 && it != _gameText.end()))
+        throw arcade::Error("No game loaded");
 }
 
 void arcade::Core::readLib(const std::string libPath)
@@ -44,7 +48,7 @@ void arcade::Core::readLib(const std::string libPath)
         }
     }
     if (_libLoader.size() == 0)
-        throw arcade::Error("");
+        throw arcade::Error("No graphic library loaded");
     createObjectLoader(libPath);
     for (auto &it : _libLoader)
         _lib.push_back(it->getInstance());
