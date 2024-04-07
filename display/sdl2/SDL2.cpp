@@ -257,11 +257,11 @@ void arcade::SDL2::initRectShape(const std::string pattern, const short r,
 
 void arcade::SDL2::initSprite(const std::string pattern, const std::string pathFile)
 {
-    SDL_Surface* sprite;
     SDL_Texture* texture;
 
-    sprite = SDL_LoadBMP(pathFile.c_str());
-    texture = SDL_CreateTextureFromSurface(_renderer, sprite);
+    texture = IMG_LoadTexture(_renderer, pathFile.c_str());
+    if (!texture)
+        return;
     _charMap[pattern].second = texture;
 }
 

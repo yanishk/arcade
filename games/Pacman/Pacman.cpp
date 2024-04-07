@@ -41,8 +41,8 @@ arcade::Pacman::Pacman() : _gameName("Pacman"), _score(0),
     _patternPath[" "] = std::make_pair(BLACK, "");
     _patternPath["."] = std::make_pair(WHITE, "");
     _patternPath["!"] = std::make_pair(GREEN, "");
-    _patternPath["P"] = std::make_pair(YELLOW, "");
-    _patternPath["G"] = std::make_pair(RED, "");
+    _patternPath["P"] = std::make_pair(YELLOW, "assets/sprites/pacman.png");
+    _patternPath["G"] = std::make_pair(RED, "assets/sprites/ghost.png");
     _patternPath["/"] = std::make_pair(BLUE, "");
     _defaultGhostsPos = getGhostsPos();
     _ghostsPos = _defaultGhostsPos;
@@ -60,7 +60,7 @@ arcade::Pacman::Pacman() : _gameName("Pacman"), _score(0),
 void arcade::Pacman::resetGame() noexcept
 {
     _map = _defaultMap;
-    _patternPath["G"] = std::make_pair(RED, "");
+    _patternPath["G"] = std::make_pair(RED, "assets/sprites/ghost.png");
     _textToDisplay.clear();
     _defaultGhostsPos.clear();
     _ghostsPos.clear();
@@ -494,10 +494,10 @@ arcade::GameStatus arcade::Pacman::moveGhosts() noexcept
 void arcade::Pacman::setGhostsColor() noexcept
 {
     if (_canEatGhosts && _patternPath["G"].first == RED)
-        _patternPath["G"] = std::make_pair(CYAN, "");
+        _patternPath["G"] = std::make_pair(CYAN, "assets/sprites/ghost_nerf.png");
     if (_canEatGhosts && _time >= 10 &&
         _patternPath["G"].first == CYAN) {
-        _patternPath["G"] = std::make_pair(RED, "");
+        _patternPath["G"] = std::make_pair(RED, "assets/sprites/ghost.png");
         _canEatGhosts = false;
     }
 }

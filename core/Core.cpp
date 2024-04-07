@@ -259,12 +259,11 @@ void arcade::Core::endLoop() const noexcept
 arcade::GameStatus arcade::Core::mainGame(GameStatus status)
 {
     _score = _game[_indexGame]->getScore();
-    _lib[_indexLib]->changeColor(_game[_indexGame]->getPattern());
     choseOptionMenu();
+    _lib[_indexLib]->changeColor(_game[_indexGame]->getPattern());
     _lib[_indexLib]->displayText(_game[_indexGame]->getText());
     _lib[_indexLib]->displayText(getGameScores(_game[_indexGame]->getGameName()));
-    _lib[_indexLib]->displayMap(_game[_indexGame]->getMap(),
-    _game[_indexGame]->getMapCellSize());
+    _lib[_indexLib]->displayMap(_game[_indexGame]->getMap(), _game[_indexGame]->getMapCellSize());
     _lib[_indexLib]->handleEvent(_game[_indexGame]->getGameName());
     status = _game[_indexGame]->updateMap(_lib[_indexLib]->getKey());
     status = handleMenuKey(status);

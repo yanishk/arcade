@@ -15,7 +15,7 @@ CXXFLAGS = -fPIC -I /usr/include/SDL2 -I ..  -I ../../include -Wall -Wextra
 
 LDFLAGS = -shared
 
-LDLIBS = -lSDL2 -lSDL2_ttf
+LDLIBS = -lSDL2 -lSDL2_ttf -lSDL2_image
 
 LIBPATH = ../../lib/
 

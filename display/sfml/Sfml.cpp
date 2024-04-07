@@ -17,33 +17,15 @@ void arcade::Sfml::initWindow() noexcept
 void arcade::Sfml::init(const std::unordered_map<std::string, std::pair<Color, std::string>> pattern)
 {
     initWindow();
-    pickColor(pattern);
     if (!_font.loadFromFile("assets/font/OpenSans-Regular.ttf"))
         throw arcade::Error("Font not found");
+    _spriteLoaded = 0;
+    pickColor(pattern);
 }
 
 void arcade::Sfml::changeColor(const std::unordered_map<std::string, std::pair<Color, std::string>> patternMap) noexcept
 {
-    for (auto it = patternMap.begin(); it != patternMap.end(); it++) {
-        if (!it->second.second.empty()) {
-            if (it->second.first == BLACK)
-                _charMap[it->first].first.setFillColor(sf::Color::Black);
-            if (it->second.first == WHITE)
-                _charMap[it->first].first.setFillColor(sf::Color::White);
-            if (it->second.first == RED)
-                _charMap[it->first].first.setFillColor(sf::Color::Red);
-            if (it->second.first == BLUE)
-                _charMap[it->first].first.setFillColor(sf::Color::Blue);
-            if (it->second.first == GREEN)
-                _charMap[it->first].first.setFillColor(sf::Color::Green);
-            if (it->second.first == YELLOW)
-                _charMap[it->first].first.setFillColor(sf::Color::Yellow);
-            if (it->second.first == CYAN)
-                _charMap[it->first].first.setFillColor(sf::Color::Cyan);
-            if (it->second.first == GRAY)
-                _charMap[it->first].first.setFillColor(sf::Color(150, 150, 150));
-        }
-    }
+    pickColor(patternMap);
 }
 
 void arcade::Sfml::initRectShape(const std::string pattern, const sf::Color color, const int posX, const int posY) noexcept
@@ -58,17 +40,29 @@ void arcade::Sfml::initRectShape(const std::string pattern, const sf::Color colo
 
 void arcade::Sfml::initSprite(const std::string pattern, const int posX, const int posY, const std::string pathFile)
 {
-    if (!spriteStruct._texture.loadFromFile(pathFile))
+    static sf::Texture texture;
+    static sf::Sprite sprite;
+    static struct _spriteStruct s = { texture, sprite };
+
+    _spriteVector.push_back(s);
+    if (!_spriteVector[_spriteLoaded]._texture.loadFromFile(pathFile))
         throw arcade::Error("Sprite not found");
-    spriteStruct._sprite.setTexture(spriteStruct._texture);
-    spriteStruct._sprite.setPosition(posY, posX);
-    _charMap[pattern].second = spriteStruct._sprite;
+    _spriteVector[_spriteLoaded]._sprite.setTexture(_spriteVector[_spriteLoaded]._texture);
+    _spriteVector[_spriteLoaded]._sprite.setPosition(posY, posX);
+    _charMap[pattern].second = _spriteVector[_spriteLoaded]._sprite;
+    _spriteLoaded += 1;
 }
+
 
 void arcade::Sfml::pickColor(const std::unordered_map<std::string, std::pair<Color, std::string>> patternMap)
 {
     int posX = 0;
     int posY = 0;
+
+    if (_spriteLoaded != 0) {
+        _spriteLoaded = 0;
+        _spriteVector.clear();
+    }
 
     for (auto it = patternMap.begin(); it != patternMap.end(); it++) {
         if (it->second.first == BLACK) {
@@ -139,7 +133,7 @@ void arcade::Sfml::displayMap(const std::array<std::string, 23> map, const std::
                 hay = std::string(1, map[x][y]);
             auto it = _charMap.find(hay);
             if (it != _charMap.end()) {
-                it->second.first.setPosition(yPos, xPos);
+               it->second.first.setPosition(yPos, xPos);
                 it->second.second.setPosition(yPos, xPos);
                 _window.draw(it->second.first);
                 _window.draw(it->second.second);
@@ -151,6 +145,7 @@ void arcade::Sfml::displayMap(const std::array<std::string, 23> map, const std::
         xPos += 40;
         y = 0;
     }
+
 }
 
 void arcade::Sfml::displayText(const std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) noexcept
@@ -253,5 +248,8 @@ std::string arcade::Sfml::getPlayerName() const noexcept
 
 void arcade::Sfml::stop() noexcept
 {
+    _charMap.clear();
+    _spriteVector.clear();
+    _spriteLoaded = 0;
     _window.close();
 }

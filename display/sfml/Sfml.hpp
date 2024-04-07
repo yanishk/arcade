@@ -45,11 +45,12 @@ namespace arcade
             KeyPressed _key;
             sf::Font _font;
             std::string _playerName;
-
-            struct {
+            struct _spriteStruct {
                 sf::Texture _texture;
                 sf::Sprite _sprite;
-            } spriteStruct;
+            };
+            std::vector<_spriteStruct> _spriteVector;
+            std::size_t _spriteLoaded;
     };
 }
 

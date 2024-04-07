@@ -38,7 +38,7 @@ arcade::Nibbler::Nibbler() : _score(0), _time(0), _gameName("Nibbler")
     _map = _defaultMap;
     _patternPath["##"] = std::make_pair(WHITE, "assets/sprites/brick_wall.bmp");
     _patternPath["  "] = std::make_pair(BLACK, "");
-    _patternPath["[]"] = std::make_pair(RED, "");
+    _patternPath["[]"] = std::make_pair(RED, "assets/sprites/apple.png");
     _patternPath["=="] = std::make_pair(BLUE, "");
     _patternPath["8~"] = std::make_pair(GREEN, "");
     _patternPath["<="] = std::make_pair(YELLOW, "");
