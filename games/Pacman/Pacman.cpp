@@ -590,7 +590,7 @@ bool arcade::Pacman::checkWin() const noexcept
 {
     for (std::size_t i = 0; i != _map.size(); i += 1) {
         for (std::size_t y = 0; y != _map[0].size(); y += 1) {
-            if (_map[i][y] == '!') {
+            if (_map[i][y] == '!' || _map[i][y] == '.') {
                 return false;
             }
         }
