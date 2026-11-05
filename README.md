@@ -1,173 +1,145 @@
-Other group members:
-- Wilson Bordichon (wilson.bordichon@epitech.eu)
-- Bradley Malbrouck (bradley.malbrouck@epitech.eu)
-- Mathis Brehm (mathis.brehm@epitech.eu)
+<div align="center">
 
+# Arcade: a plugin-based retro gaming platform in C++
 
+**Swap the graphics library or the game at runtime, without restarting: every renderer and every game is a shared library loaded on the fly.**
 
+![C++17](https://img.shields.io/badge/C%2B%2B-17-00599C?logo=cplusplus&logoColor=white)
+![SFML](https://img.shields.io/badge/renderer-SFML-8CC445)
+![SDL2](https://img.shields.io/badge/renderer-SDL2-1E90FF)
+![ncurses](https://img.shields.io/badge/renderer-ncurses-444)
+![Make](https://img.shields.io/badge/build-Make-A42E2B?logo=gnu&logoColor=white)
+![Linux](https://img.shields.io/badge/platform-Linux-lightgrey)
 
-                                                Arcade
-                                    Harkouk Yanis - Legrand Eva
+<img src="doc/demo.gif" alt="Nibbler hot-swapped from SFML to SDL2 to ncurses with the N key, mid-game" width="660">
 
+[Quick start](#quick-start) · [How it works](#how-it-works) · [Write your own plugin](#write-your-own-plugin) · [Documentation](#documentation)
 
-The compilation process:
-We have a Makefile at the root of the project which builds the entire project. expect if you apply a rule next to it :
-- The core Rule : builds the “./arcade” executable
-- The games Rule : builds the games libraries in ./games
-- The graphicals Rule : build the graphical libraries in ./display
-- The all Rule : build the aforementioned rules
+</div>
 
-Usage:
-To launch our Arcade, you will need to call the executable and a graphic library,
-found in the ./lib directory, with which you want to start the program with. It goes like
-this : ./arcade lib/arcade_*.so
+---
 
-Key to Use:
-- M : goes back to the menu
-- P : goes back to the previous graphical library
-- N : goes to the next graphical library
-- G : switches in between the available game
-- R : restart the game
-- Arrows : the arrows allow you to move in game
-- BACKSPACE : quit the program
-- ENTER : used to select the chosen library, graphical or games
+## About
 
-Score:
-Each time you play a game, the program looks for a file named
-“.name_of_the_game.scores”. If it does not exist, it creates it and writes the score in
-when the game is ended. The file is filled as such : NAME: SCORE
+Arcade is the Object-Oriented Programming project of Epitech's second year. The brief: build a gaming platform where the **core**, the **graphics libraries** and the **games** are strictly separated, so that any of them can be replaced by a `.so` dropped into `lib/` under one of the standard library names, including libraries written by other student groups against the same interfaces.
 
-Enums:
-The two following enums are used in our IGameModule and IDisplayModule
-Interfaces. Their role is to facilitate the transfer and the retrieving of all data
-surrounding colors and user inputs. It allows us to use descriptive words instead of
-lengthy strings.
+The result is a small engine that runs **Pacman** and **Nibbler** (a Snake variant) on three interchangeable renderers, **SFML**, **SDL2** and **ncurses**, and lets you hot-swap between them with a single key while the game keeps running.
 
-The Color Enum:
-```C++
-    enum Color
-    {
-        DEFAULT,
-        BLACK,
-        WHITE,
-        RED,
-        BLUE,
-        GREEN,
-        YELLOW,
-        GRAY,
-        CYAN
-    };
+## Highlights
+
+- **Dynamic loading with `dlopen` / `dlsym`**: a templated `DLLoader<T>` resolves the `entryPoint()` symbol of each plugin and wraps it in a `std::unique_ptr`, so the core never links against a renderer or a game at compile time.
+- **Two minimal interfaces, `IGameModule` and `IDisplayModule`**: games expose a text map plus a pattern-to-sprite table, renderers draw it. A game knows nothing about pixels, a renderer knows nothing about rules.
+- **Hot swap at runtime**: next or previous renderer, next game, back to the menu, restart, all without leaving the program.
+- **Cross-group compatibility**: the interfaces were agreed with another Epitech team, and their sprites are supported by our SDL2 renderer.
+- **Persistent scores** per game: every finished run is appended with the player name to a hidden `.<game>.scores` file and listed next to the game.
+- **Graceful failure**: a missing or incompatible library throws a typed `Error` instead of crashing, and the program exits with Epitech's expected 84 code.
+
+## Quick start
+
+### Prerequisites
+
+| Library | Debian / Ubuntu package |
+|---------|-------------------------|
+| SFML 2.x | `libsfml-dev` |
+| SDL2 with ttf and image | `libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev` |
+| ncurses | `libncurses-dev` |
+
+### Build and run
+
+```bash
+git clone https://github.com/yanishk/arcade.git
+cd arcade
+make            # builds ./arcade, lib/arcade_*.so for games and renderers
+./arcade lib/arcade_sfml.so
 ```
 
-The KeyPressed Enum:
-```C++
-    enum KeyPressed
-    {
-        OTHER,
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT,
-        R,
-        P,
-        N,
-        G,
-        M,
-        BACKSPACE,
-        CLOSE_BUTTON,
-        ENTER
-    };
+`make core`, `make games` and `make graphicals` build each part separately.
+
+### Controls
+
+| Key | Action |
+|-----|--------|
+| Arrows | Move |
+| Enter | Select a game or a renderer in the menu |
+| N / P | Next / previous graphics library (in game) |
+| G | Next game (in game) |
+| M | Back to the menu |
+| R | Restart the current game |
+| Backspace or closing the window | Quit |
+
+## How it works
+
+```mermaid
+flowchart LR
+    subgraph Core["Core (./arcade)"]
+        L[DLLoader&lt;T&gt;<br/>dlopen · dlsym entryPoint]
+        LOOP[Game loop<br/>input → updateMap → displayMap]
+        SC[Score file]
+        L --> LOOP --> SC
+    end
+
+    subgraph Games["lib/arcade_*.so (IGameModule)"]
+        PAC[Pacman]
+        NIB[Nibbler]
+        MENU[Menu]
+    end
+
+    subgraph Displays["lib/arcade_*.so (IDisplayModule)"]
+        SFML[SFML]
+        SDL[SDL2]
+        NC[ncurses]
+    end
+
+    Games -- "map (23 rows)<br/>pattern → (Color, sprite)" --> LOOP
+    LOOP -- "KeyPressed" --> Games
+    LOOP -- "displayMap · displayText" --> Displays
+    Displays -- "getKey" --> LOOP
 ```
 
-The GameStatus Enum:
-This enum is only used in the IGameModule interface. Its purpose is to track the
-status of the game and handle it in our core accordingly.
-```C++
-    enum GameStatus
-    {
-        PLAYING,
-        WON,
-        WON_AND_RELOADED,
-        LOOSE,
-        QUIT,
-        NO_ACTIVITY,
-        MENU,
-        RESET
-    };
+Each frame, the core asks the current game for its map (an array of 23 strings where every character is a pattern) and a table mapping each pattern to a colour and an optional sprite path. The renderer then draws the map the way it can: ncurses uses the colour, SFML and SDL2 use the sprite when one is given and a coloured block otherwise. Input flows the other way as a `KeyPressed` enum, so games are written once and work on every renderer.
+
+```
+core/        Core loop, DLLoader, library discovery in lib/
+display/     IDisplayModule and the three renderers (one Makefile each)
+games/       IGameModule, Pacman, Nibbler and the Menu
+include/     Shared enums: Color, KeyPressed, GameStatus, Error
+assets/      Sprites and fonts
+doc/         Technical documentation and class diagram (PDF), demo GIF
 ```
 
-IGameModule Interface:
-```C++
-    class IGameModule
-    {
-        public:
-            IGameModule() = default;
-            ~IGameModule() = default;
+## Write your own plugin
 
-            virtual void resetGame() = 0;
-            virtual std::string getGameName() const = 0;
-            virtual std::size_t getScore() const = 0;
-            virtual std::array<std::string, 23> getMap() const = 0;
-            virtual std::size_t getMapCellSize() const = 0;
-            virtual std::unordered_map<std::string, std::pair<Color, std::string>> getPattern() const = 0;
-            virtual std::vector<std::pair<std::string, std::pair<int, int>>> getText() const = 0;
-            virtual void incrementTime() = 0;
-            virtual GameStatus updateMap(KeyPressed key) = 0;
-            virtual std::pair<std::size_t, std::size_t> getIndexes() const = 0;
-            virtual void initText(const std::vector<std::string>, const std::vector<std::string>) = 0;
-    };
-```
+A plugin is a class implementing `arcade::IGameModule` or `arcade::IDisplayModule`, compiled as a shared library, exposing one C symbol:
 
-Our two games, Pacman and Nibbler, inherit from the IGameModule Interface which is composed of the following methods:
-- resetGame: reset to their beginning states all the variables of the class
-- getPattern(): returns an unordered_map composed of an std::string which represents a pattern present in the game map and a pair composed of a Color value from the Color enum, and an std::string containing the path of the desired sprite
-- incrementTime(): increments an std::size_t variable which represents the
-seconds that pass.
-- updateMap(KeyPressed key): update the game map based on the last user input (defined in the KeyPressed enum).
-- getIndexes(): returns two ints associated with the vectors containing respectively the game libraries and the display libraries.
-- initText(const std::vector<std::string>, const std::vector<std::string>): initialize a vector of string (to send it to the core and then the display)
-
-
-IDisplayModule interface:
-```C++
-    class IDisplayModule
-    {
-        public:
-            IDisplayModule() = default;
-            ~IDisplayModule() = default;
-
-            virtual void init(const std::unordered_map<std::string, std::pair<Color, std::string>> pattern) = 0;
-            virtual void stop() = 0;
-            virtual void handleEvent(const std::string gameName) = 0;
-            virtual void changeColor(const std::unordered_map<std::string, std::pair<Color, std::string>> patternMap) = 0;
-            virtual void displayText(const std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) = 0;
-            virtual void displayMap(const std::array<std::string, 23> map, const std::size_t size) = 0;
-            virtual KeyPressed getKey() const = 0;
-            virtual void setKey(const KeyPressed newValue) = 0;
-            virtual std::string getPlayerName() const = 0;
-    };
-```
-
-Our three libraries, SFML / Ncurses / SDL2, inherit from the IDisplayModule Interface which is composed of the following methods:
-- init(const std::unordered_map<std::string, std::pair<Color, std::string>> pattern) : Initializes
-all the resources that will be used throughout the execution of the display. It
-fills a map composed of the pattern retrieved through our map and its
-corresponding object to display.
-- stop() : liberate the resources used by the display.
-- handleEvent(const std::string gameName) : this function handles the event
-happening while the display is running.
-- displayText(const std::vector<std::pair<std::string, std::pair<int, int>>> textToDisplay) : retrieve the text to display
-from a map containing
-the string and its desired position and prints it.
-- displayMap(const std::array<std::string, 23> map, const std::size_t size) : displays the map given in the parameter according to an internal variable initialized in the init() function.
-
-
-If you want to use a new game or a new graphical library, you'll need to add the following entryPoint() function outside your class:
-```C++
-extern "C"
-{
-    arcade::className* entryPoint() {
-        return new arcade::className;
+```c++
+extern "C" {
+    arcade::MyGame *entryPoint() {
+        return new arcade::MyGame;
     }
 }
 ```
+
+Name it after one of the libraries the core recognises (the list shared by all groups, in [`core/Core.cpp`](core/Core.cpp): `arcade_snake.so`, `arcade_qix.so`, `arcade_centipede.so`, `arcade_solarfox.so` for games, `arcade_opengl.so`, `arcade_allegro5.so`, `arcade_qt5.so`… for renderers) and drop it in `lib/`: the core scans `lib/` for those names at startup and the menu picks it up. A file with any other name is ignored. The reference for both interfaces is their headers, [`games/IGameModule.hpp`](games/IGameModule.hpp) and [`display/IDisplayModule.hpp`](display/IDisplayModule.hpp); [`doc/Documentation_Arcade.pdf`](doc/Documentation_Arcade.pdf) explains each method but predates sprite support (its `getPattern()` and `init()` still map a pattern to a bare `Color`).
+
+## Documentation
+
+| Topic | Where |
+|-------|-------|
+| Interfaces and enums (current) | [`games/IGameModule.hpp`](games/IGameModule.hpp), [`display/IDisplayModule.hpp`](display/IDisplayModule.hpp), [`include/`](include/) |
+| Method-by-method walkthrough (written before sprite support) | [`doc/Documentation_Arcade.pdf`](doc/Documentation_Arcade.pdf) |
+| Class diagram | [`doc/Arcade_Diagram.pdf`](doc/Arcade_Diagram.pdf) |
+
+## Team
+
+Built in three weeks (March to April 2024) by two Epitech students:
+
+| | Main areas |
+|---|---|
+| [**Yanis Harkouk**](https://github.com/yanishk) | Nibbler gameplay, Pacman gameplay (ghosts, scoring, win conditions), shared interfaces and enums, error handling and exit codes, build system, ncurses colour rendering, score persistence and player name, support for the other group's sprites in SDL2, interface docs |
+| [**Eva Legrand**](https://github.com/Chaegnal) | Initial architecture, DLLoader and runtime switching between libraries and games, menu, map and sprite rendering in SFML and SDL2, Pacman and Nibbler groundwork (structure, maps), technical documentation (PDFs) |
+
+Interfaces shared with Wilson Bordichon, Bradley Malbrouck and Mathis Brehm's group for cross-compatibility.
+
+## License
+
+Educational project (Epitech, 2024). Pacman and Nibbler are trademarks of their respective owners; this is a non-commercial, academic reimplementation.

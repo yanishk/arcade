@@ -11,7 +11,7 @@ OBJ = $(SRC:.cpp=.o)
 
 CXX = g++
 
-CXXFLAGS = -fPIC -I /usr/include/SFML -I .. -I ../../include -Wall -Wextra
+CXXFLAGS = -fPIC -I /usr/include/SFML -I .. -I ../../include -Wall -Wextra -std=c++17
 
 LDFLAGS = -shared
 
@@ -25,7 +25,7 @@ all : $(NAME)
 
 $(NAME):	$(OBJ)
 	$(CXX) -c $(CXXFLAGS) $(SRC)
-	$(CXX) $(LDFLAGS) -o $(NAME) $(LDLIBS) $(OBJ)
+	$(CXX) $(LDFLAGS) -o $(NAME) $(OBJ) $(LDLIBS)
 	cp $(NAME) $(LIBPATH)
 
 clean:
